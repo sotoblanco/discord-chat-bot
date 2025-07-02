@@ -160,6 +160,10 @@ async def discord_bot_runner():
             if message.author == bot.user:
                 return
 
+            # Check if the message is from the 'bwai-bot' channel
+            if message.channel.name != 'bwai-bot':
+                return
+
             if bot_is_mentioned(message.content, bot.user):
                 print(f"Question received: {message.content}")
                 thread = await message.create_thread(
