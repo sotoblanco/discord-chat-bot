@@ -2,72 +2,22 @@ import os
 import time
 import chromadb
 from chromadb.utils import embedding_functions
-from openai import OpenAI
 import json
 import glob
-
-from dotenv import load_dotenv
 from typing import List, Dict, Any
 import numpy as np
 import re
 import uuid
 
-from .process_transcript import chunk_transcript
+# Import shared utilities and configuration (absolute imports for Modal)
+from utils import count_tokens, extract_workshop_id, get_openai_client
+from config import (
+    DATA_DIR, COLLECTION_NAME, CHROMA_DB_PATH, EMBEDDING_MODEL,
+    DEFAULT_MAX_TOKENS, DEFAULT_MAX_CHUNKS, COMPLETION_MODEL,
+    EMBEDDING_MAX_TOKENS, SYSTEM_PROMPT
+)
+from process_transcript import chunk_transcript
 
-
-def count_tokens(text: str) -> int:
-    """Count tokens using tiktoken"""
-    import tiktoken
-    try:
-        encoding = tiktoken.encoding_for_model("gpt-4")
-        return len(encoding.encode(text))
-    except:
-        encoding = tiktoken.get_encoding("cl100k_base")
-        return len(encoding.encode(text))
-
-# Support both local and Modal paths
-DATA_DIR = "/root/data" if os.path.exists("/root/data") else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
-COLLECTION_NAME = "workshop_chunks_all"
-CHROMA_DB_PATH = "/root/chroma_db" if os.path.exists("/root/chroma_db") else "chroma_db"
-EMBEDDING_MODEL = "text-embedding-3-small"
-DEFAULT_MAX_TOKENS = 12000
-DEFAULT_MAX_CHUNKS = 10
-COMPLETION_MODEL = "gpt-4o-mini"
-EMBEDDING_MAX_TOKENS = 7000
-
-SYSTEM_PROMPT = """You are an AI-powered Teaching Assistant with expertise in artificial intelligence and machine learning. Your purpose is to help users by answering their questions based on a provided workshop transcript.
-
-Instructions:
-
-Carefully read the user’s question and the relevant transcript.
-
-In a single response, identify the core question, provide a concise and accurate answer, and offer any necessary context or action steps.
-
-Be both concise and thorough—your response must not exceed 200 words.
-
-Respond directly, avoiding unnecessary repetition or filler.
-
-If clarification is needed, use your best judgment to infer from the transcript; do not ask follow-up questions.
-
-Maintain a professional, supportive, and clear tone in all responses.
-
-Output Requirements:
-
-Answer in a single turn only.
-
-Limit your response to 200 words.
-
-Provide actionable insights or next steps when applicable.
-"""
-
-
-def get_openai_client():
-    """Initialize OpenAI client with API key"""
-    load_dotenv()
-    api_key = os.getenv("OPENAI_API_KEY")
-    if not api_key:
-        raise ValueError("OPENAI_API_KEY not found in environment variables")
-    return OpenAI(api_key=api_key)
 
 ############### workshop discovery, chunking and embedding ##########
 
@@ -80,7 +30,7 @@ def discover_workshops(data_dir=DATA_DIR):
         workshops = {}
         for vtt_file in vtt_files:
             filename = os.path.basename(vtt_file)
-            workshop_id = filename.split('-')[0] if '-' in filename else filename.split('.')[0]
+            workshop_id = extract_workshop_id(filename)
             
             workshops[workshop_id] = {
                 'id': workshop_id,

@@ -1,22 +1,11 @@
 import re
 import uuid
-import tiktoken
 from typing import List, Dict, Any
 import os
 
-# Configuration
-CHUNK_SIZE = 1000
-CHUNK_OVERLAP = 100
-MIN_CHUNK_SIZE = 200
-
-def count_tokens(text: str) -> int:
-    """Count tokens using tiktoken"""
-    try:
-        encoding = tiktoken.encoding_for_model("gpt-4")
-        return len(encoding.encode(text))
-    except:
-        encoding = tiktoken.get_encoding("cl100k_base")
-        return len(encoding.encode(text))
+# Import shared utilities and configuration
+from utils import count_tokens, extract_workshop_id
+from config import CHUNK_SIZE, CHUNK_OVERLAP, MIN_CHUNK_SIZE
 
 def load_vtt_content(file_path):
     """Load VTT file and extract clean text content"""
@@ -97,5 +86,5 @@ def create_chunk(text: str, position: int, workshop_id: str) -> Dict[str, Any]:
 def chunk_workshop_transcript(transcript_path: str) -> List[Dict[str, Any]]:
     """Main chunking function - extracts workshop ID from path"""
     filename = os.path.basename(transcript_path)
-    workshop_id = filename.split('-')[0] if '-' in filename else filename.split('.')[0]
+    workshop_id = extract_workshop_id(filename)
     return chunk_transcript(transcript_path, workshop_id)
