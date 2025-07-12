@@ -4,8 +4,8 @@ from typing import List, Dict, Any
 import os
 
 # Import shared utilities and configuration
-from utils import count_tokens, extract_workshop_id
-from config import CHUNK_SIZE, CHUNK_OVERLAP, MIN_CHUNK_SIZE
+from .utils import count_tokens, extract_workshop_id
+from .config import CHUNK_SIZE, CHUNK_OVERLAP, MIN_CHUNK_SIZE
 
 def load_vtt_content(file_path):
     """Load VTT file and extract clean text content"""
