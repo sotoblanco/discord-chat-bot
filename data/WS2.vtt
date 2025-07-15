@@ -1,0 +1,2650 @@
+WEBVTT
+
+1
+00:00:05.270 --> 00:00:25.829
+hugo bowne-anderson: Welcome everyone to workshop 2, those who just joined the conversation with Alex. Thanks so much for for joining, and all the wonderful questions for those who didn't. The recording will be available on Maven Super soon and check out the the channel on discord for some of the chat as well, we do have.
+
+2
+00:00:25.830 --> 00:00:36.320
+hugo bowne-anderson: You may have seen. And I put this in announcements. We have a workshop, 2 channel in discord. So all questions let's put there.
+
+3
+00:00:37.730 --> 00:00:44.850
+hugo bowne-anderson: And if you see a question, we'll try to get to everything essentially, either in the workshop or
+
+4
+00:00:46.468 --> 00:01:00.599
+hugo bowne-anderson: afterwards. But yeah, if you see a question that you'd like answered as well. Just give it a plus one, so we can prioritize, if need be. So I'm going to. We're recording. I'm going to share my, just give me one second.
+
+5
+00:01:03.420 --> 00:01:05.229
+hugo bowne-anderson: Yep, I'm gonna share my screen.
+
+6
+00:01:14.220 --> 00:01:17.579
+hugo bowne-anderson: Can people see my screen if someone just give me a thumb up? Okay.
+
+7
+00:01:22.100 --> 00:01:23.870
+hugo bowne-anderson: cool. Great. So
+
+8
+00:01:24.140 --> 00:01:44.909
+hugo bowne-anderson: today, one of the main things we'll be focusing on are Apis and prompt engineering and the types of knobs we can turn when building and iterating. We will be doing a bit of deployment stuff before that, primarily. So you can all get up and running with getting stuff deployed asap before that. I just do want to do
+
+9
+00:01:45.570 --> 00:01:55.860
+hugo bowne-anderson: a bit of housekeeping. 3 min of housekeeping. Firstly, you may have seen we have a course, Wiki. I posted in the announcements. Channel yesterday, Pastor
+
+10
+00:01:55.930 --> 00:02:06.779
+hugo bowne-anderson: and Plus AI pastor AI put in a workshop workshop summary with details about the homework, with slides, with the recordings and that type of stuff. So this Wiki is something that we'll be continuing to build
+
+11
+00:02:07.120 --> 00:02:28.880
+hugo bowne-anderson: as the course progresses, so that you have all the information for everything that's happening. If there's anything missing there, or anything you'd like added, let us know in in the Help Channel, or something something along those lines, because this is, you know, a community driven work in progress as well, and we want to make sure that you all have everything you need, and we set up set you up for success there.
+
+12
+00:02:29.460 --> 00:02:33.410
+hugo bowne-anderson: Also, in announcements in Maven. We've
+
+13
+00:02:33.560 --> 00:02:39.820
+hugo bowne-anderson: earlier this week before the 1st workshop, we made an announcement about how to get all of your sponsored credits. Now.
+
+14
+00:02:40.190 --> 00:02:50.329
+hugo bowne-anderson: please go there. I've put it in the course credits channel in discord. If you can't figure it out. Ping myself and Pastor in the course credits Channel.
+
+15
+00:02:50.380 --> 00:03:12.060
+hugo bowne-anderson: The reason I'm being very explicit about this. There are time sensitive things you need to do to get credits, and if you do not do them, you will not get the credits. So, for example, join this hugging face organization by end of day tomorrow, so that we can then add credits for 6 months of hugging face pro for everyone. So please do that and ping me and Pastor, if there are any challenges with that.
+
+16
+00:03:12.580 --> 00:03:28.719
+hugo bowne-anderson: additionally, I've seen a lot of fantastic engagement on discord, and just a reminder for those who haven't engaged so much feel free to jump in time permitting. But there are so many wonderful conversations of people building together and working things out together. So it's really a good place for that.
+
+17
+00:03:29.200 --> 00:03:55.220
+hugo bowne-anderson: On top of that yesterday Caleb ran his Builders Club, and I think 8 to 9 people turned up, and I was fortunate enough to then join Mike's Builders Club, where we got logfire, which is a sponsor of the course up and running with the app that we built on Tuesday in workshop one. And it was super fun. So that's another way to engage. Now, just recall or remember, or you may hear it for the 1st time.
+
+18
+00:03:55.440 --> 00:03:56.420
+hugo bowne-anderson: that
+
+19
+00:03:58.110 --> 00:04:18.950
+hugo bowne-anderson: the builders, clubs are a place to build and chat and workshop things together. So if you're working on something even outside the course that you want, feedback on, or thoughts on, or to chat about, bring it. There. We have a demo day at the end of the course, so bring stuff that you want to show there as well. So that's all to say, the 8 workshops in this course.
+
+20
+00:04:18.959 --> 00:04:33.589
+hugo bowne-anderson: the the happy path for the course. But the more workshops you attend, the more builders, clubs, you attend, time, permitting, of course, the the more you get out of it, and we're recording all of them. And so we'll be able to share. We share the recordings afterwards also.
+
+21
+00:04:33.850 --> 00:04:39.160
+hugo bowne-anderson: So what are we doing today? First, st we're going to have a quick recap of workshop, one
+
+22
+00:04:39.160 --> 00:05:00.469
+hugo bowne-anderson: to make sure everyone's up to date and chat about the homework. We're going to get Kevin actually to show his homework solution and chat about it. Briefly, then, what we're going to do is deploy our Mvp. On modal. Now, as I said, this workshop really is about we want to get through, do some prompt engineering stuff and how that is situated in the Llm. Software development lifecycle.
+
+23
+00:05:00.470 --> 00:05:10.070
+hugo bowne-anderson: But I want to make sure that everyone in week one is really able to get up and running to have something deployed so that we can iterate on things that are deployed.
+
+24
+00:05:10.320 --> 00:05:32.219
+hugo bowne-anderson: Then, in the final half hour after we do our prompt engineering workshop, Charles Fry, from Modal is going to come and give a talk on the general nature of building Llm. Applications on on Modal. Okay. Having said all that, the prompt engineering part is really focused on Api calls, inputs and outputs system user prompts and context structured outputs knobs. What's happening over over here?
+
+25
+00:05:32.570 --> 00:05:33.470
+hugo bowne-anderson: So
+
+26
+00:05:33.760 --> 00:06:03.540
+hugo bowne-anderson: what did we do in workshop? One, we saw what proof of concept purgatory can look like we learned about the AI and Llm. Software development Lifecycle discovered the 1st principles for the lifecycle. And then we saw the basic ways of how to get out of poc purgatory, which, as we just saw with Alex, really involved monitoring and observability, and having a quick iterative loop to improve improve your app. And then we got into poc purgatory right? And we did that. So these are the principles
+
+27
+00:06:03.540 --> 00:06:06.230
+hugo bowne-anderson: we we discussed and the lifecycle there.
+
+28
+00:06:06.260 --> 00:06:11.119
+hugo bowne-anderson: But we and these are the ways that we discussed getting getting out of it.
+
+29
+00:06:11.850 --> 00:06:12.640
+hugo bowne-anderson: But
+
+30
+00:06:13.460 --> 00:06:36.249
+hugo bowne-anderson: we got into it by essentially building a basic retrieval system where you would upload a Pdf, and you saw all the challenges associated with that, including the inability to actually inspect your system and see what's actually up there. So to that end what? I asked people. And so, yes, this is how we did it with, you know, all of these different tools.
+
+31
+00:06:37.180 --> 00:06:52.399
+hugo bowne-anderson: What I asked people to do was essentially to rip out lama Index and only to have an Llm. Api call. Now we kept it intentionally vague, and then clarified a few things in in the workshop. The thing is, we're not.
+
+32
+00:06:53.060 --> 00:06:55.470
+hugo bowne-anderson: We're here to help you think about
+
+33
+00:06:55.490 --> 00:07:16.010
+hugo bowne-anderson: building AI systems. And to support that right? So what I want to do is encourage conversation and robust thinking around how we build these systems. So that's why we kept it slightly vague, intentionally, but then engaged when people ask questions. But I appreciate we didn't tell you whether you know, to keep doing the
+
+34
+00:07:16.010 --> 00:07:44.369
+hugo bowne-anderson: the chunking or to just have a single call. And these types of things. So it was interesting to see a variety of different solutions. And it isn't like a late coding challenge. Or you know, a math problem where there's 1 obvious right solution, right? There are many different things you can do here. So without further ado, I was chatting with Kevin Markham, and he had a solution which was which was super nice. So I'm wondering, Kevin, if you wanted to share your solution with us now.
+
+35
+00:07:46.170 --> 00:07:48.649
+Kevin Markham: Sure happy to do it. Can you hear me, Hugo?
+
+36
+00:07:48.780 --> 00:07:50.030
+hugo bowne-anderson: I can. You sound great?
+
+37
+00:07:50.030 --> 00:07:51.030
+Kevin Markham: Great Great Great Great.
+
+38
+00:07:51.030 --> 00:07:51.950
+hugo bowne-anderson: Out of Asheville.
+
+39
+00:07:52.608 --> 00:08:03.749
+Kevin Markham: Yes, yes, indeed. Hi, I'm Kevin. I from data school. I've been teaching data science about 10 years, and I'm in Asheville, North Carolina. Did you want me to share my screen, or just.
+
+40
+00:08:03.750 --> 00:08:06.990
+hugo bowne-anderson: Yeah, if you're able to. I'm just giving and privileges. I think.
+
+41
+00:08:07.130 --> 00:08:13.290
+Kevin Markham: Sure. Hold on here, let's see. Share
+
+42
+00:08:17.500 --> 00:08:27.449
+Kevin Markham: alright, share alright. Can you see that.
+
+43
+00:08:27.450 --> 00:08:28.680
+hugo bowne-anderson: Yep. Looks great.
+
+44
+00:08:28.940 --> 00:08:56.810
+Kevin Markham: Yep. I just decide I put on just created a gist of it, and I'll just talk briefly about it. Rather than walking through. I just put a little steps here at the top of my gist, saying, just to remind myself of all the details I went through, but just to kind of get into the bottom line more quickly. There's the 2 main changes I made. One is just in this process. Pdf.
+
+45
+00:08:57.060 --> 00:09:00.039
+Kevin Markham: is this text large enough, or do I need to make it larger?
+
+46
+00:09:00.280 --> 00:09:01.199
+hugo bowne-anderson: It looks good to me.
+
+47
+00:09:01.200 --> 00:09:21.370
+Kevin Markham: Okay, in this process, Pdf function. Originally we were extracting the text and then generating an index and returning that. And I just changed it literally just to return the extracted text. And then that process Pdf
+
+48
+00:09:21.670 --> 00:09:32.099
+Kevin Markham: gets called from query, Pdf, right here. And previously this was returning an index. And
+
+49
+00:09:32.643 --> 00:09:37.009
+Kevin Markham: and I just changed it. Okay, you're returning the extracted text only.
+
+50
+00:09:37.230 --> 00:09:39.950
+Kevin Markham: And then, whereas in
+
+51
+00:09:40.310 --> 00:10:02.340
+Kevin Markham: the original code you were using the query and then passing it essentially to Llama Index to send out the query and get back a result and give it to you. My solution was just to call Openai directly. So here's kind of the boilerplate code for calling
+
+52
+00:10:02.340 --> 00:10:21.770
+Kevin Markham: Openai, and I just use Gpt. 4 0 Mini, for no other reason than it's fast and relatively cheap. And then for the content sent by the user. I just put in this prompt variable which I defined up here, and then the prompt was an F string.
+
+53
+00:10:21.850 --> 00:10:48.939
+Kevin Markham: And the F string is just here's my question about a Linkedin profile, and we're going to insert the query which came in, which is what the user typed in or we typed in. Rather. Here's my question about a Linkedin profile. Please answer only using this document, which is the text of that Linkedin profile and extracted text entered that variable there
+
+54
+00:10:48.970 --> 00:10:59.170
+Kevin Markham: and then Openai sends back a response. And this is the standard way, apparently, to get back the content of that response as a string.
+
+55
+00:10:59.190 --> 00:11:22.980
+Kevin Markham: and then we returned it, and we also logged it. So that's kind of the high level. Well, I guess not. That high, level answer to what I did. I just sent in the entire text to the Linkedin profile because I didn't see a need to chunk it like it's very small. This would be very different if it was a gigantic document, or if
+
+56
+00:11:23.787 --> 00:11:49.430
+Kevin Markham: we had a ton of documents, and it needed to identify the correct document like in Rag, but given the size of the document, this seemed to be sufficient, and it worked fine. I only test. I didn't test variations of the prompt, but it worked fine. So I went with it, and then the only other thing of note is changing the
+
+57
+00:11:49.450 --> 00:12:15.490
+Kevin Markham: logs to also include the prompt. So that we're logging that explicitly. And then to do that, you need to change some code in log interaction and need to change some code in the init. dB, yeah, so that's that's basically everything I did just seemed like a simple solution. So that's what I went with.
+
+58
+00:12:16.600 --> 00:12:41.349
+hugo bowne-anderson: Amazing. I really like that solution for several reasons. The 1st is the simplicity of it, and the fact that you realize just for a Linkedin profile. And, as you said, if you had a far larger corpus, perhaps you would need to use rag or some, you know, more sophisticated aspects of retrieval, but that you can just do it with a single prompt right? Yeah, is incredibly important. And the fact now that we don't need to, you know.
+
+59
+00:12:41.510 --> 00:12:59.330
+hugo bowne-anderson: inject something or figure out how to intercept the prompt. And we can actually log and have observability into it. So that was really the intention. Behind this, this homework some people did chunking, and all of those types of things which is also also great, and may serve you well when you want
+
+60
+00:12:59.480 --> 00:13:06.082
+hugo bowne-anderson: something which can, you know, work with larger documents and that type of thing as well? I would be interested. What type of
+
+61
+00:13:07.040 --> 00:13:19.490
+hugo bowne-anderson: failure modes you you get with this and part of the the homework after workshop 2 will be to play around with different prompts and see see what failure modes you get. You get with each. But thanks for presenting Kevin. Sure.
+
+62
+00:13:19.490 --> 00:13:22.737
+Kevin Markham: From really clear and and understandable great.
+
+63
+00:13:23.520 --> 00:13:28.099
+hugo bowne-anderson: Great. So Alfonso has a question, is there any fundamental difference between
+
+64
+00:13:29.070 --> 00:13:34.329
+hugo bowne-anderson: sending the data Pdf text in this case into the system prompt
+
+65
+00:13:34.460 --> 00:13:37.750
+hugo bowne-anderson: or the user prompt. My cheeky answer is.
+
+66
+00:13:38.130 --> 00:14:03.599
+hugo bowne-anderson: you know, try it, try it and see. And I think there probably is, although it may be negligible in a lot of cases, I think. The reason we send it into the user prompt is often we'll want to send like different Pdfs and different data. So stuff that changes with respect to queries and requests, you usually put in the user prompt and stuff that stays constant over the software you you put in the system prompt. That's the that's the.
+
+67
+00:14:03.770 --> 00:14:11.009
+AlfonsoZalazar: Yeah. Sorry, like. My question is because I did the same as Kevin. But I am sending the data into the system prompt.
+
+68
+00:14:11.170 --> 00:14:23.870
+AlfonsoZalazar: And then, like, just the user problem is just a question, you know, and saying, you know, like, you're receiving this date of the Pdf, just answer the question of the user based on this data, like with question marks and so on. And then, you know, Noah.
+
+69
+00:14:24.090 --> 00:14:31.990
+AlfonsoZalazar: don't answer any question that is not related to this, and it worked pretty well. So that's what that's why, you know, I my question was.
+
+70
+00:14:32.270 --> 00:14:39.319
+hugo bowne-anderson: Yeah, so it may work well in in a bunch of cases. So as I said, the heuristic I use is things that will change over the software.
+
+71
+00:14:39.540 --> 00:14:50.680
+hugo bowne-anderson: the use of the software put in the user, prompt and stuff that stays constant, such as you're a helpful assistant that does XY and and Z, put in, put in the system, prompt. But to be honest with a lot of these models, it's not even clear how
+
+72
+00:14:50.880 --> 00:14:59.419
+hugo bowne-anderson: Openai or or Gbt, whichever model will concatenate the system and user prompt how they actually use it. So that's the heuristic
+
+73
+00:14:59.530 --> 00:15:01.379
+hugo bowne-anderson: I tend to use.
+
+74
+00:15:02.060 --> 00:15:07.039
+hugo bowne-anderson: So let's now, this is, this is fun.
+
+75
+00:15:11.580 --> 00:15:13.910
+hugo bowne-anderson: Can you all see my screen again?
+
+76
+00:15:16.620 --> 00:15:18.719
+hugo bowne-anderson: So what we're gonna do now is.
+
+77
+00:15:18.720 --> 00:15:21.109
+biodun: But we're seeing discord, though your discord.
+
+78
+00:15:21.110 --> 00:15:26.450
+hugo bowne-anderson: Oh, Wild, isn't that interesting?
+
+79
+00:15:26.980 --> 00:15:32.289
+hugo bowne-anderson: Okay, thank you for telling me that.
+
+80
+00:15:32.470 --> 00:15:35.550
+hugo bowne-anderson: Can you say, let's deploy to dot dot dot modal.
+
+81
+00:15:35.550 --> 00:15:36.440
+biodun: Yes, yes.
+
+82
+00:15:36.440 --> 00:15:50.500
+hugo bowne-anderson: Right? So what we're going to do now is we're going to deploy our application to Modal. Okay? And if you set up modal, that's cool. I mentioned Workshop 2 Channel. If you haven't also cool and you can do it.
+
+83
+00:15:50.810 --> 00:16:02.810
+hugo bowne-anderson: do it after the fact. But essentially, what we do is we have modal, and we have the app running on modal. And then we have a front end ui, which a user can use. And so I just want to tell you a few things so
+
+84
+00:16:02.990 --> 00:16:06.382
+hugo bowne-anderson: modal the way they that they frame frame it.
+
+85
+00:16:06.930 --> 00:16:19.749
+hugo bowne-anderson: it's really wonderful. It's what what we call coders infrastructure. So it allows me essentially, with decorators in a very pythonic way, to define the infrastructure. I want to spin up
+
+86
+00:16:20.170 --> 00:16:32.330
+hugo bowne-anderson: applications running on modal as quickly as possible, and we'll get a sense of how that works. There's auto scaling for inference, data jobs, all types of stuff. I'm not quite sure what
+
+87
+00:16:32.780 --> 00:16:39.409
+hugo bowne-anderson: Charles is going to go into today, but I presume he'll show us some of the examples
+
+88
+00:16:39.570 --> 00:16:59.280
+hugo bowne-anderson: and documentation. And Charles and his team just do such a wonderful job of providing interesting and useful use cases in their examples that are really up to date. So in terms of one of my favorite developer relations teams is at Modal, and you'll see, you know, for example, this is
+
+89
+00:16:59.420 --> 00:17:29.360
+hugo bowne-anderson: a dog called Qwerty. That was, I think, a dog of one of Charles's roommates at college, and what they've done is fine-tuned, the flux model on Qwerty. So with several images of this dog, you can, you can get it up and up and running. So this is a nice example of fine tuning that we may actually go through later in the course. But you can see all types of stuff here you can serve diffusion models create music. You can sandbox a Langraf agents code, which is interesting, because, of course, in the conversation with Alex, we just saw how Langraph
+
+90
+00:17:29.850 --> 00:17:35.049
+hugo bowne-anderson: you know, to to help with visibility and orchestration of
+
+91
+00:17:35.430 --> 00:17:39.589
+hugo bowne-anderson: agentic and multi agentic systems now is is being increasingly used.
+
+92
+00:17:41.020 --> 00:17:42.870
+hugo bowne-anderson: In addition to all of this.
+
+93
+00:17:43.670 --> 00:17:49.260
+hugo bowne-anderson: Once you complete the form, you'll have $500 in credits, or 530, because they they give
+
+94
+00:17:49.620 --> 00:17:59.280
+hugo bowne-anderson: 30 free, and then you'll re up to 500. So please do that. And Charles and his team are quite, quite quick at doing that. Okay, so
+
+95
+00:17:59.500 --> 00:18:05.710
+hugo bowne-anderson: once you're logged into modal. What I'm going to get you to do is go into your codespace. And first, st
+
+96
+00:18:06.910 --> 00:18:13.190
+hugo bowne-anderson: I'm going to source.vn been activate to get my
+
+97
+00:18:14.960 --> 00:18:22.449
+hugo bowne-anderson: environment activated. I just want to make sure that I have modal installed. We put in the requirements. But it doesn't. Didn't always come through. So I'm going to pip install modal.
+
+98
+00:18:23.340 --> 00:18:25.519
+hugo bowne-anderson: Oh, yeah. Requirement already satisfied?
+
+99
+00:18:25.810 --> 00:18:26.950
+hugo bowne-anderson: Very good.
+
+100
+00:18:27.350 --> 00:18:33.679
+hugo bowne-anderson: And then I'm going to CD into workshops.
+
+101
+00:18:34.100 --> 00:18:37.950
+hugo bowne-anderson: Workshop 2 deploy. Okay.
+
+102
+00:18:38.290 --> 00:18:48.519
+hugo bowne-anderson: let's just have a look at what's in there. We've got the app front end, and we have the modal wrapper. So let's just have a look at the app front end. Oh, and I just want to be clear. I think.
+
+103
+00:18:52.240 --> 00:18:57.970
+hugo bowne-anderson: So, as I said earlier, this course really is to help you build production
+
+104
+00:18:58.570 --> 00:19:05.449
+hugo bowne-anderson: AI systems and think about how to orchestrate them. And the iterative process. Okay? So in the Builders Club and in
+
+105
+00:19:07.270 --> 00:19:10.369
+hugo bowne-anderson: on discord, and in some of the workshops, we'll go through and and
+
+106
+00:19:10.530 --> 00:19:16.840
+hugo bowne-anderson: and like talk about a lot of code together. But we won't always do that. And the design choice
+
+107
+00:19:17.140 --> 00:19:18.699
+hugo bowne-anderson: behind that is that
+
+108
+00:19:19.220 --> 00:19:39.079
+hugo bowne-anderson: it's not the best use of our time to talk about Apis in a workshop. This is stuff that now, especially with AI assisted coding. We can all really do ourselves, and learn otherwise, of course, very happy to answer questions about it. But going through significant chunks of code together isn't isn't the best use of our time, but very happy to chat about all of that on discord.
+
+109
+00:19:40.010 --> 00:19:46.229
+hugo bowne-anderson: All we have here essentially, is the app that we built previously. Okay.
+
+110
+00:19:46.350 --> 00:20:07.089
+hugo bowne-anderson: so we have the front end app there with gradio. Now, what happens in modal wrapper? We're doing a few things here. We're importing the front end app. We're creating the image right of what we, what we want, what packages we want there. Now then, we define the modal app container.
+
+111
+00:20:07.360 --> 00:20:14.489
+hugo bowne-anderson: Then we create the the function and get our secrets. Define the amount of containers.
+
+112
+00:20:15.620 --> 00:20:19.140
+hugo bowne-anderson: define how many maximum inputs concurrent users
+
+113
+00:20:19.280 --> 00:20:28.169
+hugo bowne-anderson: we're going to allow. And then we essentially like wrap this gradio app inside Fastapi, because that plays a bit more nicely with
+
+114
+00:20:28.490 --> 00:20:36.547
+hugo bowne-anderson: with modal. But once again, these details, like they're interesting, but aren't so important. And then we mount the app.
+
+115
+00:20:37.150 --> 00:20:58.329
+hugo bowne-anderson: and well, yeah, we we do this for convenience to redirect the route, and we'll see see what happens when when we launch this, then what we do is we define the local entry point which allows us to serve things locally and debug there. I'm just going to zoom out slightly again. I'm sorry.
+
+116
+00:20:58.450 --> 00:21:04.730
+hugo bowne-anderson: I just want to see if there's anything else in there, and I'm just also going to change the name of this app.
+
+117
+00:21:06.380 --> 00:21:12.080
+hugo bowne-anderson: And the reason I'm doing that is because I've run it previously with that name, and what it will do is it will.
+
+118
+00:21:12.200 --> 00:21:20.110
+hugo bowne-anderson: It will reuse the container that I built there essentially. And I don't want to do that because I want to demonstrate this more to you all. So
+
+119
+00:21:20.530 --> 00:21:43.030
+hugo bowne-anderson: that's the basics of the modal app, and if you're interested in using modal a lot more, of course you have $530 credit as part of this course, Charles will tell you certain things, but Modal has a vibrant, slack community. You can ask on on our course discord definitely, but you'll probably get a better answer more quickly. If you join modal slack as well, for what? For? What? That's worth. So
+
+120
+00:21:43.970 --> 00:21:48.799
+hugo bowne-anderson: what do I want to do? A pip installed modal, and I want to make sure that I'm connected
+
+121
+00:21:49.100 --> 00:21:53.430
+hugo bowne-anderson: to my modal instance, and I think I do that with modal token new.
+
+122
+00:21:56.160 --> 00:22:00.679
+hugo bowne-anderson: Okay, please go to this URL manually, manually, and complete the flow
+
+123
+00:22:02.460 --> 00:22:09.879
+hugo bowne-anderson: great. So I'm going to create a token, and that will authorize my codespace to have access to my modal account. Essentially
+
+124
+00:22:10.500 --> 00:22:14.119
+hugo bowne-anderson: so my client has been granted. Granted a token and ready to use. So let's have a look
+
+125
+00:22:14.940 --> 00:22:22.340
+hugo bowne-anderson: awesome. This is super cool, and I just want to do modal help just to see what what's up. So let's just have a look at the
+
+126
+00:22:22.710 --> 00:22:23.980
+hugo bowne-anderson: capabilities here.
+
+127
+00:22:24.350 --> 00:22:26.690
+hugo bowne-anderson: So super cool.
+
+128
+00:22:27.240 --> 00:22:30.699
+hugo bowne-anderson: This is nice. Modal is the fastest way to run code in the cloud. Great
+
+129
+00:22:31.496 --> 00:22:34.109
+hugo bowne-anderson: like a bit of marketing in my terminal.
+
+130
+00:22:34.870 --> 00:22:44.579
+hugo bowne-anderson: we can deploy a modal application. Okay, we can serve it so that would serve it locally, or I need to keep my local shell open to interact with it.
+
+131
+00:22:45.003 --> 00:22:47.189
+hugo bowne-anderson: We can launch it. We can run it.
+
+132
+00:22:47.420 --> 00:22:51.170
+hugo bowne-anderson: All of these things mean slightly different things. What we're going to do is deploy it today.
+
+133
+00:22:52.910 --> 00:22:55.769
+hugo bowne-anderson: We can onboard with setup.
+
+134
+00:22:56.836 --> 00:23:02.489
+hugo bowne-anderson: We can, you know, manage, deployed apps, run containers, etc. So
+
+135
+00:23:03.110 --> 00:23:05.670
+hugo bowne-anderson: what we need to do is
+
+136
+00:23:07.685 --> 00:23:17.520
+hugo bowne-anderson: oh, Z Kong has a great question. No, the deploy folder is different to the one in workshop one. So please go to workshop 2 great question, and we probably should delete that one in workshop, one
+
+137
+00:23:20.770 --> 00:23:29.460
+hugo bowne-anderson: great. So you'll notice that we put in here Openai secret?
+
+138
+00:23:32.500 --> 00:23:37.400
+hugo bowne-anderson: And so I just want to make sure. I wonder if it's modal secret
+
+139
+00:23:38.420 --> 00:23:41.060
+hugo bowne-anderson: list. Yes, so you can see
+
+140
+00:23:41.370 --> 00:23:50.399
+hugo bowne-anderson: I have a bunch of secrets already here, so I have a hugging face, one I have weights and biases. I have another hugging face, one I have. Open AI, and then
+
+141
+00:23:50.780 --> 00:23:58.580
+hugo bowne-anderson: I have another open. AI one. So what the way you get your secrets working are? I'm going to put this
+
+142
+00:23:59.980 --> 00:24:01.230
+hugo bowne-anderson: in discord.
+
+143
+00:24:06.030 --> 00:24:11.820
+hugo bowne-anderson: You go to modal.com slash secrets, and you go to create new secret. This is pretty cool, right?
+
+144
+00:24:12.060 --> 00:24:15.040
+hugo bowne-anderson: So you'll be doing open AI,
+
+145
+00:24:15.560 --> 00:24:23.070
+hugo bowne-anderson: and you literally put the secret in there and click done. Okay? And what that means is that now.
+
+146
+00:24:23.320 --> 00:24:30.150
+hugo bowne-anderson: whenever I deploy or run something on modal here, and I have this keyword argument.
+
+147
+00:24:30.650 --> 00:24:46.110
+hugo bowne-anderson: It will get the open AI key I put in there from modal secrets. And you just. I'm sorry you need to make sure that the name here the name of the secret matches the name here. So were I to do this again, it would be number 2. Okay, so you need to make sure that's the case.
+
+148
+00:24:46.660 --> 00:24:50.279
+hugo bowne-anderson: Now, once we've done all of that.
+
+149
+00:24:51.700 --> 00:24:56.420
+hugo bowne-anderson: what we can do is deploy our app so
+
+150
+00:24:57.510 --> 00:25:04.899
+hugo bowne-anderson: hopefully, the demo gods aren't as spiteful and vengeful today as they're known to be. So I'm going to do modal deploy modal wrapper.
+
+151
+00:25:05.260 --> 00:25:06.369
+hugo bowne-anderson: dot PY.
+
+152
+00:25:17.830 --> 00:25:21.049
+hugo bowne-anderson: Okay, the moment of truth.
+
+153
+00:25:21.760 --> 00:25:22.680
+hugo bowne-anderson: Hey?
+
+154
+00:25:24.890 --> 00:25:25.690
+hugo bowne-anderson: Huh?
+
+155
+00:25:27.560 --> 00:25:28.465
+hugo bowne-anderson: Fascinating
+
+156
+00:25:29.670 --> 00:25:45.259
+hugo bowne-anderson: number of endpoints. This is hilarious. So I mean, this is, yeah. This is great. I'm going to. So I'm sorry I just switched to without mentioning it to my modal dashboard, where I can see all my apps. This is this is wonderful. So what I want to do is
+
+157
+00:25:47.700 --> 00:25:49.199
+hugo bowne-anderson: kill some of my apps.
+
+158
+00:25:52.520 --> 00:25:58.369
+hugo bowne-anderson: So I'm just gonna I don't need any of these. A lot of these were were tests. I actually the 1st who I might need. But
+
+159
+00:26:02.700 --> 00:26:10.170
+hugo bowne-anderson: okay, so I have 5 items live now. So hopefully, Modal will know that I'm going to try to deploy again.
+
+160
+00:26:10.370 --> 00:26:11.740
+hugo bowne-anderson: and we'll see what's up?
+
+161
+00:26:16.930 --> 00:26:28.600
+hugo bowne-anderson: Wow! Cool. So that that happened very quickly. Right? So what we can see here is it created the mount created the web function. Oh, no, I'm sorry I'm looking below, created the mount to the function
+
+162
+00:26:29.330 --> 00:26:40.120
+hugo bowne-anderson: and serve the app. Here we can view the deployment there. I'm in all my supreme impatience. I want to have a look at the app super quickly. So I do command click to
+
+163
+00:26:40.940 --> 00:26:41.929
+hugo bowne-anderson: open this.
+
+164
+00:26:51.850 --> 00:26:57.990
+hugo bowne-anderson: Okay, cool. So what you can see there is that this is the app that we built the other day.
+
+165
+00:26:58.651 --> 00:27:12.510
+hugo bowne-anderson: What's interesting is the reason. If you did modal serve and modal run, you'd see it still churning away in your command line. Now, what's super cool now is that this is deployed so that once I exit the codespace, or if you did this locally. Once you close your laptop.
+
+166
+00:27:12.550 --> 00:27:29.719
+hugo bowne-anderson: this will still be running. Now you can send this to friends and family. You can redirect the URL to something different. If you want, you can send it to colleagues. After doing this you have an app up and running right? So it is. It's totally deployed. Now what I'm going to do is I'm going to drop
+
+167
+00:27:30.140 --> 00:27:38.110
+hugo bowne-anderson: something here a Pdf. Just to test it. And I'm going to just show you this. Pdf like, can you see Preview? Pdf, or am I just sharing chrome still.
+
+168
+00:27:41.612 --> 00:27:42.949
+Caleb Tutty: Yep, yep, we can see it.
+
+169
+00:27:43.260 --> 00:27:47.840
+hugo bowne-anderson: Fantastic. So this is, I'm at the Scipy Conference currently. And this is
+
+170
+00:27:47.950 --> 00:27:57.409
+hugo bowne-anderson: these are the slides from someone at Nvidia, called Alison Ding. I don't know why I chose this as if, like Nvidia needs more more press to be honest. But you know
+
+171
+00:27:58.248 --> 00:28:05.430
+hugo bowne-anderson: then's the break, so I'm going to ask, who? Whose slides are these
+
+172
+00:28:11.130 --> 00:28:17.519
+hugo bowne-anderson: Alison Ding slides? That's pretty cool. Where does Alison Ding? Who made these slides work
+
+173
+00:28:27.360 --> 00:28:33.580
+hugo bowne-anderson: interesting? Okay, that's nice. Because we've got like, it's kind of right. But
+
+174
+00:28:33.790 --> 00:28:51.189
+hugo bowne-anderson: it doesn't mention Nvidia, which it probably probably should. Okay, so that's nice. We've seen it does something nice. And being able to extract the name from the slide with all that information is cool. What I'm going to do now is so we've seen it. It works. We're going to view the deployment in Modal just to see what's up there.
+
+175
+00:28:56.610 --> 00:29:03.860
+hugo bowne-anderson: Great. So we can see this was deployed 3 min ago.
+
+176
+00:29:04.900 --> 00:29:09.703
+hugo bowne-anderson: Pretty incredible that we can do this so quickly. To be honest, I mean, and we can see
+
+177
+00:29:10.320 --> 00:29:16.580
+hugo bowne-anderson: the calls I've made there, and I'm going to make one more just to
+
+178
+00:29:20.810 --> 00:29:24.830
+hugo bowne-anderson: what does Alison say about synthetic data? In these slides?
+
+179
+00:29:32.060 --> 00:29:39.010
+hugo bowne-anderson: Synthetic data generation can be easily integrated into existing pipelines with Python api synthetic Fata generation includes
+
+180
+00:29:39.500 --> 00:29:48.679
+hugo bowne-anderson: prompt generation, dialog, generation, entity, classification great, that was all all in her talk. So that's that's fantastic. Sorry. The zoom toolbar is getting in the way?
+
+181
+00:29:50.020 --> 00:29:53.169
+hugo bowne-anderson: So let's just have a look now. Oh, where is it?
+
+182
+00:29:54.370 --> 00:29:56.209
+hugo bowne-anderson: Where is the app? Man
+
+183
+00:30:00.177 --> 00:30:05.092
+hugo bowne-anderson: here? Okay, yep. So we can see that we had our our 4th call there. Okay,
+
+184
+00:30:06.800 --> 00:30:35.050
+hugo bowne-anderson: so that's cool. So that's really all I wanted to show you with respect to Modal at the moment. In an hour Charles Fry, from Modal will come and show you a lot of different, wonderful things you can do there. But that's the basics of getting what we've built so far up and running on Modal, and you all can. That was the app using lama index. So you can all play around with getting your app from homework, one up and running there as well, and your ability to inspect the prompt. And all of those things is super cool also.
+
+185
+00:30:35.679 --> 00:30:39.269
+hugo bowne-anderson: So what I want to do now is move on
+
+186
+00:30:39.390 --> 00:30:52.470
+hugo bowne-anderson: to Api calls and knobs, such as temperature and top P. But before that I'd just love to know if there are any questions or anything people want to discuss right now.
+
+187
+00:31:00.690 --> 00:31:04.099
+hugo bowne-anderson: All right. Well, let's rock and roll.
+
+188
+00:31:04.260 --> 00:31:07.460
+hugo bowne-anderson: So now we're in notebook
+
+189
+00:31:07.690 --> 00:31:20.159
+hugo bowne-anderson: workshops, 2 in the notebook, and, as always, I've already selected my kernel here. But you'll want to select kernel, and then I'll actually just demonstrate it with another notebook just because I want to make sure everyone's up and running.
+
+190
+00:31:24.920 --> 00:31:28.080
+hugo bowne-anderson: You select kernel, and it will ask you
+
+191
+00:31:28.190 --> 00:31:35.729
+hugo bowne-anderson: if you want to install Jupyter and Ipython first, st and you do that, and then you'll select this kernel, the AI Sdlc, July 2025.
+
+192
+00:31:36.090 --> 00:31:36.900
+hugo bowne-anderson: Okay?
+
+193
+00:31:38.980 --> 00:31:39.920
+hugo bowne-anderson: And so
+
+194
+00:31:41.060 --> 00:31:47.239
+hugo bowne-anderson: what we're going to do now is, as as you know, we've we haven't, except in the homework. We've barely interacted with
+
+195
+00:31:47.240 --> 00:32:14.170
+hugo bowne-anderson: with Apis ourselves. So the rest of this session, before Charles joins is really to get a sense of how to interact with Apis user and system prompts, then tuning knobs and thinking about structured output and these types of things. And next week we'll really get into the weeds with more productiony stuff like evaluation, observability, and monitoring. But we wanted to make sure everyone's level set with respect to how we're working with Apis. So the goals here really are to have an introduction to Lm. Apis and prompt engineering
+
+196
+00:32:14.230 --> 00:32:24.899
+hugo bowne-anderson: understanding Api knobs, such as temperature. Max. Token system prompts, think through extracting structured data and then extending the Pdf query app by optimizing prompts.
+
+197
+00:32:25.200 --> 00:32:31.459
+hugo bowne-anderson: So in the 1st section, we're going to explore how to interact with Apis. And so
+
+198
+00:32:31.760 --> 00:32:43.990
+hugo bowne-anderson: we've already set up our Api, so we don't need need to do that. But we're going to see how to make basic Api calls, send requests to the model and start customizing model behavior. So
+
+199
+00:32:44.190 --> 00:32:47.840
+hugo bowne-anderson: you'll see in the file. This will be in
+
+200
+00:32:48.540 --> 00:32:57.359
+hugo bowne-anderson: in the notebook in your version. This will be Xxx. What I want you to do is put your open AI key here, and then your anthropic key below it. Okay? And
+
+201
+00:32:58.120 --> 00:33:00.509
+hugo bowne-anderson: I wonder I'm going to clear all output
+
+202
+00:33:00.810 --> 00:33:05.719
+hugo bowne-anderson: and restart the kernel. I mean the you know famous last words right in Python land. But
+
+203
+00:33:06.450 --> 00:33:08.260
+hugo bowne-anderson: I won't click run all yet, though.
+
+204
+00:33:08.728 --> 00:33:12.730
+hugo bowne-anderson: And so I'm going to execute this now great
+
+205
+00:33:12.940 --> 00:33:23.240
+hugo bowne-anderson: and then. What I'm going to do is I'm going to use the Openai Api, where I set up the client, and then I use the completion endpoint
+
+206
+00:33:23.910 --> 00:33:26.899
+hugo bowne-anderson: to get a response to
+
+207
+00:33:29.600 --> 00:33:33.680
+hugo bowne-anderson: the prompt. Tell me a joke, and so what I'm doing here. You may have seen.
+
+208
+00:33:33.840 --> 00:33:42.600
+hugo bowne-anderson: particularly if you've used these Apis directly before I'm specifying the message. And I'm specifying the role. So usually, the user is the role.
+
+209
+00:33:42.750 --> 00:33:46.279
+hugo bowne-anderson: If you want to put a system prompt, the system will be the role. And when
+
+210
+00:33:47.340 --> 00:33:50.070
+hugo bowne-anderson: the model returns a response.
+
+211
+00:33:50.240 --> 00:34:15.720
+hugo bowne-anderson: the role will be assistant there. Okay, now, to my point, earlier, we can chat about this in discord. But unlike this Api, we don't really need to go through all the details. Okay? Because it's it's relatively standard. It's documented. And AI assisted. Coding will write this stuff for you. Having said that some Chat Gpt models don't know its current. Api. They only know a previous one which is eminently infuriating. So let's now
+
+212
+00:34:17.150 --> 00:34:21.489
+hugo bowne-anderson: print the result.
+
+213
+00:34:22.290 --> 00:34:24.810
+hugo bowne-anderson: So we get out this chat completion message.
+
+214
+00:34:25.070 --> 00:34:32.459
+hugo bowne-anderson: The content was, why couldn't the bicycle sorry? The reply was, why couldn't the bicycle stand up by itself? Because it was too tired.
+
+215
+00:34:32.570 --> 00:34:35.570
+hugo bowne-anderson: brilliant, absolutely brilliant? Dad joke there.
+
+216
+00:34:36.070 --> 00:34:50.170
+hugo bowne-anderson: and the amount of dad jokes that I mean. I don't know whether the Internet the majority of jokes are dad jokes for some reason, but the way these Llm. Spit out Dad jokes is absurd. The other thing I want you to notice is
+
+217
+00:34:51.163 --> 00:34:52.550
+hugo bowne-anderson: even like
+
+218
+00:34:53.580 --> 00:35:06.890
+hugo bowne-anderson: this. Api. I understand it, but it's pretty annoying the fact that I have to like. Find an attribute. Then slice it, then get out the message, and even then I still don't get out like the string, the string response. I understand there's a lot of metadata that they want to
+
+219
+00:35:07.000 --> 00:35:23.820
+hugo bowne-anderson: want to put out there, but it is it is quite, quite frustrating, but we'll see how to get out the actual responses in a bit. I did. Eric. Ma. Has a lovely package called Llamabot, which essentially is a unified interface. The Internet is Dad, that that's
+
+220
+00:35:24.300 --> 00:35:27.100
+hugo bowne-anderson: that's 1 of the most amazing statements I've ever
+
+221
+00:35:27.340 --> 00:35:33.089
+hugo bowne-anderson: heard. So this is Lauren just posted this in in in discord. I
+
+222
+00:35:33.590 --> 00:35:41.229
+hugo bowne-anderson: I'm not quite sure what you mean. But I also like 110% agree. So that's something I need to need to think about.
+
+223
+00:35:41.390 --> 00:35:48.740
+hugo bowne-anderson: So, this is just an example of how to get a response. Right?
+
+224
+00:35:49.010 --> 00:35:51.560
+hugo bowne-anderson: So that's the user prompt. Now.
+
+225
+00:35:52.440 --> 00:35:56.840
+hugo bowne-anderson: we want to change system prompts right? And I'm going to use a toy example here
+
+226
+00:35:57.030 --> 00:36:14.750
+hugo bowne-anderson: where I'm going to say the system prompt is, you are Mario from Super Mario Brothers, answer, is Mario the assistant only. But there are case. I mean, this is a silly example. But let's say you're building a bot to help a marketing team like you would say in the system from you are a helpful marketing assistant, right? When Pastor and I built the
+
+227
+00:36:15.140 --> 00:36:27.469
+hugo bowne-anderson: the Discord Bot for over course transcripts. It's you are a helpful analyzer of workshops for students taking a course. And this type of stuff, right? So we'll be doing Super Mario here. But you know the
+
+228
+00:36:28.151 --> 00:36:32.849
+hugo bowne-anderson: you can. You can really do anything. So I'm gonna ask Mario to tell. Tell us a joke.
+
+229
+00:36:34.470 --> 00:36:39.300
+hugo bowne-anderson: Okay, why did the Cooper go to the doctor because he had a shellfish. Allergy?
+
+230
+00:36:40.720 --> 00:36:47.520
+hugo bowne-anderson: Ha, ha! Okay, that yeah, that's not great, I presume the coopers are the turtle dudes in super, Mario, but
+
+231
+00:36:47.710 --> 00:37:09.240
+hugo bowne-anderson: super wild stuff there, and you know there are other things you can ask. So I just wanted to make sure that we are getting getting. So I think Mario lives in the mushroom kingdom. But we'll see. Yeah, it's a me, Mario. And yeah, I probably shouldn't say that too much. I live in the mushroom kitchen kingdom with Princess Peach, and it's interesting. We've already seen, you know.
+
+232
+00:37:09.370 --> 00:37:11.080
+hugo bowne-anderson: a slight verbosity.
+
+233
+00:37:11.430 --> 00:37:30.129
+hugo bowne-anderson: because the only question was, Where do you live so he could just say, the mushroom kingdom. But you know these these systems are pretty chatty, right? Which is a challenge and something we'll get to like you do need to put guardrails around. How much, how much output they give as well. So that's like a basic 101 introduction to the Openai Api.
+
+234
+00:37:31.060 --> 00:37:36.609
+hugo bowne-anderson: Now we're going to explore the anthropic Api to access and interact with Claude.
+
+235
+00:37:36.900 --> 00:37:40.390
+hugo bowne-anderson: Now.
+
+236
+00:37:40.620 --> 00:37:49.170
+hugo bowne-anderson: it's it's relatively similar. But there are kind of different different details. Right? So what we'll see here, we've already defined the the key up above.
+
+237
+00:37:49.280 --> 00:37:58.550
+hugo bowne-anderson: We'll see that, you know the Api is slightly slightly different. I've defined the Max tokens here, so it doesn't doesn't blow out. We've defined temperature which we'll get to
+
+238
+00:37:59.080 --> 00:38:05.809
+hugo bowne-anderson: but we've defined the system prompt to be respond. Only in Yoda speak. So we've had
+
+239
+00:38:06.260 --> 00:38:10.529
+hugo bowne-anderson: Openai as Mario. Now we're going to have Claude as as Yoda. Okay.
+
+240
+00:38:13.790 --> 00:38:20.800
+hugo bowne-anderson: okay, so how are you today? Yoda, doing well. I am peaceful and wise. My day has been greetings to you. I offer
+
+241
+00:38:21.200 --> 00:38:31.640
+hugo bowne-anderson: fantastic sounds like sounds like Yoda Yoda to me, and once again. This is not like this is a list of a bunch of stuff, right? So to get out the actual text itself.
+
+242
+00:38:31.770 --> 00:38:38.880
+hugo bowne-anderson: you can slice it this way, and these things vary Api to Api. But a lot of the time you will want to extract the string
+
+243
+00:38:39.170 --> 00:38:43.229
+hugo bowne-anderson: once again. These types of things I usually use cursor or AI assisted coding
+
+244
+00:38:43.370 --> 00:39:00.389
+hugo bowne-anderson: to do so. I literally don't need to keep looking up the different Apis, and how to how to extract these things. So that was kind of a whirlwind tour of Openai Api and and the Claude Api with user prompts and and system prompts. Now because we've gone
+
+245
+00:39:00.520 --> 00:39:30.259
+hugo bowne-anderson: so far as to create a Mario Claude. Sorry a Mario Chat, Gbt. And a Yoda Claude. I mean, it makes sense to just generate a brief conversation between them to to see how they how they converse. Now we've done all this hard work. So what we're going to do mostly for fun, but to give a sense how you can get different things in interacting and build systems together. We're going to set up the characters where Openai is configured to respond. As Mario
+
+246
+00:39:30.260 --> 00:39:36.209
+hugo bowne-anderson: Anthropic is Yoda, we're going to have a loop where we have a seed set, so
+
+247
+00:39:36.220 --> 00:39:43.479
+hugo bowne-anderson: have a string where one of them opens the conversation. Then we're going to loop over call and response. And essentially okay.
+
+248
+00:39:43.870 --> 00:39:54.799
+hugo bowne-anderson: So what I've done is made the display slightly nicer with Ipython. I'm going to execute an HTML. I'm going to execute that. Then just show you what we're doing here is we're initializing
+
+249
+00:39:55.010 --> 00:40:05.310
+hugo bowne-anderson: the open AI Api and the anthropic. Then what we're doing is we've got our function to get the open AI response, and we're returning the content itself. So the string itself.
+
+250
+00:40:05.440 --> 00:40:08.380
+hugo bowne-anderson: Then we're defining a function to get
+
+251
+00:40:10.071 --> 00:40:17.039
+hugo bowne-anderson: the anthropic response as Yoda. And then what we're doing is, as I said, we're setting the seed of the 1st
+
+252
+00:40:17.930 --> 00:40:25.659
+hugo bowne-anderson: 1st statement or question from Mario, and then we're just doing a loop of 5. Where what we do is we send this message. We send it to
+
+253
+00:40:27.770 --> 00:40:33.339
+hugo bowne-anderson: Oh, interesting. So this will. Actually, the initial message will be from Claude.
+
+254
+00:40:37.790 --> 00:40:38.790
+hugo bowne-anderson: And it's just
+
+255
+00:40:39.550 --> 00:40:50.999
+hugo bowne-anderson: Hello! Where do you live? Even though it doesn't quite sound like sound like Yoda. And then we. So then we get the Mario response. Then we send that and get the Claude response and update the message and go round and around. So
+
+256
+00:40:51.870 --> 00:41:02.499
+hugo bowne-anderson: what happens? We have Mario saying, it's me, Mario. I live in the mushroom kingdom with my friends. So this is actually a wonderful, the only the message the user message there was, Hello! Where do you live?
+
+257
+00:41:05.170 --> 00:41:28.260
+hugo bowne-anderson: And Mario responded, it's me, Mario. I live in the mushroom kingdom with my friends, Luigi Princess Peach. We're always busy, you know. So it's actually an incredibly verbose response. So, as I said before, this is something we really need to keep in check a lot of the time. Then Yoda responds, hmm, Mario, you are in mushroom kingdom, live, you do, and so on. And then, you know, we see a conversation generated occasionally.
+
+258
+00:41:29.860 --> 00:41:30.800
+hugo bowne-anderson: Yeah.
+
+259
+00:41:31.640 --> 00:41:48.790
+hugo bowne-anderson: look, Mario's got Yoda on board to. Hmm, brave plumber, you are! Defeat, Bowser. We must. So he's got Yoda on board to go and defeat Bowser, which I think that's that's a huge win the forces of of light. I don't know enough about Star Wars, but I feel like having Yoda on your team to defeat Bowser would be would be super cool.
+
+260
+00:41:49.437 --> 00:42:01.939
+hugo bowne-anderson: So this is a toy example. But it gives a sense how you can use system prompts and user prompts and basic for loops to to generate conversations between between different different Apis.
+
+261
+00:42:02.750 --> 00:42:05.220
+hugo bowne-anderson: So I spoke to this earlier.
+
+262
+00:42:05.390 --> 00:42:06.130
+hugo bowne-anderson: But
+
+263
+00:42:07.300 --> 00:42:16.630
+hugo bowne-anderson: and we've talked about prompt iteration in user prompts. But we can also think about it in in system prompts and business business use cases. Right? So
+
+264
+00:42:16.860 --> 00:42:23.299
+hugo bowne-anderson: for example, when we think about taking Linkedin profiles and extracting
+
+265
+00:42:24.350 --> 00:42:37.279
+hugo bowne-anderson: structured output or structured information such as someone's name, job, title, years of experience, etc. We can, we can put that in the system prompt. Okay, so this is a case which
+
+266
+00:42:38.330 --> 00:42:45.189
+hugo bowne-anderson: so let's just, Curtis has a question, is the open AI
+
+267
+00:42:45.310 --> 00:42:53.249
+hugo bowne-anderson: Api set to temperature 0 by default. I actually don't know the answer, but Pastor seems to be answering it.
+
+268
+00:42:53.600 --> 00:42:56.839
+hugo bowne-anderson: Yeah, I think it is set to one the other thing, and I think we'll get to this.
+
+269
+00:42:57.510 --> 00:43:07.049
+hugo bowne-anderson: like Openai temperature goes from 0 to 2, whereas a lot of other Apis go from 0 to one. So there isn't even standardization around that which is a bit is a bit frustrating.
+
+270
+00:43:07.997 --> 00:43:11.282
+hugo bowne-anderson: But what we have here is
+
+271
+00:43:12.370 --> 00:43:29.700
+hugo bowne-anderson: We want to develop an an assistant that will take in resumes and extract key information and return it in structured Json. Okay, now, these days, we do have Json mode. I want to make that very clear, and that's what you want to use. But these are really examples of how you think about, you know.
+
+272
+00:43:30.110 --> 00:43:37.410
+hugo bowne-anderson: changing the prompts and iterating on prompts to do. Do this, do this type of thing right? So you could say, for example.
+
+273
+00:43:37.660 --> 00:43:46.529
+hugo bowne-anderson: you are an Hr. Assistant extract the following from the resume full name, current job, title, years of experience and top 3 skills format the response as as Json.
+
+274
+00:43:47.180 --> 00:43:57.279
+hugo bowne-anderson: And then you would give it something something like this or a Linkedin profile. So John DOE is a senior data scientist with 7 years of experience in Ml and AI top skills include XY, and and Z.
+
+275
+00:43:59.490 --> 00:44:08.380
+hugo bowne-anderson: So I wanted to say a bit more about what types of system prompts you. You may. You may want to use. Okay, as we've discussed, they define the role or persona of the language model.
+
+276
+00:44:09.810 --> 00:44:27.820
+hugo bowne-anderson: they can do lots of things. They can guide tone, they can guide structure and output style as well to match all types of needs. So there are role-based prompts. So what these will do will align the Llm. With a job function or persona such as customer support. So you could say you're helpful and empathetic. Customer service representative
+
+277
+00:44:27.960 --> 00:44:38.930
+hugo bowne-anderson: could have a recruiter. You're an Hr. Assistant extract, candidate details from resumes, and so on, could have a data analyst. You are a data analyst, interpret and explain the data provided.
+
+278
+00:44:39.230 --> 00:45:00.060
+hugo bowne-anderson: So these are role-based prompts. You can also have tone and style prompts right, which write in professional and concise tone, respond in a friendly and approachable way, technical and actually, Pastor and I played around with having more technical aspects of our transcript bot for this course as well.
+
+279
+00:45:00.810 --> 00:45:18.649
+hugo bowne-anderson: And then there are task specific prompts which direct the model to perform distinct actions or produce specific formats. So you can ask for structured output. You can ask for summarization, such as in bullet points. In particular, you can ask for, you know, extract compliance risks and that type of stuff.
+
+280
+00:45:18.890 --> 00:45:24.870
+hugo bowne-anderson: And then you can have creative prompts. And this is one way to slice prompts. Right?
+
+281
+00:45:27.470 --> 00:45:28.370
+hugo bowne-anderson: I
+
+282
+00:45:28.650 --> 00:45:44.499
+hugo bowne-anderson: I've just seen Laura's Laura's question. It's such a great question. Has anyone else had trouble getting Llms to produce text in distinct tone of voice that doesn't sound like smile or die. American corporatism drives me nuts.
+
+283
+00:45:46.210 --> 00:45:55.449
+hugo bowne-anderson: Yes, is the short answer. These models are incredibly American. Even when you get like tonal shifts.
+
+284
+00:45:55.650 --> 00:46:09.800
+hugo bowne-anderson: even when you can get the tone it will still be like, have a pleasantness about it. And I actually, I have friends in Germany who dislike Chat Gbt because they would prefer just a blunt, direct answer, right? Whereas as an Australian, I like a bit more of the, you know.
+
+285
+00:46:10.420 --> 00:46:11.465
+hugo bowne-anderson: hey?
+
+286
+00:46:12.830 --> 00:46:24.260
+hugo bowne-anderson: So you're absolutely right, Laura. I think with clever system prompting, you can get a long way, like 85 to 90% of the way. But it it can still be challenging
+
+287
+00:46:24.400 --> 00:46:26.765
+hugo bowne-anderson: one way. I've seen around this
+
+288
+00:46:27.920 --> 00:46:45.060
+hugo bowne-anderson: to get more consistent results than with prompting is by fine tuning. Right? So if you do fine tune. Your language models and do some form of style transfer. Having said that a lot of the time like the 90% is is enough for for most use cases.
+
+289
+00:46:45.450 --> 00:46:47.960
+hugo bowne-anderson: So I hope that's hope that's somewhat helpful.
+
+290
+00:46:51.340 --> 00:46:52.620
+nyx: Yep, thank you.
+
+291
+00:46:53.530 --> 00:46:59.130
+hugo bowne-anderson: And also creative prompting. And this is something I actually.
+
+292
+00:46:59.710 --> 00:47:18.010
+hugo bowne-anderson: I find, for brainstorming and content expansion. The way I think about like writing and drafting and working on on thinking is, you know, like an accordion. So periods of expansion and contraction, and I think, in terms of like riffing and getting new ideas. Creative prompting can be can be really useful.
+
+293
+00:47:18.240 --> 00:47:23.019
+hugo bowne-anderson: And I just wanted to say why this matters and this actually speaks to Laura's point. It isn't like
+
+294
+00:47:23.130 --> 00:47:25.579
+hugo bowne-anderson: it doesn't solve everything. But
+
+295
+00:47:25.700 --> 00:47:38.749
+hugo bowne-anderson: using these types of prompts thoughtfully can improve reliability and control output variability and ensure responses, fit the context of the task at hand once again. There isn't a science to it, right?
+
+296
+00:47:39.020 --> 00:47:47.020
+hugo bowne-anderson: There's barely an art to it. What I mean by that is, there's there's barely like a process we really know we really know. Well,
+
+297
+00:47:47.610 --> 00:47:50.190
+hugo bowne-anderson: currently, I am going to link to
+
+298
+00:47:52.730 --> 00:48:03.669
+hugo bowne-anderson: something by Sanders Schulhoff, and he gave a guest talk in the 1st cohort on prompt engineering in the software development lifecycle which I'll share with you all. It's actually in the notion, Wiki
+
+299
+00:48:05.450 --> 00:48:07.400
+hugo bowne-anderson: And this is.
+
+300
+00:48:08.390 --> 00:48:24.009
+hugo bowne-anderson: you know this is a year old, but it it really was the 1st systematic survey of prompt engineering techniques, and it has a bunch of interesting stuff around system prompts as well. So for people interested definitely definitely check it out and also in the spirit of like
+
+301
+00:48:24.310 --> 00:48:44.220
+hugo bowne-anderson: community, like, if there are people who are interested in reading this like, feel free to get together and set up a call and invite people from the course. And that type of stuff as well, that's just an idea about something we've seen in previous cohorts kind of self organizing groups of people interested in particular things. And a lot of that interaction will happen on discord
+
+302
+00:48:44.620 --> 00:48:49.589
+hugo bowne-anderson: as well. So before I get into
+
+303
+00:48:49.890 --> 00:49:00.590
+hugo bowne-anderson: handling conversation history, I'm wondering if there are any questions, reflections, thoughts. Does this bring up any anything for you with respect to stuff you've worked on previously, or you're working on now.
+
+304
+00:49:15.270 --> 00:49:20.909
+hugo bowne-anderson: All right. Well, let's talk about history. So
+
+305
+00:49:22.640 --> 00:49:24.900
+hugo bowne-anderson: one way to set. The stage here is
+
+306
+00:49:25.560 --> 00:49:29.000
+hugo bowne-anderson: when you interact when you like, chat with Chat Gpt.
+
+307
+00:49:29.210 --> 00:49:31.390
+hugo bowne-anderson: or Claude, or whatever it may be.
+
+308
+00:49:31.900 --> 00:49:34.589
+hugo bowne-anderson: It it has memory of some sort right?
+
+309
+00:49:35.330 --> 00:49:38.930
+hugo bowne-anderson: And yet when I ping an Api, it doesn't
+
+310
+00:49:39.360 --> 00:49:49.399
+hugo bowne-anderson: for good reason. And when we when we're building a system, we need to think about how to incorporate memory into the system and and conversation history.
+
+311
+00:49:49.510 --> 00:50:17.900
+hugo bowne-anderson: So sometimes we don't. Of course we don't want to do that like if we're doing a single turn conversation, and I think I've told you all about what Philip Carter did at Honeycomb with the text to honeycomb query, language stuff. But that was single turn right? It was prompt then honeycomb query out so no, no conversation, no history needed. And there are a lot of use cases where you won't need history. So once again, think about your your use case. But
+
+312
+00:50:18.460 --> 00:50:28.360
+hugo bowne-anderson: I do want to. And this is something that we're going to cover in detail later in the course, but anthropic. Late last year December
+
+313
+00:50:29.750 --> 00:50:38.780
+hugo bowne-anderson: published a blog post called Building Effective Agents, and this was really good because well, among many other reasons
+
+314
+00:50:39.270 --> 00:50:51.390
+hugo bowne-anderson: it formalized a lot of like. There was a lot of conversation about what agents are, what they aren't, and it began to formalize kind of a lot of what we were. We were thinking as a community, and how we we were working, and essentially
+
+315
+00:50:52.490 --> 00:51:01.020
+hugo bowne-anderson: what, how? How Barry and Eric, at anthropy framed it is we have Llms which are just pinging an Api, which is, let's have a look at this figure.
+
+316
+00:51:01.930 --> 00:51:07.129
+hugo bowne-anderson: right? Which is tokens in and tokens out right. That's an Llm.
+
+317
+00:51:07.630 --> 00:51:23.119
+hugo bowne-anderson: Then you start to add things like memory. Right? Then you start to add things like retrieval. So as we've seen retrieving things from Pds. Whatever it may be. Then you start to add things like tool calls, whether that's, you know, put something on my calendar.
+
+318
+00:51:23.210 --> 00:51:38.760
+hugo bowne-anderson: or ping the slack Api or Mcp, or whatever it is, or get the current weather for me, or calculate this right? So before we even get to full blown agents, we get this augmented Llm. Which was a really nice framing of it.
+
+319
+00:51:38.990 --> 00:52:01.069
+hugo bowne-anderson: And then what they did was they went through and started talking about before going to full blown agents start thinking about the types of workflows we're building. And they took essentially the 5 most common patterns that they've seen people building with Claude and anthropics models and spelled them out, and we'll go through a bunch of this later in the course. But
+
+320
+00:52:01.070 --> 00:52:13.390
+hugo bowne-anderson: the reason I said this now is I we're going to talk about history and and memory. And so the movement from Llm. To augmented Llm. To Llm. Workflows is.
+
+321
+00:52:13.430 --> 00:52:15.290
+hugo bowne-anderson: I think, a valuable
+
+322
+00:52:15.410 --> 00:52:21.810
+hugo bowne-anderson: framing for the introduction of of why we want to think about history and why we want to think about memory. Okay?
+
+323
+00:52:22.560 --> 00:52:23.360
+hugo bowne-anderson: So
+
+324
+00:52:25.380 --> 00:52:42.870
+hugo bowne-anderson: when building all types of applications that require continuous conversation or interaction. Think about, you know a travel agent, bot, or something like that? Right? That's definitely not a 1 turn single turn conversation. You want it to remember things. So you want to keep track of the dialogue context, and it becomes crucial. So
+
+325
+00:52:43.380 --> 00:53:06.809
+hugo bowne-anderson: generative models and Apis don't inherently maintain history. So what we need to do is manage and provide the previous conversation context ourselves. So what we're going to do here, I'm just going to show you a very naive way to do this, and you would never do this in production. But it's a 1st order or zeroth order. Approximation about how to do these types of things. And, in fact, I'll share a video from a previous cohort
+
+326
+00:53:06.890 --> 00:53:18.540
+hugo bowne-anderson: where Eddie Landsberg shows some simple ways to to get nicely working memory systems up and running. And one way is actually to have a slightly agentic
+
+327
+00:53:18.800 --> 00:53:44.270
+hugo bowne-anderson: system which will look at the conversation so far and summarize it, and add that to the context essentially. But what we're going to do here is, and you don't want to do this for very large conversations. Or if it's going to be 3 turn or 4 turn maximum, you you can. But we're going to essentially save the entire conversation. And then Pre, pen that to the user. Input. Okay.
+
+328
+00:53:44.770 --> 00:53:45.999
+hugo bowne-anderson: so let's see that
+
+329
+00:53:47.590 --> 00:53:48.870
+hugo bowne-anderson: So firstly.
+
+330
+00:53:49.841 --> 00:54:04.440
+hugo bowne-anderson: firstly, I'm going to give an example of showing that the Api just doesn't have history. Okay, so I'm defining a chat function where the system prompt is you are a helpful assistant. The user prompt is whatever I give it, and it returns
+
+331
+00:54:04.730 --> 00:54:07.409
+hugo bowne-anderson: the reply. So I'm going to say my name is Hugo.
+
+332
+00:54:08.330 --> 00:54:12.129
+hugo bowne-anderson: Nice to meet you, Hugo. How can I assist you today? Now I'm going to say what's my name?
+
+333
+00:54:13.450 --> 00:54:25.810
+hugo bowne-anderson: I'm sorry I'm not able to see your personal information, including your name. How can I assist you today? Okay, so I just wanted to demonstrate, like for real that these things do not do not remember anything. So then how do we get some memory to this?
+
+334
+00:54:25.980 --> 00:54:27.420
+hugo bowne-anderson: What I'm going to do?
+
+335
+00:54:27.660 --> 00:54:32.590
+hugo bowne-anderson: As you know, the basic naive approach is, have an empty list to store conversation history.
+
+336
+00:54:32.800 --> 00:54:43.640
+hugo bowne-anderson: And then what I'm going to do is I'm going to add the user. Input so once I define a function, chat with memory, pass it a prompt, then I'm going to add
+
+337
+00:54:43.850 --> 00:54:46.740
+hugo bowne-anderson: that to the conversation history.
+
+338
+00:54:47.320 --> 00:54:59.320
+hugo bowne-anderson: then what I do is I set up the yep. I add the conversation history to this system prompt, and then what I do is I send them all
+
+339
+00:54:59.952 --> 00:55:01.189
+hugo bowne-anderson: this entire thing.
+
+340
+00:55:01.995 --> 00:55:05.680
+hugo bowne-anderson: To the Api. So let's just define that.
+
+341
+00:55:06.460 --> 00:55:08.960
+hugo bowne-anderson: And now I'm going to say my name is Hugo.
+
+342
+00:55:09.510 --> 00:55:12.029
+hugo bowne-anderson: Nice to meet you, Hugo. How can I assist you today.
+
+343
+00:55:12.420 --> 00:55:15.559
+hugo bowne-anderson: And then I'm going to say, what's my name?
+
+344
+00:55:16.370 --> 00:55:26.619
+hugo bowne-anderson: And it says, your name is Hugo. How can I assist you today? Hugo? Okay, so we have a basic memory mechanism there. And now I want to do. What I want to do is look at the conversation history.
+
+345
+00:55:28.050 --> 00:55:39.670
+hugo bowne-anderson: So this is interesting because the conversation. History is a list of dictionaries, right? And
+
+346
+00:55:42.320 --> 00:55:44.490
+hugo bowne-anderson: and what I actually
+
+347
+00:55:44.950 --> 00:55:50.710
+hugo bowne-anderson: have done is when we pass the new prompt to the Api. Remember we give it
+
+348
+00:55:51.510 --> 00:55:55.509
+hugo bowne-anderson: the entire conversation history. Okay, and
+
+349
+00:55:56.220 --> 00:56:03.650
+hugo bowne-anderson: this is, I'm giving it a string. But it looks like a list with all these roles and assistant and user
+
+350
+00:56:05.850 --> 00:56:08.210
+hugo bowne-anderson: and yet the Llm.
+
+351
+00:56:08.780 --> 00:56:15.520
+hugo bowne-anderson: Like gives a reply as it would otherwise, can anyone tell me what like is that odd, or why
+
+352
+00:56:16.730 --> 00:56:22.479
+hugo bowne-anderson: does it seem odd that because I'm not saying this is the conversation history in this form.
+
+353
+00:56:22.850 --> 00:56:28.539
+hugo bowne-anderson: I'm literally giving it something that looks like programmatic output. Right?
+
+354
+00:56:36.310 --> 00:56:39.949
+hugo bowne-anderson: Sorry. Can you repeat the question, Hugo? I just didn't. I was.
+
+355
+00:56:39.950 --> 00:56:43.789
+hugo bowne-anderson: does it? Does it seem weird that I can just give this as
+
+356
+00:56:44.070 --> 00:56:47.169
+hugo bowne-anderson: give this as context to the Llm.
+
+357
+00:56:47.320 --> 00:56:51.920
+hugo bowne-anderson: And it just spits out a reply that, like this.
+
+358
+00:56:55.670 --> 00:57:07.050
+biodun: I my take on it is that it's looking at the same way you'd look at a code snippet and adding it to the context and just searching for relevant information to inform its response.
+
+359
+00:57:07.600 --> 00:57:12.379
+hugo bowne-anderson: Totally totally right. And and that's that's the argument I would give that you know.
+
+360
+00:57:12.590 --> 00:57:13.999
+hugo bowne-anderson: These systems are.
+
+361
+00:57:14.120 --> 00:57:18.730
+hugo bowne-anderson: you know, quote unquote, clever enough, or have enough of this type of stuff in their training data that
+
+362
+00:57:19.180 --> 00:57:33.399
+hugo bowne-anderson: that they quote unquote, know that this is this is essentially the same as giving it. The conversation itself, as like Hugo Colon, what Hugo says like a script. Bot response. And that type of stuff. So that's absolute, absolutely right?
+
+363
+00:57:34.985 --> 00:57:47.930
+hugo bowne-anderson: So that was a brief introduction, and of course I'll give more resources to this for those who want to dive a lot deeper into to memory, and we'll discuss, of course, and work with augmented Llms. And Llm. Workflows a lot more later in the course.
+
+364
+00:57:50.720 --> 00:58:12.100
+hugo bowne-anderson: so the next thing to really start to talk about are the types of knobs you can change, and temperature is something that's, I think, well known and well publicized. But top P is not so much, and you may not use top P so much. But I think it is also important and interesting.
+
+365
+00:58:13.310 --> 00:58:15.600
+hugo bowne-anderson: To know about. Okay. So
+
+366
+00:58:18.110 --> 00:58:27.620
+hugo bowne-anderson: pastor, could you actually just ask in the chat? Who who knows? 2 questions? Who knows about temperature? And people give a thumb up or thumb down? And who knows about top P. And people give a thumb up and thumb down.
+
+367
+00:59:09.270 --> 00:59:10.210
+hugo bowne-anderson: I don't
+
+368
+00:59:10.720 --> 00:59:16.230
+hugo bowne-anderson: super cool. Thank you, Pastor, and thanks everyone for for just give me a sense sense of the room.
+
+369
+00:59:16.670 --> 00:59:22.109
+hugo bowne-anderson: So temperature controls randomness. And as we know.
+
+370
+00:59:22.520 --> 00:59:25.360
+hugo bowne-anderson: Llms are flip-floppy in the sense that you can give it
+
+371
+00:59:26.710 --> 00:59:30.930
+hugo bowne-anderson: the same input and get a different output. Right? So
+
+372
+00:59:31.310 --> 00:59:37.210
+hugo bowne-anderson: we have a space, a very large space of possible outputs, and what
+
+373
+00:59:38.390 --> 00:59:44.129
+hugo bowne-anderson: And then we get when we call an Llm. We get a sampling. We get one sample from that space of possible
+
+374
+00:59:44.280 --> 00:59:51.469
+hugo bowne-anderson: and outputs now, as we increase the temperature.
+
+375
+00:59:52.080 --> 01:00:00.090
+hugo bowne-anderson: what it means is that what were previously less likely outputs will become more and more likely right? So you get more creative.
+
+376
+01:00:00.230 --> 01:00:13.109
+hugo bowne-anderson: more expressive responses. The closer we get to 0. It will sample more and more from the most likely ones. So that's temperature. And we'll see how this plays out when we when we play around with it.
+
+377
+01:00:13.880 --> 01:00:23.610
+hugo bowne-anderson: Top. P. On the other hand, actually controls the range of probable tokens. Considered so it will limit
+
+378
+01:00:23.750 --> 01:00:40.050
+hugo bowne-anderson: the the possible output space right? So the lower top P. The less exam the less it will space it will have from to sample from. And then temperature decides how you sample from that particular space. So
+
+379
+01:00:41.160 --> 01:00:59.550
+hugo bowne-anderson: they're related. But what we get is high temperature. And this is for Openai that it's more than one. As I said, some other Apis have one, as the maximum will be more creative and also less predictable, right low temperature will be more focused and deterministic output. So when we want, you know, structured output. For example, we want to get a Json.
+
+380
+01:00:59.550 --> 01:01:20.040
+hugo bowne-anderson: We should have a pretty low temperature ideally 0 right? Whereas top P. It will limit the output to the most probable tokens. And the math is those that sum to the percentage. P. If you look at the cumulative distribution function. So with high top P, you'll get a more diverse set of response, including less likely words
+
+381
+01:01:20.310 --> 01:01:27.260
+hugo bowne-anderson: and low top. P. We restrict to the most confident, safe predictions.
+
+382
+01:01:28.630 --> 01:01:37.129
+hugo bowne-anderson: So Haroon, in Openai, in Chat Gpt. There is an upper limit. It's 2 with other Apis, it'll be one, and we'll have a look at
+
+383
+01:01:37.280 --> 01:01:58.460
+hugo bowne-anderson: what happens at those upper limits. Kevin has such a great question, to what extent does setting the temperature at 0 guarantee that 2 different users with the same question get the exact response. Okay, and assuming they're not logged in model, knows nothing about them, etc. We just think about pinging an Api right? So it never guarantees it.
+
+384
+01:01:59.096 --> 01:02:02.080
+hugo bowne-anderson: What it does is it makes it
+
+385
+01:02:03.690 --> 01:02:26.779
+hugo bowne-anderson: less likely that you'll get 2 different responses. Okay? And we'll see examples where you can have temperature 0. And particularly if you're doing like extraction tasks and tool calling and that type of stuff, then it gets even even Wackier. But the truth is, depending on the use case setting temperature with top P with a 0 can have a variety of different
+
+386
+01:02:26.980 --> 01:02:37.290
+hugo bowne-anderson: results, and the only way to really know it in your particular use case is to do the experiment and simulation so, and depending on like
+
+387
+01:02:37.700 --> 01:02:54.969
+hugo bowne-anderson: costs. What you can do is you can give the same prompt or set of prompts, and perform at 2030 times whatever it is, and look at the distribution. So the short answer is, it's the best we can do. But these systems are inherently flip-floppy as well.
+
+388
+01:02:58.770 --> 01:03:07.340
+hugo bowne-anderson: Us has a wonderful question. Would having low temperature and low top P have less hallucinations. Now.
+
+389
+01:03:08.970 --> 01:03:16.650
+hugo bowne-anderson: I'm gonna I'm gonna say something that may seem to be cheeky.
+
+390
+01:03:18.560 --> 01:03:21.969
+hugo bowne-anderson: It gives you more consistent responses.
+
+391
+01:03:22.450 --> 01:03:25.790
+hugo bowne-anderson: It won't impact hallucination.
+
+392
+01:03:27.610 --> 01:03:37.770
+hugo bowne-anderson: And to be clear, this is actually a very challenging thing. But I actually agree with Andre Carpathie, who said, if we're going to use the word hallucination, we should probably recognize that
+
+393
+01:03:38.200 --> 01:03:44.660
+hugo bowne-anderson: Llms actually hallucinate a hundred percent of the time, and sometimes those hallucinations coincide with ground truth
+
+394
+01:03:45.830 --> 01:04:13.780
+hugo bowne-anderson: and what he. And then he says, and we also to compare it to search which hallucinates 0% of the time. Right? Google search will get like, whether it's true or not. Right. The response it will give you something grounded, not with the AI summarization summary these days. But I think that the point remains that because these are next token prediction machines, there is actually no sense in which it corresponds to quote unquote
+
+395
+01:04:14.210 --> 01:04:37.380
+hugo bowne-anderson: ground truth, unless as a human, we look at it afterwards and see see that it does so. That was a long, winded way to say, reducing temperature and top P can definitely result in more consistent and reliable results for your Llms. And software. But there's no guarantee that it will reduce hallucinations. I suppose one example would be.
+
+396
+01:04:39.020 --> 01:04:41.090
+hugo bowne-anderson: let's say you reduce temperature. And
+
+397
+01:04:41.350 --> 01:05:11.210
+hugo bowne-anderson: the way I think about hallucinations in another sense is, if something is very well represented in training data less likely to hallucinate right? And what I mean by that is, you'll get something a lot of the time that corresponds to something in training data which we consider ground truth. Now, if something is out of distribution, not in the training data, you'll just get far more hallucinations, and if it's not in, not in the training data at all, it will constantly hallucinate. Right? It will make things up
+
+398
+01:05:12.480 --> 01:05:22.889
+hugo bowne-anderson: and that has to do with the post training as well. How these things are, you know, reinforcement learning via human feedback or direct preference optimization. These types of things. Turn these machines into kind of people pleasing.
+
+399
+01:05:24.450 --> 01:05:26.240
+hugo bowne-anderson: Conversational agents.
+
+400
+01:05:28.080 --> 01:05:29.200
+hugo bowne-anderson: What's up, Laura?
+
+401
+01:05:30.030 --> 01:05:34.339
+nyx: Oh, if if you don't mind, I just wanted to add one thing about hallucinations, which is that
+
+402
+01:05:34.480 --> 01:05:55.119
+nyx: you can have really good coverage of the ground truth in the data, but it can still hallucinate, like the connections between things like, I had a friend who was doing a retrieval thing that was looking for like songs by Taylor Swift, and it kept giving her songs by like beyonce. And it's like you can see how it got there, because they were like similar in the vector space. But then there was like this
+
+403
+01:05:55.120 --> 01:06:10.889
+nyx: weirdness where it couldn't like, you know, keep the connection between the singer and the song. So yeah, even even when there's like really good coverage of the data, and you would assume that it should know it like you can't assume that those like causal links are actually available, or will be like respected. When you retrieve the data.
+
+404
+01:06:11.250 --> 01:06:17.010
+hugo bowne-anderson: Yeah. And I think that example is slightly different, because I was talking about the training data for the model, not retrieval. Right?
+
+405
+01:06:17.080 --> 01:06:23.308
+hugo bowne-anderson: So with retrieval. There is actually a sense of groundedness and ground truth as well. But you're absolutely right. And
+
+406
+01:06:23.620 --> 01:06:50.440
+hugo bowne-anderson: chatting with Eric about an example. Yesterday he had at Moderna, where had a bunch of science papers? And he asked a general question. And it actually, it was something. It was a question that wasn't well designed for a rag system, because it was like, Hey, tell me about this set of papers right? Which, as we discussed the other day in terms of chunking like asking for that type of coverage. Rag isn't isn't particularly great at, and it hallucinated across all the documents. Essentially.
+
+407
+01:06:53.700 --> 01:07:16.839
+hugo bowne-anderson: Jethro has a great great comment it will affect. How confident it is about its hallucinations! And this is one of the most challenging things in the space is the supreme confidence and the lack of ability to reason about uncertainty with Llms. And there are some wonderful people working on, you know, Bayesian methods with Llms in terms of getting better. Certainty.
+
+408
+01:07:18.930 --> 01:07:25.470
+hugo bowne-anderson: Great. So what I want to do is just give an example of
+
+409
+01:07:26.170 --> 01:07:31.100
+hugo bowne-anderson: changing temperature. And so I'm going to ask Mario to tell me about his day.
+
+410
+01:07:31.661 --> 01:07:41.429
+hugo bowne-anderson: And then just do it for different temperature settings and loop over it right, and I'll change the Max dog. I'll allow Mario to speak a bit more, but he is particularly verbose today. It seems
+
+411
+01:07:44.010 --> 01:07:50.398
+hugo bowne-anderson: so. Temperature point one. It's a me. Mario, today was a very exciting
+
+412
+01:07:53.120 --> 01:08:01.019
+hugo bowne-anderson: I went on an adventure through the mushroom kingdom, jumping on goombas and collecting coins, even say, yep, great. Okay.
+
+413
+01:08:01.890 --> 01:08:05.150
+hugo bowne-anderson: I had some delicious spaghetti and meatballs. That's
+
+414
+01:08:06.330 --> 01:08:18.239
+hugo bowne-anderson: that's what I've like. I played a bunch of Mario in my time. I've never actually seen it. That seems like an Italian trope which Mario isn't particularly involved in. But hey, you never know. So that was one that was point 1.
+
+415
+01:08:18.479 --> 01:08:22.790
+hugo bowne-anderson: Then we have point 5, I went on, Bench, jumping on Goombas.
+
+416
+01:08:23.399 --> 01:08:26.830
+hugo bowne-anderson: That doesn't look look too different. Right?
+
+417
+01:08:29.609 --> 01:08:54.740
+hugo bowne-anderson: Okay. 1.5 every day is an adventure for me, especially when I'm not. This is stuff we haven't seen before. Just yesterday I spent some time in the mushroom kingdom. I also jumped a few power up blocks to get some super mushrooms and fire flowers. So that's something that you rarely see with lower temperatures right, and a delicious mushroom pizza. Now, to verify that you really would need to do it a bunch of times to see what the distribution looks like. But this is getting, you know.
+
+418
+01:08:55.800 --> 01:08:59.729
+hugo bowne-anderson: It's going to different places now and then.
+
+419
+01:08:59.840 --> 01:09:09.260
+hugo bowne-anderson: Temperature 2, mamma mia! It's been a day. I jumped through pipes, fought a bunch of Bowser's baddies, had a few power-ups. This add, Gd, take Alec Woodu Andron
+
+420
+01:09:09.620 --> 01:09:13.779
+hugo bowne-anderson: Indones, N. 720 Almanova cheers.
+
+421
+01:09:14.726 --> 01:09:16.040
+hugo bowne-anderson: I mean.
+
+422
+01:09:17.060 --> 01:09:30.939
+hugo bowne-anderson: this is almost like perverse poetry to to me. I yeah. So what we've seen I love that it ends with uncle open parent parenthesis invoice because everyone loves a good uncle invoice.
+
+423
+01:09:31.670 --> 01:09:32.160
+hugo bowne-anderson: But
+
+424
+01:09:34.529 --> 01:09:57.140
+hugo bowne-anderson: yeah. So the temperature is definitely too high there. Right? So as we get more and more creative. We also can get pretty pretty wacky. So these are the types of experiments when trying to get more creative. You want to see what if you, if you want something that you know will ideate with you and open your mind in a variety of ways, you do want somewhat high temperature, but you definitely don't want something something like this. Right?
+
+425
+01:09:57.840 --> 01:10:04.329
+hugo bowne-anderson: I love Kevin's response. I usually give Willow and Pablo a wakka. Watch the munch and Smeckles.
+
+426
+01:10:06.710 --> 01:10:16.039
+hugo bowne-anderson: Incredible. So so that's that's a whirlwind tour of temperature. And I'm sorry there was a question.
+
+427
+01:10:16.748 --> 01:10:20.332
+hugo bowne-anderson: Borden, I'm sorry if I mispronounce your name.
+
+428
+01:10:21.120 --> 01:10:29.099
+hugo bowne-anderson: yeah. So when we actually do a lot of rag like later in the course, we will talk about places that you do want to use more classic information, retrieval.
+
+429
+01:10:29.848 --> 01:10:32.120
+hugo bowne-anderson: Techniques, for example, like.
+
+430
+01:10:32.710 --> 01:10:41.109
+hugo bowne-anderson: you know, keyword search and bm, 25, which we'll get to. And that type of stuff can be really powerful. And you can combine them with a generative response to
+
+431
+01:10:42.600 --> 01:10:48.040
+hugo bowne-anderson: to get what? Get? Get the good information out of your out of your corpus.
+
+432
+01:10:49.050 --> 01:10:55.612
+hugo bowne-anderson: So now let's jump into top. P. To look at the diversity of responses.
+
+433
+01:10:56.390 --> 01:11:14.140
+hugo bowne-anderson: you can get when you increase the probability space. And this is not always as obvious. But what I'm going to do I'm actually going to change the Max tokens to 500. We're going to say, give me a list of 10 titles for adventure books. And we're going to go 0 point 1 0 point 5.9
+
+434
+01:11:14.360 --> 01:11:16.660
+hugo bowne-anderson: and print all of those.
+
+435
+01:11:21.360 --> 01:11:28.529
+hugo bowne-anderson: Okay. So here are 10 titles, The Lost City of Eldoria quest for the crystal Compass, the secret of the forgotten jungle.
+
+436
+01:11:31.850 --> 01:11:37.159
+hugo bowne-anderson: I. Still, this isn't. And this is like some of the the real work we have to do in building these systems.
+
+437
+01:11:37.560 --> 01:11:53.950
+hugo bowne-anderson: And we don't do this. Using Llms is like getting rid of the ending and the beginning. And and that type of stuff like it's not always particularly easy to just get a list of 10 things like it will quite often prepend something like that, and then append something like that to the end. So
+
+438
+01:11:54.340 --> 01:11:59.610
+hugo bowne-anderson: anyway, we see the lost city of Eldoria
+
+439
+01:12:00.420 --> 01:12:03.139
+hugo bowne-anderson: quest for the crystal compass great.
+
+440
+01:12:03.340 --> 01:12:04.210
+hugo bowne-anderson: And
+
+441
+01:12:06.120 --> 01:12:16.880
+hugo bowne-anderson: here we have the 1st one's the same, but we get the quest for the celestial compass, which is interesting. That's something we haven't got there got there previously, I will view as a
+
+442
+01:12:17.060 --> 01:12:22.809
+hugo bowne-anderson: scrollable element, escape from the enchanted mountain. So
+
+443
+01:12:24.240 --> 01:12:49.699
+hugo bowne-anderson: yeah, so what we're seeing as we go on are kind of more and more possibilities emerge. And once again you'd want to sample this several times to really make sure that you're getting increased diversity of responses. But when you run it at Point One. You just get, you know, variations on these types of things quite often. And then we are seeing, like the enigma of the ancient ruins and into the heart of the storm and chronicles of the Wandering Isles and that type of stuff.
+
+444
+01:12:50.080 --> 01:12:55.539
+hugo bowne-anderson: So this is something to play around with. If you want increased diversity in your responses as well.
+
+445
+01:12:55.910 --> 01:13:01.020
+hugo bowne-anderson: So just to give kind of a heuristic or rule of thumb for
+
+446
+01:13:01.180 --> 01:13:05.020
+hugo bowne-anderson: how to combine these. And here. I'm sorry I've used.
+
+447
+01:13:05.180 --> 01:13:17.080
+hugo bowne-anderson: because, as I said, Openai goes up to 2, but many go up to one. So here we're using the ones that go up to one. But if you have high temp and high top P, you have creative and diverse output. Right?
+
+448
+01:13:17.400 --> 01:13:21.560
+hugo bowne-anderson: If you have low temperature and high top P.
+
+449
+01:13:23.120 --> 01:13:28.259
+hugo bowne-anderson: Remember, with low temperature, you're really sampling from the most, the most likely.
+
+450
+01:13:28.755 --> 01:13:55.759
+hugo bowne-anderson: But you have a more diverse responses, right? So you get something that's balanced and coherent, but it may not be as predictable, as safe as you get with low temperature and low top P. Whereas if you have low top P. And high temperature. That's where we saw Mario start to go off the rails, and it's quirky some randomness. In that case it's pretty much totally quirky, if not a total mess. Okay?
+
+451
+01:13:56.200 --> 01:14:10.409
+hugo bowne-anderson: And these are kind of rules of thumb for thinking about. You know what you get with medium temperature and medium top P. And feel free to jump into those. I'm not going to go through this now.
+
+452
+01:14:10.560 --> 01:14:18.449
+hugo bowne-anderson: but this is an example that you can play around with later, where we do a bunch of temperatures and top peas
+
+453
+01:14:19.200 --> 01:14:31.910
+hugo bowne-anderson: to see what type of ice cream flavors come out, and the intention once again. This may not be something you'd use in in your work, but it's really to give a sense of the creativity and and controlledness of of changing temperature and and top heat
+
+454
+01:14:33.740 --> 01:14:39.920
+hugo bowne-anderson: and then low temperature with high top P, and vice versa. So feel free to play around with all of those.
+
+455
+01:14:41.470 --> 01:14:42.340
+hugo bowne-anderson: So
+
+456
+01:14:42.630 --> 01:14:50.710
+hugo bowne-anderson: in the final section, today, I do want to talk about structured output and in extracting and formatting data. So.
+
+457
+01:14:51.740 --> 01:14:59.399
+hugo bowne-anderson: for example, one use case, we'll be working on is extracting data from Linkedin profiles
+
+458
+01:14:59.500 --> 01:15:06.629
+hugo bowne-anderson: and generating outreach emails based upon the characteristics of the Linkedin profile.
+
+459
+01:15:07.690 --> 01:15:25.959
+hugo bowne-anderson: Now, why do we even want structured output in in this case we want to break it down into 2 steps. We want to have one Llm. That gets out the important information, then another that will generate the email. So at the risk of foreshadowing a bit too much. This is actually in
+
+460
+01:15:28.120 --> 01:15:33.960
+hugo bowne-anderson: the prompt chaining. Sorry in the anthropics formulation. This is prompt chaining where we have one Llm. Call to get out
+
+461
+01:15:34.260 --> 01:15:37.880
+hugo bowne-anderson: information about a Linkedin profile, and then we pass it
+
+462
+01:15:38.040 --> 01:15:54.320
+hugo bowne-anderson: to another. Llm. Now, when we have modularized software like this, we want to pass it in a known format to the second Llm. Something which you can ingest easily, and something that's standardized, and, as it turns out, Json is pretty good for this right
+
+463
+01:15:54.610 --> 01:16:03.499
+hugo bowne-anderson: now. You will note that we've got a gate here. Anthropics put a gate there with a with a failure mode, and that's really important. Now.
+
+464
+01:16:03.500 --> 01:16:29.000
+hugo bowne-anderson: the reason that's the case is, let's say you don't get the Json you expect right, or it's incorrectly formatted, or you want to test that the name is actually the name of the person, and it isn't. You want to make sure that you that you have some sort of test or guardrail. To ensure what you're passing is is what you think it is. And those tests and guardrails are something we're going to cover a lot in workshop for next week, which Stephan will be leading.
+
+465
+01:16:30.000 --> 01:16:57.730
+hugo bowne-anderson: which I love that workshop. I'm very excited for that, but what we're going to do now is, just get a sense of how you can craft prompts that extract structured data like Json or Csv. Now, as I said, there is Json mode right and structured output mode with all the Apis now. But this is, I think, an instructive way to start thinking about how we prompt Llms to get the types of things we want out. Okay, as I've said.
+
+466
+01:16:57.850 --> 01:17:07.829
+hugo bowne-anderson: structured output matters because we want to automate things right? So we can feed structured output directly into downstream maps or Llms
+
+467
+01:17:08.310 --> 01:17:27.899
+hugo bowne-anderson: resulting consistent output models often return verbose, unstructured text, and in fact, I don't know if this will happen now, but you can say to an Llm. Give me Json. Give me only Json as the output, and it will say, Okay, here's your Json, and then gives you the output, and then says, Hey, that was your json right? Hope hope you liked it.
+
+468
+01:17:28.727 --> 01:17:32.279
+hugo bowne-anderson: So like it. Absolutely wacky, wacky stuff.
+
+469
+01:17:32.420 --> 01:17:41.490
+hugo bowne-anderson: and then scalability as well. So we want to have these clean extraction flows because they can scale across thousands of documents with minimal human intervention.
+
+470
+01:17:41.640 --> 01:17:48.950
+hugo bowne-anderson: So to that end, what I've done here is, I've got a user prompt, which is
+
+471
+01:17:49.821 --> 01:18:09.279
+hugo bowne-anderson: Francesca's made a wonderful point. Thanks. Jessica. Using pydantic models are great at ensuring consistency in obtaining structured response format output like Json. So combining Json mode with. And we'll get to this. And actually Samuel Colvin, who created Pydantic, is giving a guest talk in a couple of weeks about things they're up to at logfire.
+
+472
+01:18:09.280 --> 01:18:21.169
+hugo bowne-anderson: but pydantic can very much help you when you get structured. Output, even define the types of fields like make sure something's a string, and if you play around, if you do the homework and play around with Linkedin profiles a bunch, you'll see that
+
+473
+01:18:21.170 --> 01:18:32.559
+hugo bowne-anderson: sometimes it will return previous jobs as a list, sometimes as a concatenated string. These types of things and pydantic will help very much with you, defining the schema that you want the output in.
+
+474
+01:18:32.870 --> 01:18:38.830
+hugo bowne-anderson: So here we're saying, extract the name job, title and top 3 skills from this.
+
+475
+01:18:39.260 --> 01:18:43.879
+hugo bowne-anderson: this profile. Okay? And I've set temperature. So we've got a point 3.
+
+476
+01:18:44.200 --> 01:18:49.369
+hugo bowne-anderson: And I've said as Json, okay, great
+
+477
+01:18:50.490 --> 01:18:52.970
+hugo bowne-anderson: gave me the name title and top 3 skills.
+
+478
+01:18:54.200 --> 01:18:59.180
+hugo bowne-anderson: Can anyone tell me if this is Json or not?
+
+479
+01:19:04.490 --> 01:19:06.770
+biodun: So that's Json and Markdown.
+
+480
+01:19:07.780 --> 01:19:09.849
+hugo bowne-anderson: Exactly. It's really annoying.
+
+481
+01:19:10.260 --> 01:19:15.059
+hugo bowne-anderson: really annoying that you'll say give it to me as Json, but it will give me Json in Markdown now.
+
+482
+01:19:15.340 --> 01:19:18.330
+hugo bowne-anderson: So let's then
+
+483
+01:19:21.810 --> 01:19:23.170
+hugo bowne-anderson: wonder if I do this
+
+484
+01:19:26.950 --> 01:19:32.200
+hugo bowne-anderson: now. No, I don't. But one thing you can do, and this works a lot of time you can say, hey?
+
+485
+01:19:33.170 --> 01:19:44.649
+hugo bowne-anderson: You will likely give me Json as Markdown with 3 back ticks at the start of the end. Please do not do that, and that will decrease the rate of this happening by 50% or so or something along those lines. Right?
+
+486
+01:19:45.875 --> 01:19:46.740
+hugo bowne-anderson: So.
+
+487
+01:19:47.390 --> 01:20:00.980
+biodun: Hugo, what about if we ask if we actually specify the structure and say, Give me a dictionary with this value in this key, the values for this key should be this, the values for this other key should be that, and so.
+
+488
+01:20:05.760 --> 01:20:13.202
+hugo bowne-anderson: So I think you'd get something similar, right? You'd you'd get a dictionary some of the time, and it would do it. But other times.
+
+489
+01:20:13.720 --> 01:20:21.549
+hugo bowne-anderson: you'd you'd get something where it doesn't actually do it, and it returns something funky like that, and it may give you a string with a dictionary inside it, or something along those lines.
+
+490
+01:20:21.890 --> 01:20:22.500
+biodun: Hmm.
+
+491
+01:20:23.920 --> 01:20:28.420
+hugo bowne-anderson: So what we're doing here is saying, if any field is missing.
+
+492
+01:20:29.500 --> 01:20:35.139
+hugo bowne-anderson: return null values. So as you iterate on prompts, and no fields are missing here right, but
+
+493
+01:20:35.670 --> 01:20:42.119
+hugo bowne-anderson: as you iterate on as you iterate on prompts, you'll see new failure modes emerge and
+
+494
+01:20:42.270 --> 01:20:48.069
+hugo bowne-anderson: as new failure modes emerge, you'll you'll work on work on the prompt as as well. Right? So
+
+495
+01:20:50.290 --> 01:20:51.940
+hugo bowne-anderson: once again, let's have a look at
+
+496
+01:20:53.760 --> 01:21:11.589
+hugo bowne-anderson: this one. So we're doing this with another profile, and once again it. It gives us 3 3 back ticks. So. And this was really an example of shifting this to the system prompt as well. And we've told it several times to have structured data. But it still returns Markdown. So that's something that I want you to play around with
+
+497
+01:21:11.760 --> 01:21:13.968
+hugo bowne-anderson: in in in the homework.
+
+498
+01:21:15.030 --> 01:21:17.829
+hugo bowne-anderson: right? So what I want you to start doing is
+
+499
+01:21:18.240 --> 01:21:33.249
+hugo bowne-anderson: modifying the prompts, ask for additional fields and start to iterate and test how the model handles missing or ambiguous data, and we'll get to. You know what the actual homework is in in a second. We won't have a breakout room now, but
+
+500
+01:21:33.920 --> 01:21:38.449
+hugo bowne-anderson: what I do want to say is a preview for things we'll be doing next week.
+
+501
+01:21:39.660 --> 01:21:46.109
+hugo bowne-anderson: Is really starting, doing error, handling and debugging, because even if you think
+
+502
+01:21:46.500 --> 01:22:06.230
+hugo bowne-anderson: it will, return Json most of the time, as we know it won't all the time. So you will want to catch these failure modes. And how do you do that? Right? You have guardrails, and you have testing. So what you want to do when you have something in production is have tests that run. And if it doesn't give you
+
+503
+01:22:06.890 --> 01:22:18.090
+hugo bowne-anderson: the correct structure, then you need a fallback plan. Maybe you run it again. Maybe for latency issues. You actually decide to run things 5 times in parallel when a user query comes in. And then
+
+504
+01:22:18.380 --> 01:22:31.170
+hugo bowne-anderson: let's say there's a 10% failure mode failure rate. Then if you run it 5 times, that goes to 1% or whatever it is, right? So you can. You can like guarantee more and more that that you'll get get something useful.
+
+505
+01:22:31.710 --> 01:22:35.290
+hugo bowne-anderson: So there, there are many, many approaches.
+
+506
+01:22:35.770 --> 01:22:56.249
+hugo bowne-anderson: You can force Json compliant clients. You can have strict output control using temperature and top P. Now you can use openai's Json mode, of course, but the intention here was really to get you thinking about how prompting can help you achieve your goals, and I think this is a kind of a very nice toy toy example of doing so. So
+
+507
+01:22:56.970 --> 01:22:57.800
+hugo bowne-anderson: July, like.
+
+508
+01:22:57.800 --> 01:23:00.160
+Urs Peter: It's a small addition, still possible.
+
+509
+01:23:01.567 --> 01:23:02.880
+hugo bowne-anderson: Sorry. What's that?
+
+510
+01:23:03.190 --> 01:23:05.170
+Urs Peter: May may I have a small addition.
+
+511
+01:23:05.540 --> 01:23:07.099
+hugo bowne-anderson: Yeah, yeah, please. Firstly, who is.
+
+512
+01:23:07.100 --> 01:23:34.830
+Urs Peter: From the Gvm world, not in the Python world. And, for instance, Spring AI has kind of a standard feature that, and what it does is because it's all typed in the Gvm world. It literally generates a Jason schema. So here we have kind of ways of defining how we do want to chase in. But this really defines Jason Schema even with clear values. And from there I have never had issues. So maybe that's something that also could be. Yeah, known to others. That is a way I've seen that this very, very predictable.
+
+513
+01:23:35.340 --> 01:23:50.779
+hugo bowne-anderson: I really appreciate that input Urz. And, in fact, in Python Land and Laura's talking about this, and it is something she works on. But pydantic and pydantic AI are very useful for that as well, absolutely right, but really cool to hear what's happening in the Jvm world as well.
+
+514
+01:23:52.410 --> 01:23:58.180
+hugo bowne-anderson: so what I want you to do is you've already ripped out the framework, and there's a typo there.
+
+515
+01:24:00.200 --> 01:24:25.289
+hugo bowne-anderson: and I want you to start iterating on prompts. Right. So you've removed the framework to get close to the data as we saw Kevin demonstrated today. And then I want you to start iterating on prompts to improve the product. So what you'll need to do there is start finding the failure modes right when you put things in and see see what happens. And so I've asked you to iterate on prompts to get 3 that work well across 3 Pdfs.
+
+516
+01:24:25.690 --> 01:24:45.290
+hugo bowne-anderson: And I think one way to do it is you've done the logging, but you should try at least 10 to 20 prompts and look at your results in a spreadsheet. There is optional homework which we'll include in notion around tuning temperature and top P for structured output. But I do encourage people to look into Json mode and
+
+517
+01:24:47.510 --> 01:24:54.720
+hugo bowne-anderson: pydantic as well. Now, the final thing I wanted to say. Just to
+
+518
+01:24:55.330 --> 01:24:59.339
+hugo bowne-anderson: foreshadow some of the things we're doing next week about guardrails and testing.
+
+519
+01:24:59.670 --> 01:25:01.420
+hugo bowne-anderson: Firstly, what are guardrails?
+
+520
+01:25:01.970 --> 01:25:29.409
+hugo bowne-anderson: All they are are checks that happen before an Llm. Call or after a response from an Llm. They can take many forms, right? You can have regular expression checks. You can have keyword matching rejects for specific formats or specific words, or you can use an Llm. To check out, check the output of another Llm. Like here. So let's execute this. And what we're doing essentially is we've got these categories. Of things that we don't don't want.
+
+521
+01:25:29.780 --> 01:25:53.099
+hugo bowne-anderson: And what we, what we do is, we determine if the user input violates any of these guidelines categories and the user input was, how do I prepare for a job interview and is violating is false. So we allow through, okay, and this is just foreshadowing a lot of things we'll do in workshop 4 with Stefan. I do want to say.
+
+522
+01:25:54.130 --> 01:25:57.249
+hugo bowne-anderson: a lot of the time we think about guardrails for output.
+
+523
+01:25:58.610 --> 01:25:59.380
+hugo bowne-anderson: But
+
+524
+01:25:59.640 --> 01:26:26.010
+hugo bowne-anderson: we also do them for input as well. And you will see this like for chat gpt. If you ask it to show you how to do something illegal, it will say I'm not able to answer that for XY. And Z. Reasons. Now, a lot of the people. A lot of people don't really worry about input guardrails at the moment, and a lot. Don't don't worry so much about output guardrails as well, but it is something that will become increasingly.
+
+525
+01:26:26.010 --> 01:26:43.159
+hugo bowne-anderson: increasingly important. Pastor. Thank you for putting the survey in discord. We love all your feedback, the feedback you gave after session. One was incredibly helpful to get us calibrated to everything you need and want in this course, so please do fill it out.
+
+526
+01:26:43.290 --> 01:27:10.580
+hugo bowne-anderson: I will quickly say, and we'll include this in. We're going to set up a channel called Homework 2. What we want you to do is experiment with prompts and Api knobs with the Linkedin profile ingestion system you're building and start thinking about how to evaluate the performance of your AI system. And so once again, that will involve looking at inputs and outputs. You're logging them. Put them in a spreadsheet, for example, give them plus one minus one iterate on your prompt when you see things not working. Okay.
+
+527
+01:27:10.760 --> 01:27:15.889
+hugo bowne-anderson: So next week will be going through
+
+528
+01:27:16.180 --> 01:27:36.699
+hugo bowne-anderson: evaluation, iteration and observability. Workshop 3 on Tuesday will be all about evaluation and iteration and workshop. 4. Which Stefan will lead will be all about observability and and logging and monitoring both in development and and production as well.
+
+529
+01:27:38.040 --> 01:28:02.750
+hugo bowne-anderson: exactly. And next week we have several guest talks. We have Vb. From hugging face. He's called his talk building cool shit with the hugging face ecosystem. He's going to show you a bunch of things that you'll be able to leverage your 6 months free of hugging face pro, for then we have Samuel Colvin from Pydantic and pydantic AI and Logfire coming to talk about self-improvement, self-improving agents.
+
+530
+01:28:02.750 --> 01:28:12.989
+hugo bowne-anderson: We also have 2 optional Guest talks next week. Nathan Danielson talking about some wonderful things he's doing at Carvana, and he joined Cohort One.
+
+531
+01:28:13.090 --> 01:28:20.680
+hugo bowne-anderson: He was a builder in residence in cohort 2, and then we're going to have John Berryman, who's got his own company now Arcturus Labs.
+
+532
+01:28:20.720 --> 01:28:46.530
+hugo bowne-anderson: He was at Github and worked on the precursor to copilot, so was doing like generative AI stuff. Well, back in the day. He builds a lot of different systems these days, and we'll be having a Q&A about patterns and anti-patterns for building AI systems. Please fill in the feedback form that Pastor just shared. But without further ado, I'm wondering, is Charles Frey on the call.
+
+533
+01:28:46.990 --> 01:28:48.099
+Charles Frye: I'm here. Hugo!
+
+534
+01:28:48.100 --> 01:28:49.789
+hugo bowne-anderson: Good welcome.
+
+535
+01:28:50.290 --> 01:28:52.330
+Charles Frye: Hey? Nice to see you again.
+
+536
+01:28:52.330 --> 01:28:59.429
+hugo bowne-anderson: Dude always always a pleasure and it was great to great to actually catch up in person week week before last.
+
+537
+01:28:59.430 --> 01:29:02.590
+Charles Frye: Yeah. Yeah. Thanks for coming. By San Francisco.
+
+538
+01:29:03.000 --> 01:29:07.580
+hugo bowne-anderson: Dude always always a pleasure. I just want to
+
+539
+01:29:08.380 --> 01:29:24.609
+hugo bowne-anderson: say, Charles, huge fan of Charles. His work at Modal is incredible. What he's doing, for for the space in terms of helping people build and understand how to build is is fantastic, and I will. I wasn't going to do this. But what was it building with? Llms.
+
+540
+01:29:25.090 --> 01:29:32.930
+hugo bowne-anderson: Yes, so everyone. This is this is how I met Charles through Hamill originally, and it's
+
+541
+01:29:33.910 --> 01:29:35.710
+hugo bowne-anderson: it's a wonderful.
+
+542
+01:29:36.780 --> 01:30:02.919
+hugo bowne-anderson: you know, resource. I was going to call it an essay or a blog post, but it's really none of those. It's it's a collection of lessons about what all the authors learned after a year of building with Llms. And it splits it into tactical, operational, and and strategic. And it's a set of, you know, really, really interesting, useful lessons that we've all started and started implementing. So that's how I met Charles. But then started using modal
+
+543
+01:30:02.920 --> 01:30:11.780
+hugo bowne-anderson: huge fan just for context. Charles, I showed everyone how to get the application. We're working on up and running on Modal at the start
+
+544
+01:30:11.990 --> 01:30:15.770
+hugo bowne-anderson: and show them some of the some of the docs. But
+
+545
+01:30:15.900 --> 01:30:28.029
+hugo bowne-anderson: before taking it away, just want to say Thank you so much for supporting the course and all the work we do with $500 in credits for for every everyone here. So really appreciate your support as always, man.
+
+546
+01:30:28.360 --> 01:30:56.829
+Charles Frye: Yeah, yeah, always, always happy to support people learning more stuff. Yeah, I used to do. I was at weights and biases doing education stuff, and then I was doing it with full stack, deep learning for a couple of years back, when the most important part was learning how to like train a model and use pytorch rather than how to use the hugging face ecosystem and and prompt engineer. And yeah, so it's something.
+
+547
+01:30:57.390 --> 01:31:14.755
+Charles Frye: Yeah, I think it's super important, and I'm always happy to support folks like you who are who are making it happen. I dropped a couple links in the discord chat because I see the zoom chat is disabled. So there's a link to my slides for today. I'll put some other stuff in there as well.
+
+548
+01:31:15.310 --> 01:31:18.519
+Charles Frye: Hugo, do. I have the ability to share. Yeah.
+
+549
+01:31:18.520 --> 01:31:19.799
+hugo bowne-anderson: You should. Yes.
+
+550
+01:31:19.800 --> 01:31:21.090
+Charles Frye: Huge. All right.
+
+551
+01:31:21.711 --> 01:31:25.508
+Charles Frye: So now you should be seeing my screen. So
+
+552
+01:31:26.260 --> 01:31:49.719
+Charles Frye: yeah. So going to give like a kind of high level overview of what modal is and the problems that it's solving and how that helps for building large language model applications. And actually, you may notice that there's this kind of cool looking QR. Code on the side of the slide, or at least I think it's pretty cool looking, so you could scan that, and that should take you to the slides.
+
+553
+01:31:49.720 --> 01:32:04.429
+Charles Frye: and that QR. Code over there was generated using an app that runs on Modal that I made actually, before I even joined the company just when I was like a user who thought it was really cool. So I built a bunch of stuff on it.
+
+554
+01:32:04.430 --> 01:32:29.360
+Charles Frye: So this little tiny demo takes a prompt and uses a diffusion model with some extra things wrapped around it to generate a QR code. And then we actually apply some what you might call guardrails, I guess, following what Hugo was just saying, to make sure that the generated QR. Code actually scans. So we take an image like this one. We pass it through some QR code, reader.
+
+555
+01:32:29.360 --> 01:32:57.710
+Charles Frye: and determine whether it actually scans and we show back. We generate a bunch of them at once. So that's inference. Time compute scaling. If you're familiar with that idea also from the sort of language model app space. So we run a bunch of them, and take only the ones that scan and then rank them by aesthetic quality. So that's sort of like an Llm. Is judge type thing, but applied to diffusion models. We use a small little clip based
+
+556
+01:32:57.710 --> 01:33:04.880
+Charles Frye: model to to check. How good the how well you know which one we think a human will prefer.
+
+557
+01:33:05.040 --> 01:33:31.020
+Charles Frye: So yeah, so this app here, it's got a couple of pieces. You've got a Gpu accelerated backend. You've got these evals, these sort of or guardrails, and Lm is judge-like components, mljudge components, and that's like wrapped in a job queuing system. And all of that together runs on modal with like flexible auto scaling infrastructure.
+
+558
+01:33:31.020 --> 01:33:43.779
+Charles Frye: So you can read a lot more about how this thing works at this blog post here. That sort of talks through this and sort of takes a bunch of the ideas that you're learning here in this building. Llm. Apps
+
+559
+01:33:43.780 --> 01:34:06.960
+Charles Frye: class and sort of like talks about them in this different context with images and QR codes instead of text. So folks might find that interesting just to see this different perspective on the same ideas. But yeah, so putting together an application like that is exactly what modal is designed for. We have teams like Suno, the music generation company
+
+560
+01:34:06.960 --> 01:34:22.420
+Charles Frye: who do all their inference on our platform. We've got folks in the biotech space who fold proteins and run molecular dynamics simulations and then run a front end website all off of the platform. And I came in
+
+561
+01:34:22.420 --> 01:34:45.510
+Charles Frye: from working on full stack, deep learning and weights and biases, because basically all the problems that I ran into when trying to build Mll. Applications were solved by this platform, and I was like, Dang, that's a pretty cool product. I'd really love to like work on that, and also get other people excited about it, too, and help them solve their problems.
+
+562
+01:34:45.910 --> 01:35:01.810
+Charles Frye: Yeah, so that's some context on me, some context on the product. Let's let's go into some a little bit more brass tacks here feel free to interrupt with questions as we're going. I won't be able to look at the discord chat, so just just pipe up
+
+563
+01:35:03.880 --> 01:35:04.785
+Charles Frye: so.
+
+564
+01:35:05.920 --> 01:35:16.010
+Charles Frye: the like title I I gave this talk. Besides 1 billion apps on modal was simple, scalable, serverless services, because that's what I think
+
+565
+01:35:16.010 --> 01:35:40.629
+Charles Frye: Modal provides for people so scalable services. This is about going beyond what you do at the beginning, when you're like a lot of people who maybe have more of an Ml. Or data scientist background are maybe used to, like, you know, spinning up a little Jupyter notebook that helps them do an analysis and then sharing those figures with some stakeholders. Maybe you run like that spins up like a little streamlit thing that runs localhost so you can click around in a browser.
+
+566
+01:35:40.690 --> 01:36:03.140
+Charles Frye: and that is like where a lot of the best ideas start. But it's not where the best ideas end. They end in becoming a service, something that people can consume from other applications consume from other environments, and they end up becoming something scalable, something that can handle large amounts or variable amounts of load.
+
+567
+01:36:03.520 --> 01:36:27.600
+Charles Frye: And there's many reasons why we've moved in the direction of these like scale, like why we're moving in the direction of scalable services. Maybe I should have put a slide for this. But there's a bunch of different things, one is. It's just so much easier to build with Ml. Now than it was a few years ago. A few years ago you had to train a model from scratch, or do a lot of fine tuning in order to get something even
+
+568
+01:36:27.600 --> 01:36:35.869
+Charles Frye: vaguely useful. And now you can, like, you know, put something put together a useful poc in, you know, an hour or a couple of hours.
+
+569
+01:36:36.452 --> 01:36:42.249
+Charles Frye: So that's you know. That's why we're sort of leaning more in the direction of services.
+
+570
+01:36:42.250 --> 01:37:09.930
+Charles Frye: But then there's also, you know, scalability is more important these days because of how quickly you can distribute something. You can get something out to a bunch of people like, you know, via social media. You can distribute something within your company and have a bunch of people hit it much more rapidly, thanks to all the like high quality communication software that we have in the 2,020 s. And so, you know, it's not enough to just ship something that runs on one machine anymore.
+
+571
+01:37:11.040 --> 01:37:32.009
+Charles Frye: So Modal wants to give you the sort of the tools you need to build these kind of scalable services that are made up of a bunch of different components. I think a lot of people focus on compute a lot of people focus on this as the core thing like, oh, yeah, there needs to be a CPU running a program. That thing needs to.
+
+572
+01:37:33.470 --> 01:37:56.769
+Charles Frye: yeah, that thing needs to take in information and manipulate it like it might run on a Gpu people are really focused on Gpus right now. They think they're very fun and cool, and they are. They are super great. I love them, but the compute is only one part of the story. You also need not just manipulating information, but preserving it and connecting the world to information. So preserving, storing information.
+
+573
+01:37:57.120 --> 01:38:09.739
+Charles Frye: You know, putting it at rest somewhere, and then, I/O sort of connecting your compute and your storage to the world so that the world can send signals in, and the world can extract signals out.
+
+574
+01:38:10.340 --> 01:38:26.089
+Charles Frye: So Modal is trying to. You know, there exist tools that can let you do this right like we aren't the 1st ones to come up with this idea. Obviously, this is kind of one of the core things that cloud computing is trying to deliver to people right? You have
+
+575
+01:38:26.090 --> 01:38:41.890
+Charles Frye: flexible compute that's in data centers that are distributed around the world for low latency, and you can add more instances. Take them away in minutes or hours instead of days.
+
+576
+01:38:41.900 --> 01:39:00.219
+Charles Frye: So you know that part is not new. What Modal's trying to do is make this process like, still get that same super high performance and high quality and high robustness that people expect from cloud deployed applications, but make it simple, do it in like a nice sort of comfy python environment.
+
+577
+01:39:01.060 --> 01:39:29.959
+Charles Frye: So we've got a bunch of different kind of compute primitives or application development software primitives that we offer that you can use to build applications. So in compute. We've got functions, schedulable functions, gpu, acceleration and sandboxed code execution for storage. We've got key value stores. We've got fifo queues and we've got like
+
+578
+01:39:30.250 --> 01:39:40.579
+Charles Frye: distributed disks or volumes, and then for I/O for turning things into something you can talk to the world with. We've got a variety of things for web endpoints and web servers.
+
+579
+01:39:42.009 --> 01:39:46.840
+Charles Frye: So, going through each of these in turn, we've got like
+
+580
+01:39:46.940 --> 01:39:59.949
+Charles Frye: you just add a couple of decorators to your python code, and all of a sudden your your python functions suddenly become like scalable compute in the cloud that can like that can compose services
+
+581
+01:39:59.950 --> 01:40:17.030
+Charles Frye: so you can spin up. Let's see, we got maybe 5 running containers handling about 50 calls to something running the mistral model with Vlm. Like running about 6,000 tokens a second.
+
+582
+01:40:17.030 --> 01:40:42.930
+Charles Frye: 5 6,000 token seconds in and out. We can see here. So this is all in the modal dashboard like you start running something. You deploy something. You get all this nice observability and logging. And you can see, let's see, do we show? I don't think this shows the specific Gpu we're running on here. Oh, yeah, there it is. This is running on fancy data center. Gpus Hopper, H, 100 Gpus.
+
+583
+01:40:43.246 --> 01:40:47.989
+Charles Frye: and yeah, a lot of the stuff you might want to run. That's like.
+
+584
+01:40:48.080 --> 01:41:10.949
+Charles Frye: in collecting data like generating embeddings of things that they can be searched over with vector search. These are all things you might want to run regularly. So this was a fun little app that would display a poem, a different poem every hour in our office on a tiny screen a tidbit that ran on a schedule once an hour.
+
+585
+01:41:13.310 --> 01:41:32.660
+Charles Frye: so yeah, then another sort of slightly more recently added feature. We have these compute sandboxes. So let's say you're running. You're generating code from an Llm that might be going back to a user to help them solve a problem. Or it might be
+
+586
+01:41:32.690 --> 01:41:50.960
+Charles Frye: might be like you might be building an application with an agent. It's generally these things work better if the language models can run the code and see what happens certainly works better for me to build stuff if I can actually run the code and see what happens. So we have this sandbox feature sandbox
+
+587
+01:41:51.040 --> 01:42:13.589
+Charles Frye: sandboxes. You run your code in them. They have no privileges, they can't access anything else in the modal system. They're fully contained. If the agent goes off the rails and runs Rm-rf on the Root Directory. Then it doesn't matter. It just destroys one tiny little sandbox. The blast radius is contained.
+
+588
+01:42:13.590 --> 01:42:35.859
+Charles Frye: So these are some screenshots from running this at a reasonable scale. We have folks like lovable quora, and others who run like thousands of containers at once, thousands of sandboxes. This here is doing a little running an academic benchmark, human eval with a mistral model, and doing that at like.
+
+589
+01:42:35.860 --> 01:42:46.860
+Charles Frye: you know, doing that at topping out at like 150 containers simultaneously, like 1 1 for each call, generating like a thousand responses all at once.
+
+590
+01:42:47.080 --> 01:42:51.340
+Charles Frye: So, inference, time scaling for an Llm application.
+
+591
+01:42:51.710 --> 01:43:15.299
+Charles Frye: Yeah. So the sort of calling cards of of modal for these things like sandboxes, and our compute is things spin up super fast. We can like spin up a container in seconds. Do I have the spin up time for this 1? 0, yeah, there it is. So container startup time down here on the left. How long does it like once you request like, Hey, Modal, spin me up a sandbox and run some code on it.
+
+592
+01:43:15.300 --> 01:43:25.420
+Charles Frye: How long does it take? Before your code starts running? You can see p. 91 and a half seconds. Many other container execution platforms that p. 90 is going to be in the like
+
+593
+01:43:25.420 --> 01:43:32.979
+Charles Frye: tens of seconds, if not longer. If you think how long it takes for you to get an Ec 2. Instance up and running your code.
+
+594
+01:43:34.870 --> 01:43:56.619
+Charles Frye: so storage, like so focusing in the past couple of slides on compute storage is like another important piece. You need to be able to like hold data at rest when applications aren't working on it. We've got like you can use our modal volume. Feature helps you store really like
+
+595
+01:43:56.820 --> 01:44:21.360
+Charles Frye: sort of write. Once read, many is the kind of main pattern it supports. So that's things like model weights. You either download them from a place like hugging face, or you generate them during training. That's writes one time, but then, every time you spin up a new container, spin up a new replica of your service. You need to load those model weights. And that so that's like, write. Once, read many similar thing with data sets
+
+596
+01:44:21.360 --> 01:44:33.909
+Charles Frye: right, you might have data that you want to embed, that sits at rest in a volume, and then is read many, many times by, like, you know, a database that stores like a pointer to that data.
+
+597
+01:44:34.501 --> 01:44:46.259
+Charles Frye: Then we got lots of other sort of storage features. Key value store job queues like mounting local files. So you can find more about that on the modal website.
+
+598
+01:44:47.650 --> 01:44:50.425
+Charles Frye: Then. For
+
+599
+01:44:52.030 --> 01:45:21.779
+Charles Frye: like what we've been talking about so far, maybe, is sort of running python functions in the cloud. So it's like remote procedure calls remote execution of code. So that's sort of focused on like, oh, can I offload the like? Compute intensive parts of my application onto this like extra cloud infrastructure. But you can also host like Host Apis, and create sort of like a web service, not just like a python service
+
+600
+01:45:21.780 --> 01:45:25.250
+Charles Frye: with modal. And so that come, you know the
+
+601
+01:45:25.280 --> 01:45:35.989
+Charles Frye: like. What I've shown here is just this little fast api kind of interface. So here this is like swagger docs for a fast Api application sort of interactive docs.
+
+602
+01:45:36.060 --> 01:45:47.909
+Charles Frye: and like web logs here for, like a SQL. Alchemy talking to a database, you know, exposed via a rest. Api, the sort of like classic
+
+603
+01:45:47.910 --> 01:46:14.010
+Charles Frye: crud type backend. And this is for this is for a fun. Demo. If you go to. Actually, this demo is currently offline. But this demo was a fake social media website full of language models, pretending to be pretending it's 1995. So it's like Twitter. If it was around in 1995, Bill Clinton, you know, retweeting Oj. Simpson, or whatever.
+
+604
+01:46:14.150 --> 01:46:29.830
+Charles Frye: and that, like web application, people can go to a URL, check it out all running on modal. So this is really nice. You get https without having to think about it. You get sort of like automatic scalability up to like many, many thousands of requests.
+
+605
+01:46:30.338 --> 01:46:34.720
+Charles Frye: Like with, you know, without with just a few python decorators.
+
+606
+01:46:34.890 --> 01:46:46.409
+Charles Frye: So I'm actually going to switch here at this point, and just do like a super quick, demo. I think you have seen how modal works from
+
+607
+01:46:47.960 --> 01:46:48.680
+Charles Frye: at
+
+608
+01:46:48.890 --> 01:47:16.630
+Charles Frye: from Hugo, but just wanted to show, like my version of like, how you know how I think about talk about modal. So the idea is that you take your python code. Let me make that full screen and zoom in a wee bit. So the idea is that you can take your python code and add all these like superpowers, these like special features that I've been talking about remote execution, scalability, fast hardware, remote storage. You can do that with just like a couple of
+
+609
+01:47:16.630 --> 01:47:27.919
+Charles Frye: decorators. So let's let's see what that looks like. So let's run this modal run. Get started, dot pi. I'll turn on my virtual environment modal run.
+
+610
+01:47:28.000 --> 01:47:29.680
+Charles Frye: start a dot pi
+
+611
+01:47:29.920 --> 01:47:46.440
+Charles Frye: great. So this is like, this is going to run a little bit of code locally. So down here, this is sort of like how you would make a script that runs on modal or runs, you know, offload some work onto modal. So this is like the entry point to the script, the beginning, or the like.
+
+612
+01:47:46.530 --> 01:48:15.260
+Charles Frye: where you start, and where all the like local execution kind of lives. So this is a pretty simple script. All it does is take a number and square it here. So it looks like my, the square is square, dot remote 42. Let's actually make this a little bit more interesting and make that X of type Int is 42 and send x. So now we got like a little command line interface, and I can say, like X is 41 instead.
+
+613
+01:48:15.480 --> 01:48:39.139
+Charles Frye: And what's happening like when I do that containers are being spun up. Any code that's available locally is, or that's been changed locally is sent up to the cloud. Then the code runs and we get a response back, and all that happens in, as we saw in the slide like p. 91.5 seconds. So like very quickly.
+
+614
+01:48:39.220 --> 01:48:53.089
+Charles Frye: And let's see, let's maybe do some fun stuff here, like, maybe that doesn't seem that cool to you. But let's make a custom image here, deviant, slim dot pip, install.
+
+615
+01:48:53.280 --> 01:48:55.440
+Charles Frye: let's say Torch.
+
+616
+01:48:56.020 --> 01:49:25.560
+Charles Frye: and let's see. So now I need a torch image in order to square this. All right. You see, that also happens super quickly, not because we installed torch, you know, in under a second. That's basically impossible. But because this image is actually already cached, you know me or somebody else in my team has already used an image that just has this exact definition. And so it was just like already, readily available. Let's maybe show something that's like, you know.
+
+617
+01:49:25.830 --> 01:49:46.949
+Charles Frye: Let's do requests greater than 2. I doubt anybody has ever tried that one. So this will trigger an image, build. So now, like we got a little image build going. We're doing Pip install here. Great. So that finished. And now the container is running and booting. So we work hard to like. You know, we maintain like a mirror of Pypi, so that we can do those installs faster.
+
+618
+01:49:47.275 --> 01:49:57.050
+Charles Frye: So that's cool. And this, like having these like separate environments, is super great. If you've ever like, struggled with python environment management. It is so nice to just like
+
+619
+01:49:57.050 --> 01:50:04.320
+Charles Frye: think in terms of docker containers, and then, like offload worrying about management of those docker containers to an external service
+
+620
+01:50:04.320 --> 01:50:33.259
+Charles Frye: like, you know, you have one function that needs like one version of torch and another function needs another version. And this one needs, like, you know, some like jank grad student code in it, and like you can just keep all those nice and separate and like, define them. Per python function, which is pretty cool. Then maybe the thing that's like most fun is that you can add a Gpu. So we got that up there. Let me just run that just to show you that we can get a Gpu super quickly.
+
+621
+01:50:33.641 --> 01:50:46.599
+Charles Frye: So there we go, container initializing. Boom. No slower, no no queuing or waiting time. Just because we want a Gpu. If you want like proof, let's do what every you know, every
+
+622
+01:50:46.750 --> 01:50:53.119
+Charles Frye: self-respecting Ml. Engineer does. The moment they get access to a new Gpu type and run Nvidia. Smi.
+
+623
+01:50:53.950 --> 01:51:12.460
+Charles Frye: Yeah. Hell, yeah, look at that. Nvidia B, 200 kilowatt power limit, 180 something gigabytes of of vram ready for service, ready to square a number on the CPU in this case, which is not the best use of that resource.
+
+624
+01:51:12.580 --> 01:51:28.179
+Charles Frye: But yeah, let's see what else? Let's maybe like Modal. One of the things we like want to do with this infrastructure platform is, make it easy to develop like develop on this platform. And so we have a bunch of features that like
+
+625
+01:51:28.790 --> 01:51:49.700
+Charles Frye: will help you when you run into a problem. So let's modal shell get started. So this is I was modal running before. That's like, run this thing like a script. Modal shell says, Hey, I want a shell in the environment of this modal function. And so, if I like, run Pip list, it should have requests available.
+
+626
+01:51:49.840 --> 01:52:13.650
+Charles Frye: Right? Yeah, there's request. Pip, list Grep requests. You'll have to see it. And then, if I'm like, Wait, what code is actually landing on this thing I can just head to the Root User's home Directory. I can see what code is there? Let's like, CAD it? Oh, there it is. Yeah. This code is running on remote worker sub products run smi blah blah! Oh, yeah, that means this one should have a Gpu. Let's check it out. Yep, there it is.
+
+627
+01:52:13.650 --> 01:52:27.740
+Charles Frye: We've shelled into an instance that has all of our stuff available. And like, you know, it's nice and snappy, and and you know you can. The terminal feels like a you know, as close to a local terminal as you can get
+
+628
+01:52:28.790 --> 01:52:31.700
+Charles Frye: with with cloud execution.
+
+629
+01:52:32.544 --> 01:52:38.010
+Charles Frye: So yeah, a couple couple features sort of like how to use modal. Let's like
+
+630
+01:52:38.020 --> 01:53:04.499
+Charles Frye: you. The last thing I'll say is like, if you wanted to turn this into like a service where you could like hit this square function from somewhere else that would be modal deploy, and so modal deploy get started, dot pi. This isn't the full like rest. Api thing that I showed. This is just like a python service. But yeah, so let's import modal. And then this square function equals modal dot function, dot from name.
+
+631
+01:53:04.710 --> 01:53:11.140
+Charles Frye: Get example, get started square. Yeah, that's right. So now, we're like looking up this function. We just deployed
+
+632
+01:53:11.711 --> 01:53:16.529
+Charles Frye: and now we can call it even from outside that script so square, dot remote 2,
+
+633
+01:53:16.900 --> 01:53:34.750
+Charles Frye: and there will be there we go, squared, R. Remote 2. Do it again. Boom! Boom! So the 1st time there was that like one second delay. But now you can see like, dang, those are pretty fast. Like it's maybe not know. I bet the terminal logging
+
+634
+01:53:34.930 --> 01:53:41.689
+Charles Frye: definition function of missing here. Oh, yeah, sorry. I tried to do something that was like kind of cool, I thought, but that would be
+
+635
+01:53:42.190 --> 01:54:07.490
+Charles Frye: that didn't work. I tried to run the function, a local version of the function for direct performance comparison, but didn't have a copy available. So yeah, I'd say this, this like square, dot, remote thing is running almost as quickly as something running locally. But it's happening on a B 200 in the cloud, with a custom image that I defined, and we were able to get there in seconds.
+
+636
+01:54:08.652 --> 01:54:16.379
+Charles Frye: and again that ipython rep that Ipython repl was just like me, locally on my macbook. That was not any cloud infrastructure.
+
+637
+01:54:17.532 --> 01:54:19.117
+Charles Frye: Okay. So
+
+638
+01:54:20.140 --> 01:54:43.559
+Charles Frye: the rest of these slides are just like kind of like for fun. Some stuff about like Gpu. Utilization. Most important thing is, you want to get started with modal strong recommendation for checking out our examples. These are like carefully curated to help you get started in a bunch of domains where you know modal works well and show you like how to use all of these features, how to use remote storage, how to use. Scale up
+
+639
+01:54:43.560 --> 01:55:04.000
+Charles Frye: all these other things. So I will, Hugo, if you drop that link in the discord. So people have it. I take this pretty seriously. I think this is one of the best ways to get started. Want to make sure that it's a good experience. So every single one of these examples gets run multiple times per day, built multiple times per week.
+
+640
+01:55:04.000 --> 01:55:14.529
+Charles Frye: And all of that is sort of like collected up and monitored to make sure that if you try and run our code, it actually runs.
+
+641
+01:55:14.680 --> 01:55:31.049
+Charles Frye: Yeah, that we're able to get like 2 nines of reliability across like a hundred different python scripts. Thanks to thanks to Modal's infrastructure, making it really easy to do all this stuff.
+
+642
+01:55:31.772 --> 01:55:46.660
+Charles Frye: So yeah, that's how you can build applications on on modal. I only have a I have a hard stop at 11, so I only have, like a minute or 2 to to answer questions, but happy to take them.
+
+643
+01:55:47.460 --> 01:56:03.550
+hugo bowne-anderson: Craig, do we have any any quick questions? And I have told people that if people are like experimenting with Modal, where I'm happy to help out on our discord. But the modal slack is a vibrant place where you can go and, you know, discover all types of things. So I've encouraged people to check out that as well.
+
+644
+01:56:04.540 --> 01:56:10.620
+Kashyap Amin: Can you talk about how the voice input would be transmitted over to the cloud infrastructure from the local device.
+
+645
+01:56:11.870 --> 01:56:13.429
+Charles Frye: Yeah. So
+
+646
+01:56:14.720 --> 01:56:43.609
+Charles Frye: yeah. Sorry. I just dropped a quick link in the chat. We have this somewhat alpha or no, not Alpha beta feature of Jupyter notebooks on modal. So it's like a modal native notebook product. That is also like a pretty good way to get started because you can use the modal infrastructure and get access to these powerful gpus and distributed storage without needing to spin up a custom script or app.
+
+647
+01:56:43.720 --> 01:56:49.012
+Charles Frye: But yeah, so the question was like, How would how would getting audio
+
+648
+01:56:49.670 --> 01:57:02.829
+Charles Frye: into the remote infrastructure work? So it depends on whether you're trying to do high throughput or low latency. Right? If you're so, what I mean there is like, if you have like
+
+649
+01:57:03.270 --> 01:57:26.840
+Charles Frye: hours of meeting notes that you want to transcribe like every day you run a job to transcribe the day's meeting notes and put them in a database that throughput oriented application. Basically, you would just turn the audio into bytes and pass it like modal can handle very, very large inputs and outputs. I don't even know what the limit is. It's basically it might be basically unlimited.
+
+650
+01:57:26.840 --> 01:57:34.900
+Charles Frye: because when you get to large sizes, we ended up using S. 3 as kind of a go-between. And so that's
+
+651
+01:57:34.900 --> 01:57:37.500
+Charles Frye: S. 3 is functionally infinite in size.
+
+652
+01:57:37.500 --> 01:57:58.169
+Charles Frye: But yeah, but using, like many gigabytes of size on inputs and outputs, works like very like transparently on modal. You won't notice any any issues. The thing that's a little bit harder, I would say, just because it's like inherently harder is how to do.
+
+653
+01:57:58.380 --> 01:58:00.100
+Charles Frye: How did you?
+
+654
+01:58:00.320 --> 01:58:27.699
+Charles Frye: A low latency, passing audio back and forth from like a local to a remote execution environment. So we have some examples that show you how to do that. One is like pretty close to the metal Webrtc example which I just shared, which is like you. You end up building your own little Webrtc is is like what
+
+655
+01:58:27.770 --> 01:58:56.020
+Charles Frye: maybe not zoom. But many video conferencing platforms use webrtc, that's the sort of like protocol. So you'd set up kind of like streaming communication between clients and containers. So this one goes like pretty low level, and it goes down to the level of Aio, Rtc. And Python to do that. That's what you need to do in order to run production grade like
+
+656
+01:58:56.230 --> 01:59:09.530
+Charles Frye: low latency communication between remote containers and and clients. It's going to show up if you end up turning your thing into an application anywhere, not just modal.
+
+657
+01:59:09.600 --> 01:59:35.359
+Charles Frye: And then for a slightly, much easier to get started. Demo. I showed some code that uses fast Rtc. From the like hugging face radio world. And that works well enough for like applications where you don't expect to have, like many, many users and a super high quality like, you know, quality of service requirements like when you're figuring out a voice agent or whatever.
+
+658
+01:59:37.580 --> 01:59:38.639
+Charles Frye: Cool.
+
+659
+01:59:39.980 --> 02:00:01.810
+Charles Frye: yeah. So unfortunately, I got to run. But thanks so much for the chance to speak, Hugo, and thanks everybody. Yeah, 500 bucks in modal credits. Love to see what you build. Don't be shy like ping me on discord, or Charles underscore Irl on Twitter would love to hear what you get up to.
+
+660
+02:00:02.400 --> 02:00:06.199
+hugo bowne-anderson: Awesome thanks once again for your support, your great talk, and your friendship, Charles. You're a legend.
+
+661
+02:00:06.772 --> 02:00:09.060
+Charles Frye: Alright, take care, everyone.
+
+662
+02:00:09.060 --> 02:00:17.840
+hugo bowne-anderson: Everyone see you on discord and see you maybe in Builders Club tomorrow with Pastor, and if not, see you in next week's workshop. 3. All right, Ciao.
+

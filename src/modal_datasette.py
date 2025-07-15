@@ -18,7 +18,7 @@ image = (
     .add_local_dir("src", "/root/src")
 )
 
-db_storage = modal.Volume.from_name("discord-bot-volume-2", create_if_missing=True)
+db_storage = modal.Volume.from_name("discord-bot-volume", create_if_missing=True)
 
 @app.function(
     image=image,

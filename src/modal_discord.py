@@ -39,8 +39,8 @@ secrets = [
 ]
 
 # Define Modal volumes for persistence
-discord_bot_volume = modal.Volume.from_name("discord-bot-volume-2", create_if_missing=True)
-chroma_volume = modal.Volume.from_name("chroma-db-volume-2", create_if_missing=True)
+discord_bot_volume = modal.Volume.from_name("discord-bot-volume", create_if_missing=True)
+chroma_volume = modal.Volume.from_name("chroma-db-volume", create_if_missing=True)
 
 volume_mounts = {
     "/data/db": discord_bot_volume,
@@ -213,12 +213,27 @@ async def discord_bot_runner():
                     name=f"Question from {message.author.display_name}",
                     auto_archive_duration=60,
                 )
-                await thread.send(f"Hey {message.author.mention}, let me think about that...")
+                await thread.send(f"Hey {message.author.mention}, I'm thinking...")
                 try:
                     result = fetch_api.remote(message.content)  # Remove await - Modal .remote() is synchronous
                     answer = result["answer"]
                     log_id = result["log_id"]
-                    await thread.send(f"**Answer:** {answer}")
+                    context_info = result.get("context_info", {})
+                    
+                    # Get workshop information
+                    workshops_used = context_info.get("workshops_used", [])
+                    num_chunks = context_info.get("num_chunks", 0)
+                                      
+                    # Create the response message with workshop information
+                    response_message = f"**Answer:** {answer}"
+                    
+                    #if workshops_used and workshops_used != ['Unknown'] and len(workshops_used) > 0:
+                    workshop_list = ", ".join(workshops_used)
+                    response_message += f"\n\n📚 **Sources:** This answer was based on information from {num_chunks} sections across workshops: **{workshop_list}**"
+                    #else:
+                    #    response_message += f"\n\n📚 **Sources:** This answer was based on {num_chunks} sections from the workshop transcripts."
+                    
+                    await thread.send(response_message)
                     feedback_msg = await thread.send(
                         "\nWas this answer helpful? Please reply with:\n"
                         "👍 for helpful or 👎 for not helpful\n"
@@ -423,7 +438,28 @@ async def start_persistent_bot():
                     result = fetch_api.remote(message.content)  # Modal .remote() is synchronous, no await needed
                     answer = result["answer"]
                     log_id = result["log_id"]
-                    await thread.send(f"**Answer:** {answer}")
+                    context_info = result.get("context_info", {})
+                    
+                    # Add debugging information
+                    print(f"🔍 DEBUG: context_info = {context_info}")
+                    
+                    # Get workshop information
+                    workshops_used = context_info.get("workshops_used", [])
+                    num_chunks = context_info.get("num_chunks", 0)
+                    
+                    print(f"🔍 DEBUG: workshops_used = {workshops_used}")
+                    print(f"🔍 DEBUG: num_chunks = {num_chunks}")
+                    
+                    # Create the response message with workshop information
+                    response_message = f"**Answer:** {answer}"
+                    
+                    if workshops_used and workshops_used != ['Unknown'] and len(workshops_used) > 0:
+                        workshop_list = ", ".join(workshops_used)
+                        response_message += f"\n\n📚 **Sources:** This answer was based on information from {num_chunks} sections across workshops: **{workshop_list}**"
+                    else:
+                        response_message += f"\n\n📚 **Sources:** This answer was based on {num_chunks} sections from the workshop transcripts."
+                    
+                    await thread.send(response_message)
                     feedback_msg = await thread.send(
                         "Was this answer helpful? Please reply with:\n"
                         "👍 for helpful\n"
@@ -504,3 +540,52 @@ async def start_persistent_bot():
             print(f"Bot encountered an error: {type(e).__name__}: {e}")
             print("Restarting in 30 seconds...")
             await asyncio.sleep(30) 
+
+@app.function(
+    image=image,
+    secrets=secrets,
+    volumes=volume_mounts,
+    timeout=30
+)
+def check_database_status():
+    """Check the status of the vector database and workshops"""
+    from vector_emb import get_chroma_client, get_or_create_collection, discover_workshops, process_all_workshops, COLLECTION_NAME
+    
+    try:
+        # Check if workshops exist
+        workshops = discover_workshops()
+        print(f"📁 Found {len(workshops)} workshop files: {list(workshops.keys())}")
+        
+        # Check vector database
+        client = get_chroma_client()
+        collection = get_or_create_collection(client, COLLECTION_NAME)
+        count = collection.count()
+        print(f"📊 Vector database has {count} chunks")
+        
+        if count == 0:
+            print(" Database is empty, processing workshops...")
+            processed = process_all_workshops(COLLECTION_NAME)
+            print(f"✅ Processed {len(processed)} workshops: {processed}")
+            count = collection.count()
+            print(f"📊 Vector database now has {count} chunks")
+        
+        # Get sample chunks to check workshop IDs
+        if count > 0:
+            sample_results = collection.query(
+                query_embeddings=[[0.0] * 1536],
+                n_results=5
+            )
+            workshop_ids = set()
+            for metadata in sample_results['metadatas'][0]:
+                workshop_ids.add(metadata.get('workshop_id', 'Unknown'))
+            print(f"🏷️ Sample workshop IDs found: {list(workshop_ids)}")
+        
+        return {
+            "workshop_files": list(workshops.keys()),
+            "chunk_count": count,
+            "sample_workshop_ids": list(workshop_ids) if count > 0 else []
+        }
+        
+    except Exception as e:
+        print(f"❌ Error checking database: {e}")
+        return {"error": str(e)} 
