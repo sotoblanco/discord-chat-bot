@@ -1,3 +1,4 @@
+
 # Discord Chat Bot
 
 A Python-based Discord bot using RAG and Modal to answer questions about the transcription of the live sessions of the course [Building LLM Applications for Data Scientists and Software Engineers](https://maven.com/hugo-stefan/building-llm-apps-ds-and-swe-from-first-principles) using Retrieval-Augmented Generation (RAG). The bot integrates with Discord to respond to mentions, creates organized conversation threads, and uses ChromaDB for fast semantic search with OpenAI's GPT-4o-mini for generating responses.
@@ -39,7 +40,7 @@ uv sync
 
 ```bash
 # For local testing without Discord
-python interactive_qa.py
+python src/interactive_qa.py
 ```
 
 ## 📊 Evaluate Multiple Queries
@@ -76,26 +77,28 @@ Set the bot token:
 export DISCORD_BOT_TOKEN="your_discord_bot_token"
 ```
 
-### 4. Deploy to Modal
+### 3. Deploy to Modal
 
 ```bash
-# Deploy the entire application
-modal deploy src.modal_discord.py
+# Deploy the Discord bot (use slashes, not dots)
+modal deploy src/modal_discord.py
 
 # Start the Discord bot
-modal run src.modal_discord::discord_bot_runner
+modal run src/modal_discord.py::discord_bot_runner
 
-# Initialize vector database (first run)
-modal run src.modal_discord::clean_and_rechunk_workshops
+# (Optional) Initialize vector database (first run)
+modal run src/modal_discord.py::clean_and_rechunk_workshops
 ```
 
-### 5. Deploy database to Modal
+### 4. Deploy the Feedback Database (Datasette)
 
 This is a datasette database that stores the question-answer pairs and the feedback from the users.
 
 ```bash
-modal deploy src.modal_datasette
+modal deploy src/modal_datasette.py
 ```
+
+---
 
 ## ✨ Key Features
 
@@ -104,8 +107,12 @@ modal deploy src.modal_datasette
 - **ChromaDB Vector Search**: Fast semantic search across workshop transcripts
 - **OpenAI Integration**: Uses GPT-4o-mini for intelligent responses
 - **Persistent Storage**: Data persists across deployments using Modal Volumes
+- **Feedback Storage**: Thumbs up/down and thread messages are stored in the database
+- **Workshop Source Display**: Bot answers include the workshops used as sources
 - **Auto-restart**: Bot automatically restarts every 55 minutes to prevent timeouts
 - **Diagnostic Tools**: Built-in functions to analyze and fix chunking issues
+
+---
 
 ## 🏗️ Core Architecture
 
@@ -115,7 +122,7 @@ modal deploy src.modal_datasette
 ├── modal_datasette.py    # Datasette database deployment
 ├── process_transcript.py # Robust chunking with fallback strategies
 ├── vector_emb.py         # Vector embeddings & retrieval
-├── database.py          # Interaction logging
+├── database.py           # Interaction logging
 
 📁 eval/
 ├── evaluate_system.py    # LLM evaluation system
@@ -123,69 +130,95 @@ modal deploy src.modal_datasette
 ├── questions.json        # Questions for evaluation
 ├── eval_progress.json    # Progress tracking
 
-
-📁 data/                     # Workshop VTT transcript files
-📁 chroma_db/                # Persistent vector database
+📁 data/                  # Workshop VTT transcript files
+📁 chroma_db/             # Persistent vector database
 ```
+
+---
 
 ## 🤖 Discord Bot Usage
 
 1. **Mention the bot**: `@DiscordBot What are debugging practice for RAG applications?`
 2. **Use "bot" keyword**: `bot explain evaluation systems for AI applications`
 3. **Get responses in threads**: Bot creates organized conversation threads
-4. **Workshop-aware**: Responses include source workshop information
+4. **Workshop-aware**: Responses include source workshop information (e.g., "Sources: This answer was based on information from WS1, WS2")
+5. **Feedback**: React with 👍 or 👎, or reply in the thread—feedback is stored in the database
 
-## 🔧 Diagnostic & Maintenance Tools
-
-```bash
-# Analyze VTT files and test chunking strategies
-modal run src.modal_discord::diagnose_chunking_issues
-
-# Check what's stored in the vector database
-modal run src.modal_discord::analyze_chromadb_content
-
-# Delete existing collection and rechunk with robust strategy
-modal run src.modal_discord::clean_and_rechunk_workshops
-
-# Quick health check of vector database
-modal run src.modal_discord::debug_vector_database
-```
-
-## 🔍 Troubleshooting
-
-### Bot Not Responding
-
-```bash
-# Check bot status
-modal run src.modal_discord::debug_vector_database
-
-# Restart bot
-modal app stop discord-chat-bot
-modal deploy src.modal_discord.py
-```
-
-### Chunking Issues
-
-```bash
-# Diagnose and fix
-modal run src.modal_discord::diagnose_chunking_issues
-modal run src.modal_discord::clean_and_rechunk_workshops
-```
+---
 
 ## 📝 Feedback Database
 
-### Viewing Locally
+- All user feedback (thumbs up/down and thread replies) is stored in the persistent database (`discord-answer-logs.db`) on the Modal volume (`discord-bot-volume`).
+- You can view the feedback using the datasette app deployed on Modal, or locally with sqlite3:
 
 ```bash
-# Using sqlite3
-sqlite3 data/feedback.db
+# Using sqlite3 locally
+sqlite3 data/discord-answer-logs.db
+
+# Using datasette (deployed on Modal)
+modal deploy src/modal_datasette.py
 ```
 
-### Viewing in Modal
+---
+
+## 📚 Workshop Source Display
+
+- The bot's answers now include the names of the workshops from which the answer was derived.
+- If no sources are found, the bot will indicate that the answer is based on the available transcripts.
+
+---
+
+---
+
+## 🛠️ Resetting Modal Volumes and Redeploying
+
+If you want to reset the data (database or vector DB) and redeploy with new data:
 
 ```bash
-modal run src.modal_discord::view_feedback_database
+# List your volumes
+modal volume list
+
+# Delete a volume (WARNING: this deletes all data in the volume)
+modal volume delete discord-bot-volume
+modal volume delete chroma-db-volume
+
+# (Optional) Create a new volume
+modal volume create discord-bot-volume
+modal volume create chroma-db-volume
+
+# Update your code to use the new volume names if needed
+# Then redeploy:
+modal deploy src/modal_discord.py
+modal deploy src/modal_datasette.py
 ```
+
+---
+
+## 🐞 Troubleshooting
+
+### Bot Not Responding or Feedback Not Stored
+
+- Ensure your Modal volumes are correctly mounted and not empty
+- Check logs:
+
+```bash
+modal app logs discord-chat-bot
+```
+
+- If feedback is not being stored, check the logs for errors in the `store_user_feedback` function
+- If workshop sources are not shown, ensure your vector database is populated:
+
+```bash
+modal run src/modal_discord.py::check_database_status
+```
+
+- If you need to reset the vector DB, use:
+
+```bash
+modal run src/modal_discord.py::clean_and_rechunk_workshops
+```
+
+---
 
 ## 🎛️ Configuration
 
@@ -201,11 +234,27 @@ modal run src.modal_discord::view_feedback_database
 - `MIN_CHUNK_SIZE = 200` - Minimum tokens required per chunk
 - `CHUNK_OVERLAP = 100` - Token overlap between chunks
 
+---
+
 ## 🆘 Support
 
-For issues with chunking imbalance or bot functionality:
+For issues with chunking imbalance, feedback storage, or bot functionality:
 
-1. **Run diagnostics**: `modal run src.modal_discord::diagnose_chunking_issues`
-2. **Check database**: `modal run src.modal_discord::analyze_chromadb_content`
-3. **Clean & rechunk**: `modal run src.modal_discord::clean_and_rechunk_workshops`
-4. **Verify fix**: `modal run src.modal_discord::debug_vector_database`
+1. **Run diagnostics**: `modal run src/modal_discord.py::diagnose_chunking_issues`
+2. **Check database**: `modal run src/modal_discord.py::analyze_chromadb_content`
+3. **Clean & rechunk**: `modal run src/modal_discord.py::clean_and_rechunk_workshops`
+4. **Verify fix**: `modal run src/modal_discord.py::debug_vector_database`
+5. **Check feedback**: `modal run src/modal_discord.py::view_feedback_database`
+
+---
+
+## Version History
+
+- **v2.0**: Feedback storage improved, workshop sources shown in Discord, Modal deployment commands updated, new diagnostics added.
+- **v1.x**: Initial bot, basic RAG, Discord integration.
+
+---
+
+## License
+
+MIT

@@ -1,0 +1,2458 @@
+WEBVTT
+
+1
+00:00:10.420 --> 00:00:11.540
+Harun Yılmaz: Hey! Hello!
+
+2
+00:00:11.730 --> 00:00:28.839
+hugo bowne-anderson: Hey! Welcome, everyone great to see so many friendly faces. Just a reminder if you're able to turn your cameras on. That's super cool, because it's always nice to see the faces of people when we're chatting with and working with and microphones off, unless speaking
+
+3
+00:00:28.840 --> 00:00:43.400
+hugo bowne-anderson: for those who just joined Vb's hugging face, an optional talk to talk us through how we can use all the credits. I hope you enjoyed it as much as I do. We'll share the recording afterwards, and we'll share notes in discord as well for those who weren't able
+
+4
+00:00:43.400 --> 00:00:59.739
+hugo bowne-anderson: able to join. But it's pretty exciting to see all the wonderful things, an increasing number of things they they just keep releasing at hugging face. So thank you all for joining and all the great questions there as well, so let me share my screen.
+
+5
+00:01:03.670 --> 00:01:05.660
+hugo bowne-anderson: Let me do that.
+
+6
+00:01:08.880 --> 00:01:15.680
+hugo bowne-anderson: Could people just give me a thumb up if they can see workshop 3 slides cool?
+
+7
+00:01:16.750 --> 00:01:26.500
+hugo bowne-anderson: thank you. So look, I'm actually really excited for today's workshop. It's it's 1 of my, it's 1 of my favorites, and very near and dear
+
+8
+00:01:26.760 --> 00:01:31.270
+hugo bowne-anderson: to my heart. Where we start talking about evaluation.
+
+9
+00:01:31.340 --> 00:01:40.289
+hugo bowne-anderson: and how to iterate with with respect to evaluation. Before getting there, though, I just want to do a bit a bit of housekeeping.
+
+10
+00:01:40.290 --> 00:02:04.620
+hugo bowne-anderson: I just want to say big shout out to Mike Mike Monroe, who issued a pull request on the Course Repository, which was a typo and fixing a spelling mistake that was incredibly useful. And it's always nice to see people issue Prs or raise issues. That's all to say. No need for anyone to do so. But if you see something that doesn't feel quite right to you.
+
+11
+00:02:04.810 --> 00:02:22.130
+hugo bowne-anderson: see something, say something, raise an issue, or if it's obvious that it's a typo to fix. Please do feel to issue a pull request. Also, I just got to say, I do see Jethro there with the with the happy birthday banner. So was it your birthday recently, Jethro, or.
+
+12
+00:02:26.510 --> 00:02:27.747
+Jethro Sloan: Yeah, on Saturday.
+
+13
+00:02:28.630 --> 00:02:34.460
+hugo bowne-anderson: Well, happy birthday man, it's mine tomorrow. So July, July, boys.
+
+14
+00:02:34.460 --> 00:02:35.519
+Jethro Sloan: Oh, nice man!
+
+15
+00:02:35.520 --> 00:02:37.120
+hugo bowne-anderson: Yeah, there you go.
+
+16
+00:02:37.380 --> 00:02:47.079
+hugo bowne-anderson: Exactly. Super cool. Now, just a slight update on compute credits. I posted all of this
+
+17
+00:02:48.328 --> 00:03:09.381
+hugo bowne-anderson: in in discord, and I just big shout out to Pastor, who's owning all the credit stuff, and I'm communicating some things. But Pastor is just so. So on top of this learn prompting. They would have sent an onboarding email and given you learn giving you access to plus prodigy, modal and logfire. Just follow all the instructions on Maven, hugging face.
+
+18
+00:03:09.750 --> 00:03:34.780
+hugo bowne-anderson: those who joined the org, as we asked you to do by last Friday, and added your credit card information. You'll have hugging face pro for 6 months, and Phoebe also added 15 Us. Dollars credit for everyone to try out all of the inference provider stuff which is super fun and which he talked about as well. Paige, at Google has all your email addresses and should reach out to you soon
+
+19
+00:03:34.780 --> 00:03:40.290
+hugo bowne-anderson: feel free to ping me and say, should I have received an email yet? But my response will be, I mean
+
+20
+00:03:40.410 --> 00:03:47.829
+hugo bowne-anderson: you you should have. But if if you have, you have. And if you you haven't, it means Paige hasn't emailed anyone yet for for what that's worth.
+
+21
+00:03:47.990 --> 00:03:56.689
+hugo bowne-anderson: So what are we doing today? I just want to do a quick recap of of week one and go through a bit of the homework. Then we're going to jump into
+
+22
+00:03:56.690 --> 00:04:23.340
+hugo bowne-anderson: the basic concepts behind evaluation. We're going to go through some slides. But how to develop what we call a minimum viable evaluation framework which you can have alongside a minimum minimum viable product as well. Then we're going to jump into 2 notebooks 1st to talk about the principles of evaluation and iteration. Then we're going to jump into a case study of evaluating factual consistency in summarization in a second notebook, and both those notebooks are in the repository.
+
+23
+00:04:23.840 --> 00:04:41.230
+hugo bowne-anderson: After that we'll be having an optional guest talk from Samuel Colvin at Pydantic, talking about evaluation, and how it can apply to self-improving agents, and I know we haven't started covering agents yet per se in this in this course. But if you want a definition of what an agent is, there are really 2.
+
+24
+00:04:41.230 --> 00:04:54.329
+hugo bowne-anderson: Well, there are many ways to think about it. But the 2 I like, I like from a user perspective. It's an Llm that does things like it doesn't only return tokens or words. It isn't only for conversation, but it quote unquote, takes actions like.
+
+25
+00:04:54.330 --> 00:04:58.489
+hugo bowne-anderson: sends an email or pings, an Api or pings a database
+
+26
+00:04:58.490 --> 00:05:17.040
+hugo bowne-anderson: or searches the Internet right? So that's what an agent one way of thinking about an agent from a user perspective, from a builder developer perspective. The way we think about agents is Llms with function calls so that corresponds to taking actions. Tool calls. So you like, have a tool which is
+
+27
+00:05:17.080 --> 00:05:35.169
+hugo bowne-anderson: ping a database, for example. So an Llm. With tool calls in some sort of context, and and while while loop or or for loop, so it'll continually do a a bunch of things right? So that's just a bit of context for how we how we think about agents for those who aren't aren't in the know.
+
+28
+00:05:35.530 --> 00:05:51.380
+hugo bowne-anderson: And today, really, the theme of today is evaluation. And to be very clear, like, you need to look at your data and results and quantify performance which will involve a combination of domain expertise and binary or more classification.
+
+29
+00:05:51.470 --> 00:05:52.380
+hugo bowne-anderson: So
+
+30
+00:05:52.420 --> 00:06:20.790
+hugo bowne-anderson: just a recap of what we did in week, one in workshop one, we introduced the Llm and Generative AI Software development lifecycle and built an Mvp. With Gradio Llama index, a bunch of Apis sqlite and Simon Wilson's tool dataset. We discussed escaping proof of concept purgatory and laid the foundations for building robust Llm. Apps in Workshop 2. We then deployed the Mvp. On modal, and please claim your $500. Well, it's 530, because they give
+
+31
+00:06:20.790 --> 00:06:42.629
+hugo bowne-anderson: 30 to everyone in modal credits if you haven't already. And then we explored prompt engineering Api tuning multi vendor. Well, we did a variety of Apis. We didn't actually do Grok this time, but in the notebook I'll show you. Now we'll be doing Grok, and we had a guest lecture from Charles Frey on building AI apps on Modal to help you all get started there.
+
+32
+00:06:43.290 --> 00:06:50.099
+hugo bowne-anderson: The project we encourage you all to do was to rip out llama index. So just don't use
+
+33
+00:06:50.330 --> 00:07:00.920
+hugo bowne-anderson: a framework and send you know your document to the context, right? And to to the Api, and then to iterate on prompts. So
+
+34
+00:07:01.240 --> 00:07:07.009
+hugo bowne-anderson: I just wanted to show you kind of how I thought about doing this for
+
+35
+00:07:09.361 --> 00:07:17.590
+hugo bowne-anderson: the Linkedin Project and what I'm going to do is just take you through. Not in significant detail.
+
+36
+00:07:19.250 --> 00:07:20.920
+hugo bowne-anderson: But take you through.
+
+37
+00:07:21.340 --> 00:07:42.959
+hugo bowne-anderson: How I started thinking about it, using a variety of different models. And Kevin just put a a great comment about agents and models using tools in in a loop. That's how anthropic thinks about agents. And similarly, you know, when we go through agents, we'll see how hugging Face and Openai and a lot of different people have defined it in slightly different ways that all converge on this definition.
+
+38
+00:07:43.180 --> 00:07:48.520
+hugo bowne-anderson: So what I wanted to show you was how we can
+
+39
+00:07:48.860 --> 00:08:16.850
+hugo bowne-anderson: use Llms to extract structured information from Linkedin profiles. Remember, in the spirit of this exercise we won't be using structured output or Json mode. We won't be using Pydantic, but we'll be seeing to explore how you do it via prompting and also using using different models. So I'm going to speed through some of the less interesting stuff here. So I have my imports. I do all my imports, and I put in my Api keys there. Of course.
+
+40
+00:08:17.050 --> 00:08:18.730
+hugo bowne-anderson: I haven't version controlled those.
+
+41
+00:08:19.090 --> 00:08:31.690
+hugo bowne-anderson: Then I create the 1st version of the prompt. Okay, so this prompt will be the backbone of the extraction. We do, and we specify the schema, including the fields. So what I've asked is.
+
+42
+00:08:32.380 --> 00:08:42.880
+hugo bowne-anderson: and you can see that I've ripped out llama index here. I'm literally just sending a prompt where I say, extract the following structured information, name, current role, etc. And
+
+43
+00:08:43.549 --> 00:09:11.829
+hugo bowne-anderson: remember, we had an issue that if you ask for Json it would often give you Markdown with back ticks, I've literally now said, do not include any back ticks in the response. You may think you're not including them, but you often do, and and so on. This is the type of ways. We coax Llms in system, prompting to do what we what we want, and in fact, it reduced it by 50%. When I just included the 1st sentence, then by another 50%. When I said, You may think you're not including them, but but you often do.
+
+44
+00:09:14.470 --> 00:09:15.910
+hugo bowne-anderson: Then what I do is
+
+45
+00:09:16.210 --> 00:09:21.199
+hugo bowne-anderson: but 4 different language models because I wanted to test it off a variety of them.
+
+46
+00:09:21.560 --> 00:09:39.819
+hugo bowne-anderson: I just wrote the chat function. So I have Openai. I have llama 3 which I'm using Grok for. And we did look at Grok briefly, actually, then anthropic and Gemini. And then what I did was, I just tested the Gemini one. Okay, and we see that with Andrew Ng's profile there. So
+
+47
+00:09:40.130 --> 00:09:44.930
+hugo bowne-anderson: then, I want to figure out how to choose out of these models which looks
+
+48
+00:09:45.040 --> 00:09:55.340
+hugo bowne-anderson: the most performant for my purposes. Okay, so we've already defined individual functions to interact with specific Llms. What I do here is just generate like
+
+49
+00:09:55.570 --> 00:10:04.879
+hugo bowne-anderson: a high level function which I can call and call the model name. So essentially, I put in the profile content, and specify the model name, and it will generate the output from that model.
+
+50
+00:10:05.170 --> 00:10:25.129
+hugo bowne-anderson: Then what I want to do is have a function which validates output. So it makes sure that it's Json, and we'll see later this week in Stefan's workshop on observability and testing, you can use pytest whatever it is to to test these things. I'm just doing a function in order to see see what's up. And you can see when I did Llama 3,
+
+51
+00:10:25.870 --> 00:10:55.680
+hugo bowne-anderson: it actually was not valid, Json, and you can explore. Why, that's the case if you're interested. But, in fact, Lama 3 is the only model here that even after all, this back ticks nonsense that I specify in the prompt. It still returns 3 back ticks at the start and end of the prompt. Okay? And we can see. Gemini, though, was valid. Json. Then what I do is integrate with logging. So essentially, I make sure that I'm getting all
+
+52
+00:10:55.740 --> 00:11:07.120
+hugo bowne-anderson: everything logged correctly, storing the results, validating Json, save them in a data frame and export to a Csv, so I'm not going to go through that in detail and remember people once again
+
+53
+00:11:07.300 --> 00:11:20.220
+hugo bowne-anderson: on discord. I'm happy to chat through any code, and the community is happy to chat through any code. But really the intention here, the code isn't the most important stuff. It's really the systems thinking and how we're building the systems as a whole.
+
+54
+00:11:20.750 --> 00:11:40.499
+hugo bowne-anderson: So then, to evaluate the model, what I do is I iterate through a directory of Linkedin profile texts execute the models, validate them, measure the latency, compare the results, and then start thinking through how I can do some sort of manual evaluation that's robust. That's everything we do here.
+
+55
+00:11:40.820 --> 00:11:45.559
+hugo bowne-anderson: then, to prepare for manual evaluation. Essentially, what I do is
+
+56
+00:11:46.280 --> 00:12:03.869
+hugo bowne-anderson: we have this Csv file output. We open it in a spreadsheet. We add the columns, and we'll see this more at play in this workshop on evaluation, and then start evaluating each row. We go through each row, inspect the raw output and determine correctness. Okay.
+
+57
+00:12:04.170 --> 00:12:05.100
+hugo bowne-anderson: now.
+
+58
+00:12:07.830 --> 00:12:19.970
+hugo bowne-anderson: what we actually see there, I'm actually going to go to the figures that that I have, that I have here what we actually see is when we analyze the key metrics, we see
+
+59
+00:12:21.025 --> 00:12:22.895
+hugo bowne-anderson: overall correctness.
+
+60
+00:12:24.560 --> 00:12:35.255
+hugo bowne-anderson: you know Llama didn't return Json at all. Gemini did 100% of the time Openai did 100% of the time Claw did only 40% of the time. Right?
+
+61
+00:12:35.580 --> 00:13:02.150
+hugo bowne-anderson: so oh, I'm sorry. That actually is correctness of the result. Not just Json. So whether the output was correct, then if we go to Json, we see exactly the same thing. So, in fact, when it did return proper, Json it was, it was actually correct. Then we look at latency, and we can see latency for Gemma, Llama 3 and Chatgbt Openai were pretty good, whereas something was up with Claude. So if we were going to use Claude, we'd want to inspect that more.
+
+62
+00:13:02.180 --> 00:13:09.540
+hugo bowne-anderson: And then what we do is just look at all the metrics together. And at this point in model development.
+
+63
+00:13:09.660 --> 00:13:24.119
+hugo bowne-anderson: you know, I think we just need to choose a model to run with. We may switch it out at a later date. But looking at these figures right, I think it becomes clear that Gemini and Chatgbt are the ones that we want to choose between Openai
+
+64
+00:13:24.120 --> 00:13:46.469
+hugo bowne-anderson: and we have a bunch of reasoning here that both Gemini and Openai return valid. Json only models to achieve high correctness, similar average latency. And I chose Gemini because it offers a free tier with 15 requests per minute, whereas Openai required payment. So that's a proxy for cost analysis. But these are the types of things you want to be doing. Okay.
+
+65
+00:13:47.430 --> 00:13:56.975
+hugo bowne-anderson: Now, the next thing I really wanted to talk through is workshop 2, we're thinking about prompt refinement. Right? So we
+
+66
+00:13:57.550 --> 00:14:01.939
+hugo bowne-anderson: if you, if you have a look at some of the responses, you'll actually see that
+
+67
+00:14:02.060 --> 00:14:06.409
+hugo bowne-anderson: when people had more than one current role, as some people do.
+
+68
+00:14:07.100 --> 00:14:28.800
+hugo bowne-anderson: Current role usually stored one job and then the other ones were misclassified under previous roles. Okay? So for that reason, I started updating the prompt to explicitly state how multiple current roles should be handled and then tested the Updated prompt for correctness and consistency. So let's actually have a look at how I did this.
+
+69
+00:14:29.080 --> 00:14:32.149
+hugo bowne-anderson: So the the way I did this was
+
+70
+00:14:33.640 --> 00:14:42.370
+hugo bowne-anderson: under current role. I specified the candidates, current titles and companies for current role, then ensure that all current roles
+
+71
+00:14:43.620 --> 00:15:03.920
+hugo bowne-anderson: are included in this section. Even if the candidate has multiple simultaneous roles, do not move any active roles to the previous roles section, and I'd be interested in in discord. And maybe, Pastor, you can ask this question in discord. If people had similar issues, or what types of issues people people saw because we saw several arise in in the homework homework channel.
+
+72
+00:15:04.060 --> 00:15:05.000
+hugo bowne-anderson: And
+
+73
+00:15:06.570 --> 00:15:20.550
+hugo bowne-anderson: once we did that, we did see, at least by Vibe Vibe checking that the current role for Andrew Wing, which previously had a lot in previous we have a variety of different things there, right? So
+
+74
+00:15:21.580 --> 00:15:33.339
+hugo bowne-anderson: you can go through the rest of this notebook. And once again, because this was the homework. I don't want to go through it too much. We can. We can discuss it on, on discord, or we can talk about it in Builders Club as well. But you will have noticed that
+
+75
+00:15:33.510 --> 00:15:34.660
+hugo bowne-anderson: the model
+
+76
+00:15:34.920 --> 00:15:48.830
+hugo bowne-anderson: occasionally omitted. Key details like start and end dates for roles. So what we did is we specifically told it that it. It should very clearly have the start and end date, and and so on. Now
+
+77
+00:15:49.850 --> 00:16:01.490
+hugo bowne-anderson: the results look significantly better. After this prompt iteration we iterated 5 times, or something like that. What the the final thing I just want to mention. And this is a question we've talked about briefly last week.
+
+78
+00:16:02.440 --> 00:16:03.470
+hugo bowne-anderson: Is that
+
+79
+00:16:03.660 --> 00:16:31.029
+hugo bowne-anderson: looking at sole outputs like this is just looking at one run of it. Right? Isn't necessarily going to tell you about all the different possible responses. So to think about flip floppiness or stochasticity, or the fact that different same inputs can have different outputs. As we've seen. What we, what we do is we actually start generating the not sure what happened there, generating
+
+80
+00:16:34.000 --> 00:16:40.120
+hugo bowne-anderson: the structured output for the same Linkedin profiles 10 times each.
+
+81
+00:16:40.430 --> 00:16:51.739
+hugo bowne-anderson: So when I did it for my friend Chris Wiggins, you can see that sometimes it had lowercase, C and lowercase W. Right, which is interesting and funnily. The reason for that is, Chris actually does
+
+82
+00:16:51.900 --> 00:17:04.141
+hugo bowne-anderson: classically spell his name lowercase, but on Linkedin, I think it forces it into uppercase in some places. So that's important to recognize. Okay, then what we see is when
+
+83
+00:17:10.240 --> 00:17:28.239
+hugo bowne-anderson: so this is looking at the output of his current role several times. So, current role, we can see, you know, it has several entries in the 1st one. Then we can see, for example, in Run 9, it has only one. Right? So suddenly, we're starting to get a sense of
+
+84
+00:17:28.420 --> 00:17:37.770
+hugo bowne-anderson: the distribution of things. And this is still, you know, exploratory. But as we'll see later in the week, if you want something to return merely
+
+85
+00:17:37.980 --> 00:17:54.619
+hugo bowne-anderson: a certain thing, you can use pydantic to do that, but you can also test after the fact and make sure that the output is what your next step expects right. So perhaps, if it gives the wrong thing. You want to correct it in real time, like you could have a function that will turn all lowercase
+
+86
+00:17:55.087 --> 00:18:01.342
+hugo bowne-anderson: names to uppercase, 1st letter, or if you don't get the output that you need, you could
+
+87
+00:18:02.220 --> 00:18:03.490
+hugo bowne-anderson: essentially
+
+88
+00:18:05.436 --> 00:18:14.939
+hugo bowne-anderson: run it several times and choose the one that works as well. And so once again, when you go through the rest of this notebook, there's a lot of details there, but let me just go and
+
+89
+00:18:16.590 --> 00:18:20.959
+hugo bowne-anderson: see what I did was for each profile. I then
+
+90
+00:18:21.400 --> 00:18:30.400
+hugo bowne-anderson: printed out the different types of frequencies of each. So for Chris, you can see, lowercase was 7. Uppercase was 3, we can see
+
+91
+00:18:30.570 --> 00:18:38.999
+hugo bowne-anderson: current role. Had this twice, had this twice, had this, once had this, once. So once again, you're getting
+
+92
+00:18:39.490 --> 00:18:41.849
+hugo bowne-anderson: a strong sense of
+
+93
+00:18:42.210 --> 00:19:07.729
+hugo bowne-anderson: what the distributions look like, and then how you want to iterate on your prompts and your system, whether you want to include tests after the fact, use things like pydantic. And so on. Okay, so that was really a whirlwind tour of how I approached the homework. And I definitely wouldn't suggest you do something that long, or that comprehensive. But I wanted to give a sense of how I think about these things in terms of prompt iteration.
+
+94
+00:19:10.726 --> 00:19:12.300
+hugo bowne-anderson: So perhaps
+
+95
+00:19:13.100 --> 00:19:22.550
+hugo bowne-anderson: now we're going to move on to evaluations and a minimum viable evaluation framework. But I'm just interested. Are there any?
+
+96
+00:19:23.490 --> 00:19:44.080
+hugo bowne-anderson: So Haroon has a great question. Lama 3 will not generate invalid Json. If you use pydantic or other schema libraries, it was straight out of the box that it gave 0 0% correctness on these use cases before we move on. If if we have any other questions, I'd love to be able to answer them
+
+97
+00:19:52.130 --> 00:19:56.760
+hugo bowne-anderson: cool. Well, let's let's move on them.
+
+98
+00:19:59.950 --> 00:20:05.260
+hugo bowne-anderson: So in terms of where we are today in the Llm software development lifecycle.
+
+99
+00:20:05.410 --> 00:20:08.369
+hugo bowne-anderson: we're really here to talk about evaluation.
+
+100
+00:20:08.770 --> 00:20:14.250
+hugo bowne-anderson: And what I really want to say here is that the most important thing to think about
+
+101
+00:20:14.400 --> 00:20:18.640
+hugo bowne-anderson: with respect to evaluation is we're really trying to make sure
+
+102
+00:20:19.100 --> 00:20:26.943
+hugo bowne-anderson: our system does what we think it does, or it works to to a certain extent, right? And as you build out a prototype
+
+103
+00:20:29.900 --> 00:20:46.910
+hugo bowne-anderson: you know, you want to develop some framework which allows you to continually test things. It doesn't need to be super sophisticated at start. And in fact, it can be vibe vibe checky by at the start. Right. So you can see, for example, in this
+
+104
+00:20:47.450 --> 00:20:54.419
+hugo bowne-anderson: in this notebook, like, I started doing it by vibes. And I saw that, you know if it didn't return. Json.
+
+105
+00:20:55.054 --> 00:20:58.599
+hugo bowne-anderson: Maybe I could. You know iterate on the prompt if
+
+106
+00:20:59.110 --> 00:21:15.680
+hugo bowne-anderson: if the start and end dates weren't there, I can iterate on the prompt. I didn't need a sophisticated evaluation harness to do that. I saw the issues and fix them in real time. So the whole point is, you can definitely get a long way by doing it by vibes, and I'm sorry for jumping around. But I do want to.
+
+107
+00:21:16.440 --> 00:21:17.180
+hugo bowne-anderson: Just
+
+108
+00:21:18.070 --> 00:21:23.570
+hugo bowne-anderson: I I think this is an important slide to show show again. Because when we're doing things by Vibe.
+
+109
+00:21:23.890 --> 00:21:51.340
+hugo bowne-anderson: as I was just doing, we're really exploring basic functionality. Okay, so you don't necessarily need to involve like serious evaluation. When you're exploring basic functionality and iterating on your prompt and other aspects like, if you're chunking is clearly wrong in a rag system. Then it's clearly wrong, right? And you can. You can iterate on that. Whereas when you start to get a bit further, you really want to start thinking about evaluation, and we'll see how that plays out
+
+110
+00:21:51.720 --> 00:21:53.837
+hugo bowne-anderson: in in a lot of products.
+
+111
+00:21:55.500 --> 00:21:58.234
+hugo bowne-anderson: so I just wanna once again,
+
+112
+00:21:59.340 --> 00:22:07.063
+hugo bowne-anderson: share this from one of Hamel's blog posts which I've shared time and time before.
+
+113
+00:22:09.320 --> 00:22:16.919
+hugo bowne-anderson: where he states that, like software, engineering or machine learning products, success with AI hinges
+
+114
+00:22:17.440 --> 00:22:34.440
+hugo bowne-anderson: on how fast you can iterate. So you need processes and tools for 3 things. One is evaluating quality. So this is testing. One is debugging issues. So this is logging, inspecting data, and then the other is changing the behavior of your system. This involves prompt engineering, as we've just seen, perhaps fine tuning, chunking, writing more code.
+
+115
+00:22:34.880 --> 00:22:42.099
+hugo bowne-anderson: something we've seen in the space. And it's for good reason. And it's because we're exploring capabilities, not consistency. A lot in the space at the moment.
+
+116
+00:22:42.690 --> 00:22:56.590
+hugo bowne-anderson: Most people focus exclusively on changing the behavior of the system which actually prevents them from improving their Llm products beyond a demo. Right? And if you just want to use, have a demo that's that's totally totally cool. But just know what you're getting into.
+
+117
+00:22:58.410 --> 00:22:59.330
+hugo bowne-anderson: So
+
+118
+00:23:00.030 --> 00:23:23.589
+hugo bowne-anderson: what we'll be doing in these slides in this section of the workshop is going through a minimum viable evaluation framework. So your minimum viable product needs some sort of minimum viable eval right. And we're actually going to go through how to get this even before product launch and then start thinking through how to define good outputs. So learn to evaluate the quality of outputs based on correctness, relevance, clarity.
+
+119
+00:23:24.103 --> 00:23:51.380
+hugo bowne-anderson: thinking about annotation and metrics, how and when to and hand annotate, then building an Llm. As a judge and using few shot, prompting to scale evaluations by teaching Llm. To assess outputs based on sorry, just a loner's comment that tell this to her managers with their vibe. Coding is all you need attitude and then iterative improvement. And then we're going to go into some hands-on practice to apply these concepts to
+
+120
+00:23:51.780 --> 00:24:11.689
+hugo bowne-anderson: a real world task, and at the very end it's optional. But Samuel Colvin of pydantic fame, will come and give a talk on self-improving agents. Now Henry Fung has a great question. In situations where we have hundreds of Linkedin profiles, is the correct approach to take a data set a data subset, say, 20 profiles, then perform this analysis.
+
+121
+00:24:12.020 --> 00:24:31.240
+hugo bowne-anderson: eg. Interactively in notebooks and assume the failure. Modes of these 20 test data points will exist in the full sample. That is such a good question, Henry, and the truth is, what you want to do is make sure the examples that you've looked at and developed tests for and iterated on
+
+122
+00:24:31.580 --> 00:24:33.740
+hugo bowne-anderson: a representative of
+
+123
+00:24:34.390 --> 00:24:52.370
+hugo bowne-anderson: your entire data set? Right? So how do you actually, how do you go about that, though? And I don't know whether checking 20 randomly is actually is actually the only the only way to do it. I think one way to think about it is you can once, and we'll see kind of how this plays out.
+
+124
+00:24:52.620 --> 00:25:11.960
+hugo bowne-anderson: Once you do 20 or 30 or 50, then build an Lm. As a judge or other types of tests and see how it plays out in in other cases. And then when you, as a human start to align the Llm. Judgments with yours, you'll see different types of errors emerge, and then you can.
+
+125
+00:25:12.130 --> 00:25:29.169
+hugo bowne-anderson: Then you can iterate with. With respect to that. Another way to to think about this is actually even doing some sort of unsupervised learning on your traces, your inputs and outputs and everything in between, in order to to cluster them, for example, to see whether
+
+126
+00:25:30.000 --> 00:25:38.660
+hugo bowne-anderson: all the data that you're actually looking at is representative of everything else. And you can use classic machine learning techniques in order to.
+
+127
+00:25:38.870 --> 00:25:49.479
+hugo bowne-anderson: I I suppose, for lack of a better term. Figure out what is representative and and what is it? Such as such as unsupervised learning? But the truth is, it's it's not.
+
+128
+00:25:49.700 --> 00:26:18.809
+hugo bowne-anderson: It's not obvious that 20 is enough. I always say, start with 20, because when you tell someone to do that, they often then get very interested, and start looking at at more Shreya Shankar from Uc. Berkeley and Hamel Hussein really advise people to only stop looking at your data when you're not learning anything new as well. That can be incredibly, incredibly time time consuming. But I think starting with 2050, and so on. Then aligning an Lm. As a judge is something which I'd encourage everyone to do.
+
+129
+00:26:19.010 --> 00:26:28.410
+hugo bowne-anderson: Now, I just a lot of this workshop will be thinking along these lines right? But when evaluating
+
+130
+00:26:28.790 --> 00:26:43.053
+hugo bowne-anderson: Llm system outputs. It's it's not obvious even what to evaluate. Right? What dimensions are we thinking of? So think about the task of summarization which we'll do a case study of later in this workshop.
+
+131
+00:26:44.340 --> 00:26:59.324
+hugo bowne-anderson: a summary you want. Okay? The 1st thing you want from a summary is that it's shorter than the original text. Right? I think that's obvious, right? A summary has to be shorter, or it isn't a summary. So we want some type of conciseness. Right?
+
+132
+00:26:59.990 --> 00:27:19.859
+hugo bowne-anderson: but we also want it to be complete or comprehensive, or capture the main things. And this there's a tension here between completeness and being short as well. Right? So, thinking through these things, it's it's never quite obvious what we want to index on the most. And we'll talk more about these things. But there are dimensions such as
+
+133
+00:27:19.870 --> 00:27:38.739
+hugo bowne-anderson: accuracy or correctness also relevance. How relevant is it? Is it complete? Is the task actually complete? You can think about format and structure, style, tone, length, appropriateness, safety. So there are all these different things that we want to evaluate for. And this process.
+
+134
+00:27:39.630 --> 00:27:45.649
+hugo bowne-anderson: I actually think this is one of people's main subconscious objections
+
+135
+00:27:46.270 --> 00:27:58.930
+hugo bowne-anderson: to going through and really looking at your data isn't the isn't the time it takes to label 20 row because you can do that right? You can. You could go in and just do one a minute right? And label them okay, as good or bad, and give a quick reason
+
+136
+00:27:59.070 --> 00:28:17.630
+hugo bowne-anderson: the real work comes in actually identifying what you think is a good output. Right? That's the that's the real challenge. And one of the things I love about using an Llm. As a judge is, it actually makes you explicitly state what you think a good output is, and what a bad output is. So
+
+137
+00:28:18.060 --> 00:28:45.400
+hugo bowne-anderson: what we're going to be doing is walking through a minimum viable evaluation framework for the the rag app over workshop transcripts. That Pastor and I worked on last time we taught this course and that he's working on with some wonderful people in the Builders Club. Then we're going to. So we're going to talk about this app. We're going to talk about defining personas and realistic scenarios. Then we're going to show how to generate synthetic questions, to simulate
+
+138
+00:28:45.400 --> 00:28:53.530
+hugo bowne-anderson: user needs use Llms to generate responses, then label outputs manually to define correctness and failure modes.
+
+139
+00:28:53.620 --> 00:29:12.089
+hugo bowne-anderson: then talk about how to build a basic evaluation harness, and once again an evaluation harness. It's a it's jargon for a dot, for a python file that computes stuff that you're interested in. Okay, just as an Llm. As a judge is essentially jargon for
+
+140
+00:29:12.550 --> 00:29:23.282
+hugo bowne-anderson: a prompt that tells an Llm. To be a judge, essentially, to judge the output of an AI system. After building the Eval harness. We're going to talk about
+
+141
+00:29:23.850 --> 00:29:32.500
+hugo bowne-anderson: comparing outputs and then talk through using failure analysis to drive iteration and improvement. So really, the takeaway from
+
+142
+00:29:32.640 --> 00:29:42.319
+hugo bowne-anderson: this part of the workshop is, I want you to feel enabled to start building fast transparent loops for testing and improving Llm apps even before you have real users. Okay?
+
+143
+00:29:42.660 --> 00:29:44.890
+hugo bowne-anderson: So let's 1st
+
+144
+00:29:45.140 --> 00:30:04.999
+hugo bowne-anderson: in the slides I want to go through. Why, you need evaluation, even without users. What Eval driven development looks like. Then building the loop step by step, and then briefly about observability and instrumentation in development and production. I'll touch on that briefly, because that's the entire topic of Stefan's art workshop on on Thursday.
+
+145
+00:30:05.880 --> 00:30:17.909
+hugo bowne-anderson: So in my consulting work and in a lot of teaching, I've done this is the most common story, like over 90% of people I've consulted with or taught.
+
+146
+00:30:19.280 --> 00:30:30.359
+hugo bowne-anderson: have this story where they say I have docs and don't get me wrong. As a lot of people here will attest to, and a lot of people who've been in this course before, and we've all worked with before
+
+147
+00:30:31.070 --> 00:30:36.730
+hugo bowne-anderson: rag or information, generative information, retrieval over internal docs is
+
+148
+00:30:37.310 --> 00:31:00.670
+hugo bowne-anderson: some of the most highest value we've seen generative AI deliver in the past several years. Without a doubt. That doesn't mean everyone, does it well, or everyone does it effectively. So this story is, people say, I have docs. Let's build a retrieval system. And then it's like this year. It's like, Oh, let's maybe add an agent right? And then they say one of 2 things happen. They say we shipped an Mvp. Does it work?
+
+149
+00:31:00.850 --> 00:31:05.989
+hugo bowne-anderson: And the question I always ask is, Well, what do you mean? Work?
+
+150
+00:31:06.400 --> 00:31:14.869
+hugo bowne-anderson: What is like? What's your metric for working? And how are you testing it? Right? The other parallel story is that I see a lot is
+
+151
+00:31:15.800 --> 00:31:22.789
+hugo bowne-anderson: build a retrieval system, maybe add an agent, and then Gemini, 2.5 just dropped. Let's switch. Or there's this new infinite rag thing. Let's switch
+
+152
+00:31:23.354 --> 00:31:27.620
+hugo bowne-anderson: and then, they say, is the system better now? And the same question is
+
+153
+00:31:28.110 --> 00:31:34.849
+hugo bowne-anderson: remains, what is the goal of the system? And are you even testing it? And how do you test it?
+
+154
+00:31:35.430 --> 00:31:43.800
+hugo bowne-anderson: And this is a huge stumbling block. Now, why is that the case, because people at the moment
+
+155
+00:31:44.610 --> 00:31:57.649
+hugo bowne-anderson: fail to answer basic product questions, a significant amount of the time. And once again I I get it. I totally get it. And I do think a lot of companies I've spoken with want to
+
+156
+00:31:58.240 --> 00:32:24.439
+hugo bowne-anderson: like immediately have an AI strategy, and they see these docs, or they see certain things that that they can do. But they don't think about what types of pain points they're solving. So when I ask people what is the goal of the product a lot of the time. The answer is, Hey, we want people to just have access to documentation. Any docs that could that could help them. Same question, who will be the user? Most people say everyone internally, and some people externally, for example.
+
+157
+00:32:24.440 --> 00:32:38.840
+hugo bowne-anderson: And when you ask, in what scenarios will people use it? They say well, in anything whenever they want to find something out that that may help them. Okay. Now, once again, this is well intentioned, but I very much encourage everyone to
+
+158
+00:32:38.840 --> 00:33:05.069
+hugo bowne-anderson: scope down and deliver value on specific pain points. So one example I saw, was a company that didn't have a goal. They built a rag system over all internal documentation, and then they decided to build a small Mvp. Of a product that helped with onboarding. It was intended for people in Hr. To help them be more efficient at onboarding new employees, and they saw success with that, because it was scoped down
+
+159
+00:33:05.110 --> 00:33:16.680
+hugo bowne-anderson: because it was a pain point, something that took a lot of time already, and they were able to develop some tests around it as well and evaluate it. Right. So all I'm trying to say is that if you
+
+160
+00:33:18.140 --> 00:33:31.530
+hugo bowne-anderson: write a 1 or 2 page product, Doc, a 1 or 2 page Prd at the start, or throughout this process, and feel free to pivot and change and iterate on it. But you have something you're working towards and North Star. I think that will very much help
+
+161
+00:33:31.650 --> 00:34:01.280
+hugo bowne-anderson: with seeing if it's working, and I know this may seem a bit a bit naive and silly to say, but I just to reiterate. So many people are building and now thinking about evaluation, and then not sure what they're evaluating. And you can only evaluate things when you have some sort of goal or a proxy for a goal. And the really cool thing is, once you answer these questions, you can start a data flywheel and build your Mve even before you launch. Okay.
+
+162
+00:34:02.300 --> 00:34:04.709
+hugo bowne-anderson: so what does this actually look like?
+
+163
+00:34:07.840 --> 00:34:16.790
+hugo bowne-anderson: So before you even launch, you have an Mvp, okay, and you can generate synthetic user queries. You label some responses by hand.
+
+164
+00:34:17.000 --> 00:34:23.510
+hugo bowne-anderson: And then you use your label data to build a basic Eval harness, such as a test set
+
+165
+00:34:23.719 --> 00:34:34.719
+hugo bowne-anderson: and an Llm. As a judge, although, as we'll see, you don't always need a judge like if you want. If you're building a rag system. No, I'm sorry if you want structured output. You don't need an Llm. As a judge to see whether it's structured output.
+
+166
+00:34:34.719 --> 00:34:47.619
+hugo bowne-anderson: If the rag system we built, there's a question, who are in the instructors in this course? And you want the answer to be Hugo Band, Anderson and Stefan Krautich. You don't need a judge for that right? You can do like basic string, matching or fuzzy matching. For example.
+
+167
+00:34:47.620 --> 00:35:10.040
+hugo bowne-anderson: once you have this label data to build a basic Eval harness, you can use your Mve to evaluate and improve your Mvp. And I actually think this is a wonderful point. Just to pause briefly and go back to Henry's fantastic question. I'll remind you that Henry's question was, in situations where we have hundreds of Linkedin profiles is the correct approach to take a data subset and then perform this analysis
+
+168
+00:35:10.170 --> 00:35:17.869
+hugo bowne-anderson: and assume the failure. Modes of these 20 test data points will exist in the full sample. And I, the way I spoke to that was, you want it to be representative of
+
+169
+00:35:18.500 --> 00:35:23.900
+hugo bowne-anderson: your entire data, set right? An entire possible possible data sets. And looking at this.
+
+170
+00:35:24.230 --> 00:35:37.530
+hugo bowne-anderson: you know process here, I think it becomes clear why you want that? Because if we think about machine classic machine learning, when you have a test set, you want it to be kind of represented. We all know what happens. If it isn't
+
+171
+00:35:37.670 --> 00:36:01.469
+hugo bowne-anderson: representative right, it will overfit to that particular desk test set. So we definitely do want representativeness. How to get that once again isn't isn't always obvious, right? But to that point this is in synthetic data flywheel for evaluation, driven development. Now for those who've been doing machine learning for some time. You may notice that this is not new at all.
+
+172
+00:36:01.470 --> 00:36:23.969
+hugo bowne-anderson: We're doing a bunch of relearning for new technologies. Essentially, this process we've been doing in machine learning for years. We have an Mvp. We collect data or we get it from Kaggle and don't even question what the columns are half joke. But we collect data. Then we label responses by hand. Then we use the label data to build a basic Eval system which is a test set right.
+
+173
+00:36:23.980 --> 00:36:27.749
+hugo bowne-anderson: We have a test set. So once again, the issue of
+
+174
+00:36:28.940 --> 00:36:43.789
+hugo bowne-anderson: is it representative, you know? Or can we just do a small test set of 20 isn't. And isn't a new and a new issue right? This is something that we've been coming up against for a long time. And so then we use this Mve to evaluate and improve the Mvp.
+
+175
+00:36:44.190 --> 00:36:45.160
+hugo bowne-anderson: So
+
+176
+00:36:45.330 --> 00:36:54.720
+hugo bowne-anderson: just to kind of double click on, I'm sorry for using the term double click. I've been chatting with too many Vcs lately, but what's different and familiar about
+
+177
+00:36:57.320 --> 00:37:01.510
+hugo bowne-anderson: evaluating? So I've just seen Harun's question. I think it's still useful to have an Lm judge.
+
+178
+00:37:01.910 --> 00:37:04.160
+hugo bowne-anderson: even if we have structured output.
+
+179
+00:37:05.678 --> 00:37:23.590
+hugo bowne-anderson: Yeah. Oh, yeah, you're absolutely right. If we want to test the relevancy. Yeah. All I was saying was, We only if we're when we want to test, is it structured output? We can do that without using an Lm as a judge. And then, if we want to like test is the content correct? You're absolutely right.
+
+180
+00:37:23.690 --> 00:37:36.490
+hugo bowne-anderson: So what's different and familiar here in machine learning workflow, we collect real world examples. We label outputs by hand. We train the model on label data. We evaluate on a held out test set. We iterate, based on performance
+
+181
+00:37:36.910 --> 00:37:56.259
+hugo bowne-anderson: before launch in an Llm. App workflow. We synthesize realistic queries from personas, label outputs by hand, prompt model and tune. The prompt and system setup evaluate using an Mve instead of a test set, and then we iterate, based on performance and use the eval evaluation to guide improvement and
+
+182
+00:37:56.510 --> 00:37:57.290
+hugo bowne-anderson: the the
+
+183
+00:37:57.950 --> 00:38:05.610
+hugo bowne-anderson: all details aside. The number one takeaway I want you all to to have here is that both workflows are grounded in 3 things. Test sets
+
+184
+00:38:05.760 --> 00:38:13.840
+hugo bowne-anderson: number one, iteration number 2, and failure analysis, seeing what's up, seeing what's going wrong, diagnose and iterate quickly and fix.
+
+185
+00:38:14.240 --> 00:38:17.020
+hugo bowne-anderson: So how do we build this loop? Step by step
+
+186
+00:38:18.190 --> 00:38:21.759
+hugo bowne-anderson: we define who our persona who our potential users are?
+
+187
+00:38:23.020 --> 00:38:47.279
+hugo bowne-anderson: we have our scenario in initially. When do they use their app? And then we create synthetic data. Then we build an Mvp. We evaluate, as we've already seen using vibes going and being like, oh, this structured output doesn't look quite right. We can iterate quickly. Then we can go. Oh, you know, wait! These dates aren't quite right. Iterate quickly. But then we want to start doing more robust error analysis and build a basic harness and iterate on the Mvp. Here.
+
+188
+00:38:47.510 --> 00:38:55.670
+hugo bowne-anderson: So just a bit on moving from vibes to more robust evaluation. As I said, vibes are cool
+
+189
+00:38:55.740 --> 00:39:19.610
+hugo bowne-anderson: for some time, but they are subjective, and it's like, Oh, that seems better right. Whereas when you get when you build a harness, you have objective, measurable metrics, eval by vibes are inconsistent and difficult to repeat reliably, whereas an eval harness we have repeatable, structured evaluation process vibes. There's no historical baseline, whereas with a harness you can clearly track improvements and regressions over time
+
+190
+00:39:19.710 --> 00:39:34.929
+hugo bowne-anderson: vibes. It's tough to communicate results clearly, as you saw, like, I was doing it with you in a notebook, being like, what's up. Let's just go through this, fix this, that type of stuff. Whereas with a harness you have, you can clearly document results. And you can even automate documentation. And it's easier to share and
+
+191
+00:39:35.010 --> 00:39:59.459
+hugo bowne-anderson: analyze. And by vibes it's just impossible to maintain consistency across team members. And remember, your most important team member is you? On a Monday morning after you've you've pushed to prod before. You know. Oyster happy hour on on Friday afternoon. Whereas a harness allows you to standardize, have standardized and and reproducible results across team members.
+
+192
+00:40:00.980 --> 00:40:04.500
+hugo bowne-anderson: So what are we measuring?
+
+193
+00:40:06.050 --> 00:40:20.650
+hugo bowne-anderson: 4 very important things, engineers love accuracy. Ml. Engineers love love, accuracy. I love Curtis's comment. Vibes equals anecdotal evidence, anecdotal, even eval harness is actionable evidence beautiful.
+
+194
+00:40:21.645 --> 00:40:22.370
+hugo bowne-anderson: So
+
+195
+00:40:23.770 --> 00:40:39.380
+hugo bowne-anderson: clearly latency and cost time and money people super important accuracy that may mean literally accuracy. It also may mean f 1 score or precision, whatever whatever's most important for you there, once again, we want to compute
+
+196
+00:40:39.750 --> 00:41:06.349
+hugo bowne-anderson: user and and business metrics, right? And what we want to do is the AI system response. When we build our harness, we want to compare it to some form of ground truth. I like 50 to 100 samples. You can start with 20 and see see what's up, and to compare it. We can use structured outputs, string and fuzzy, matching regular expressions. And Llm. As a judge for things which we can't can't solve with more elementary techniques.
+
+197
+00:41:06.530 --> 00:41:14.810
+hugo bowne-anderson: So now, I want to show you how to do this persona analysis or persona development and
+
+198
+00:41:16.510 --> 00:41:22.279
+hugo bowne-anderson: synthetic data generation. And what I'm going to do is just show you in the repository.
+
+199
+00:41:23.301 --> 00:41:25.660
+hugo bowne-anderson: If you go to workshop.
+
+200
+00:41:25.850 --> 00:41:29.099
+hugo bowne-anderson: Yes, that's what I like to see.
+
+201
+00:41:29.380 --> 00:41:31.390
+hugo bowne-anderson: Let me
+
+202
+00:41:33.160 --> 00:41:41.230
+hugo bowne-anderson: in the repository. If you go to workshop 3 and go to synthetic data. Edd, what you actually see here is
+
+203
+00:41:41.480 --> 00:41:45.050
+hugo bowne-anderson: a lot of what I'm going through now, and the code for it. And
+
+204
+00:41:47.920 --> 00:42:02.754
+hugo bowne-anderson: you can see here I'm actually defining the personas and scenarios, and so on. And you'll also see that I have the synthetic generator data generator.py, so you can go and regenerate all this data and and build the judge.
+
+205
+00:42:03.320 --> 00:42:10.460
+hugo bowne-anderson: yourself. Okay, I'm very happy to chat through all of that. But you can see, for this is so. Remember
+
+206
+00:42:11.730 --> 00:42:14.029
+hugo bowne-anderson: what Pastor and I built is
+
+207
+00:42:14.600 --> 00:42:18.369
+hugo bowne-anderson: a rag system over over workshop transcript. So I wanted to define.
+
+208
+00:42:18.730 --> 00:42:32.910
+hugo bowne-anderson: Firstly, what type of users will will we expect? And you could imagine we've got a list of 5 different types of people right? But for this 1st iteration. We really wanted to keep it simple. Right? So we had a data scientist and a machine learning engineer where we specified
+
+209
+00:42:33.940 --> 00:42:51.809
+hugo bowne-anderson: the name of the role. The description, then, goals. Right? So implement L empowered solutions for data analysis. Optimized prompting strategies combine traditional Ml with generative AI, whereas the Ml. Engineer is doing more productiony stuff, strong programming skills, production experience and and so on.
+
+210
+00:42:51.810 --> 00:43:05.290
+hugo bowne-anderson: Okay, so we do, we start by defining the personas. Now, you can do it in any format you want. You don't necessarily need the description and goals and all of these types of things, but it is useful to give as much information as possible.
+
+211
+00:43:05.290 --> 00:43:17.350
+hugo bowne-anderson: What is important are the queries you get out, and you, of course, want to make sure, once you start launching it to real users, that your testing queries are somewhat representative of what you're seeing in the real world. And then
+
+212
+00:43:17.500 --> 00:43:32.029
+hugo bowne-anderson: we've given scenarios. Okay, so this one is a student in the second cohort, trying to evaluate their own implementations, then questions about fundamental concepts, terminology, principles, and so on, technical questions and factual questions about specific content.
+
+213
+00:43:33.130 --> 00:43:34.120
+hugo bowne-anderson: Now.
+
+214
+00:43:34.540 --> 00:43:43.659
+hugo bowne-anderson: what we do so much is in a for loop. What we do in a for loop now is we have code along these lines where we have
+
+215
+00:43:44.160 --> 00:43:51.613
+hugo bowne-anderson: generate realistic user queries about a workshop based on the persona and scenario. Okay? And
+
+216
+00:43:54.650 --> 00:43:58.364
+hugo bowne-anderson: yeah. And you can see in the Github Repository, how we feed
+
+217
+00:43:58.830 --> 00:44:12.430
+hugo bowne-anderson: the personas and scenarios into that. Also note that our temperature equal to point 8. And the reason I did that I don't know quite if what? That's what we settled on. But I wanted to try that because you want a diversity of of questions right? Now.
+
+218
+00:44:12.540 --> 00:44:19.049
+hugo bowne-anderson: side note when doing rag, you don't necessarily want to over index too much on on what's in the documents. But
+
+219
+00:44:19.290 --> 00:44:31.440
+hugo bowne-anderson: you can also, when generating synthetic queries, give the transcripts to the synthetic data generator and say, these are the transcripts that people will be asking questions about, for example.
+
+220
+00:44:32.690 --> 00:44:57.039
+hugo bowne-anderson: And then what we got out we got, you know, you can generate as many questions as you want. I think we did 20 or 30 initially. Question, can you provide insights? Clearly, Llm generated. I mean, I think we've all started saying insights more recently, purely because of Llms. But can you provide insights in how to generate synthetic data for training Llms? What are the best practices for evaluating performance. Could you explain how to effectively implement prompt engineering?
+
+221
+00:44:57.060 --> 00:45:14.970
+hugo bowne-anderson: What metrics should I focus on when evaluating? These are all pretty good questions right? And, in fact, probably because you know just of the weights and the training data that Openai uses, it will be pretty good at generating these these types of questions. Okay?
+
+222
+00:45:15.260 --> 00:45:16.130
+hugo bowne-anderson: So
+
+223
+00:45:16.440 --> 00:45:28.780
+hugo bowne-anderson: once you've generated the questions, remember, we want to start hand labeling them, and we'll see several ways to do that. What pastor has done is a wonderful way in discord to give a thumb up or thumb down and a response.
+
+224
+00:45:28.780 --> 00:45:38.489
+hugo bowne-anderson: But before he did that I just I vibe. Coded a basic custom. HTML. Viewer here where I could could label things. This is one of the most
+
+225
+00:45:38.490 --> 00:45:59.450
+hugo bowne-anderson: interesting aspects of vibe coding. One of the best use cases is being able to spin up. You know what we call ephemeral software, or just in time software for like single use cases or dual use dual use cases, and I don't even need to know that much about front end to do this. I need to make sure that it's serving me the right things and logging things correctly, which I did in terms of testing. But what we can see is
+
+226
+00:45:59.450 --> 00:46:01.740
+hugo bowne-anderson: this is a rag response, evaluator
+
+227
+00:46:02.137 --> 00:46:05.299
+hugo bowne-anderson: and we can see. Question one. It gives me. The id
+
+228
+00:46:05.440 --> 00:46:13.939
+hugo bowne-anderson: user type is a student scenario gives me the latency which is cool. And the 1st question that we've generated synthetically is
+
+229
+00:46:15.680 --> 00:46:21.610
+hugo bowne-anderson: What are the 1st principles for building Llm. Applications mentioned in workshop one
+
+230
+00:46:23.460 --> 00:46:35.660
+hugo bowne-anderson: and we see the 1st principles for building Lm applications mentioned in workshop one are one focusing on workflows, iteration, hands-on development, 2 building production grade systems. 3. 1st principles approach
+
+231
+00:46:37.110 --> 00:46:53.209
+hugo bowne-anderson: using these tools. Considering Lms is non-deterministic and different from traditional software, prioritizing, logging, monitoring, and tracing. So this is interesting. I would probably give this a pass, but give a note that includes things that we may not want there in in the end. Okay,
+
+232
+00:46:54.260 --> 00:47:18.120
+hugo bowne-anderson: question 2. We can see who were the instructors, and we can see the instructors for the 1st workshop were Hugo Van Anderson and Stefan Crouchy. So that's great. We have a great question from Brad. What was the goal of the rag app for the transcripts. The goal was for students in the second cohort to be able to quickly get answers to questions that were answered in in workshops.
+
+233
+00:47:18.260 --> 00:47:19.250
+hugo bowne-anderson: Essentially.
+
+234
+00:47:19.850 --> 00:47:22.339
+hugo bowne-anderson: So, I hope that's that's helpful.
+
+235
+00:47:24.580 --> 00:47:30.189
+hugo bowne-anderson: So once we've started to log things, what do we do then?
+
+236
+00:47:30.320 --> 00:47:31.210
+hugo bowne-anderson: Right?
+
+237
+00:47:31.510 --> 00:47:32.639
+hugo bowne-anderson: And so
+
+238
+00:47:32.940 --> 00:47:39.210
+hugo bowne-anderson: we need to turn them into actionable fixes. So we've already done this in the HTML. Viewer. But let's say we, haven't we?
+
+239
+00:47:39.760 --> 00:47:43.439
+hugo bowne-anderson: What we want is to log our traces in a spreadsheet where we have prompt
+
+240
+00:47:43.790 --> 00:47:49.230
+hugo bowne-anderson: and response. Okay, then we want to add columns for accept or reject response.
+
+241
+00:47:49.480 --> 00:48:11.929
+hugo bowne-anderson: reason for, accept or reject and then classify the failure mode? Was it a hallucination? Was it a retrieval error? Was it a formatting issue? And what we want? And we'll see why in a second, we want to maybe have a maximum of 5, 7 different failure modes and classify everything else as other right. We want to have a small number of failure modes which
+
+242
+00:48:11.980 --> 00:48:39.679
+hugo bowne-anderson: hopefully capture as many of the cases as possible. That will help us with actionable fixes. Then we do a pivot table where we pivot, and if you don't remember your excel or spreadsheets, we'll see what that is in a second. Essentially, we then have failure modes as rows in the pivot table ranked by frequency, so we can see which are the most common failure modes, and only then can we start to turn levers for actionable fixes, like prompt engineering rag, fine tuning, and so on.
+
+243
+00:48:39.920 --> 00:48:44.059
+hugo bowne-anderson: So here's a toy example. Okay, where
+
+244
+00:48:44.550 --> 00:48:58.990
+hugo bowne-anderson: we have our inputs, we have ground truth. And I'm going to tell you in this case accept or fail and failure mode. So let's say, the input was summarize this, Doc. And the output was, dogs are cool, but the ground. Truth was a company summary report that's going to be a failure.
+
+245
+00:48:59.090 --> 00:49:03.709
+hugo bowne-anderson: and it's a hallucination in this case.
+
+246
+00:49:04.690 --> 00:49:08.670
+hugo bowne-anderson: Then another input get CEO name, and it's John DOE
+
+247
+00:49:09.000 --> 00:49:27.780
+hugo bowne-anderson: is the output by the ground. Truth is, Jane Smith, it's a failure, and this one was a retrieval error, and once again you may need to dig into the system to be like. Was it a hallucination or a retrieval error? In this case it was a retrieval error, because we looked at the chunks, and John DOE was actually retrieved. But it was. It wasn't the the CEO.
+
+248
+00:49:28.020 --> 00:49:50.460
+hugo bowne-anderson: So Kevin has one of the best questions you could ask is accept or reject, usually better than trying to assign a numerical quality score between 0 and one definitely, initially, at this stage in the process, you want to say whether something is a is a good response, like it's a pass or a fail, because that means you get actionable.
+
+249
+00:49:51.800 --> 00:49:59.700
+hugo bowne-anderson: Insights. So numerical quality score is interesting. The the
+
+250
+00:49:59.950 --> 00:50:04.219
+hugo bowne-anderson: another way to think about it. If you give something like somewhere between a point 3 and a point 7,
+
+251
+00:50:04.360 --> 00:50:25.579
+hugo bowne-anderson: what do you do with that information? And you know, like art scales one to 5. We always say, What do you do with a 3? But we want to make sure that that you, as a builder, are saying what what passes and what fails. So you can fix the failure modes. Now, what you could do if you really want to do like between one and 5 or one and 10.
+
+252
+00:50:25.820 --> 00:50:45.839
+hugo bowne-anderson: And well, Mike, just exactly what what you end up doing in order to actually make fixes. If you have a non-binary scale is you'll end up having a threshold, and that will be a binary anyway. Right? So but but great question. And so
+
+253
+00:50:46.060 --> 00:50:54.039
+hugo bowne-anderson: in this toy example, what we see is that hallucinations, once we do our pivot table, a 30%
+
+254
+00:50:54.420 --> 00:51:06.409
+hugo bowne-anderson: of our failures. Retrieval errors are 25%. Incomplete responses are 20. Formatting issues are 15%. Now, this is really helpful, because not only does it tell you what to focus on initially. But
+
+255
+00:51:07.160 --> 00:51:30.549
+hugo bowne-anderson: formatting issues are an interesting one, because they're often the most obvious or most salient and apparent. And you can get tricked into seeing them and thinking these are the most important things to fix. But if you focus on those, you'll only fix 15% of the issues, whereas if you focus on hallucinations and retrieval error, you've already got over 50% of them. Right? So that's 1 of the reasons this type of failure mode analysis is is so important.
+
+256
+00:51:31.960 --> 00:51:41.809
+hugo bowne-anderson: Now we want to start thinking about building our harness with an Llm. As a judge. Okay, and of course I'll share these slides after the fact.
+
+257
+00:51:41.860 --> 00:51:56.849
+hugo bowne-anderson: But you can see here I've created a function, and this is in the Github Repository as well, where we have this evaluate rag response. And what we do is we say to it, you're evaluating the output of a rag system for workshop transcripts.
+
+258
+00:51:56.850 --> 00:52:26.259
+hugo bowne-anderson: We give it some good examples, some bad examples, and then we give it evaluation. Criteria. So it's acceptable if it directly answers the question with specific details factually correct, based on the workshop content, avoids hallucinations or made up information unacceptable. If it's vague, generic, or off topic, it hallucinates or fabricates content. It fails to address key parts of the system judgment, plus one or minus one. And reason. That's how we want. We give it a structure for
+
+259
+00:52:26.330 --> 00:52:43.370
+hugo bowne-anderson: the format. Right? Oh, Roger, you asked the 1 million dollar question which we'll get to? How do we determine the reliability of a judge? Is it common to use multiple judges to get a consensus for evaluation? It's too common. And it is not the best approach, and we'll get to the best approach. And it's
+
+260
+00:52:44.570 --> 00:53:01.770
+hugo bowne-anderson: people will be disappointed, but involves looking at the judge's output, defining your own judgment and then comparing, comparing them. So we don't often use a 3rd judge on top. We use human evaluation, and after some time see alignment, but we'll get to that. Now. This Lm. As a judge, is
+
+261
+00:53:01.920 --> 00:53:07.979
+hugo bowne-anderson: a 1st approximation as a judge, and it's intended as an example. There are several things in here you wouldn't want.
+
+262
+00:53:08.140 --> 00:53:14.510
+hugo bowne-anderson: Well, that won't be good for a judge in the end. Can anyone see any
+
+263
+00:53:15.300 --> 00:53:25.739
+hugo bowne-anderson: any problems with this judge, and maybe if someone just wants to turn their mic on and say who they are, and and remind us what what they do. That that would be super cool.
+
+264
+00:53:28.520 --> 00:53:33.300
+hugo bowne-anderson: just any thoughts on what's wrong or how you would improve on this judge or think about it.
+
+265
+00:53:41.330 --> 00:53:43.060
+hugo bowne-anderson: So my zoom has disappeared.
+
+266
+00:53:46.960 --> 00:53:48.429
+hugo bowne-anderson: It's gonna go back to it.
+
+267
+00:54:01.040 --> 00:54:07.420
+hugo bowne-anderson: I'm sure someone has something interesting, even if it ends up being incorrect.
+
+268
+00:54:10.150 --> 00:54:15.700
+hugo bowne-anderson: Hey, Curtis, why don't you turn your microphone on, and just remind us where you are and and what you do by way of introduction.
+
+269
+00:54:15.700 --> 00:54:20.939
+Curtis Mitchell: I'm in San Francisco. I'm a software engineer currently, with the census bureau.
+
+270
+00:54:21.180 --> 00:54:22.320
+hugo bowne-anderson: Awesome.
+
+271
+00:54:22.610 --> 00:54:28.950
+Curtis Mitchell: Is it possible that you're giving it instructions that it can't fulfill like one of them looked like
+
+272
+00:54:29.511 --> 00:54:31.860
+Curtis Mitchell: it reminds me of a a
+
+273
+00:54:32.000 --> 00:54:39.430
+Curtis Mitchell: somebody. I saw a demo with a prompt that they wrote in a question or an instruction, and at the end they said, Don't be biased.
+
+274
+00:54:40.020 --> 00:54:45.379
+Curtis Mitchell: So I'm looking at something like it avoids solution. Hallucinations are made up. Information.
+
+275
+00:54:45.540 --> 00:54:53.959
+hugo bowne-anderson: Yeah, you're absolutely right. I have given it something that it can't do, and that perhaps. And I'll get to the next point that it probably shouldn't do. I've said it is.
+
+276
+00:54:54.090 --> 00:55:07.980
+hugo bowne-anderson: Response is acceptable if it is factually correct, based on the workshop content. And I haven't given it the workshop content. Right? So it's not. It's not going to be. It's not going to do anything in anything great there, right? And
+
+277
+00:55:08.130 --> 00:55:21.379
+hugo bowne-anderson: the other related major error. I've done here, and we're going to talk about this later in the week with John Berryman, who he worked on, you know, the precursor to copilot at Github, actually, and
+
+278
+00:55:21.960 --> 00:55:45.430
+hugo bowne-anderson: the fact that when building information retrieval systems remember, we have. We have lots of components, but you can slice it into 2. We have the retrieval aspect, right which is getting out the correct information in chunks, and then the generative aspect which is developing the generative response. And in rag systems. The best way to evaluate rag systems are decoupling those. So you actually, what you want to do is
+
+279
+00:55:46.210 --> 00:56:10.390
+hugo bowne-anderson: develop an eval for the retrieved chunks and not just the generative component. So for those interested in working with Pastor on building out this judge in in builders clubs, that's the 1st thing we'll get you to do is start thinking about how to evaluate the the retrieval part, and then how to evaluate the the generative part as well. And, in fact, when thinking about retrieval, right?
+
+280
+00:56:10.540 --> 00:56:24.089
+hugo bowne-anderson: Do you want to prioritize precision or recall? And I think if you think about it, you'd you'd realize the answer is, you want to prioritize whatever gets you chunks that have as much relevant information as possible. Even if
+
+281
+00:56:24.850 --> 00:56:36.250
+hugo bowne-anderson: there are false negatives, even if you get information that isn't relevant. That's better than leaving out relevant information in your chunks. Right? So that's how you think about precision. Recall trade off there.
+
+282
+00:56:36.490 --> 00:57:03.329
+hugo bowne-anderson: So let's just look at some of the results of this Lm. As a judge that I built, and once again I I spun up. I vibe coded a Json viewer for this. And this is actually really interesting. So there's an error here in that that. What I vibe coded, said Openai. Evaluation and Gemini evaluation. Now that isn't actually the case. It's the open, the rag system with Openai
+
+283
+00:57:03.680 --> 00:57:18.399
+hugo bowne-anderson: and the rag system with Gemini and one judge that I think, was Openai looking at that. But what we see is that you know. The question was, how can I approach prompt engineering according to workshop one? And the evaluation was
+
+284
+00:57:18.570 --> 00:57:30.987
+hugo bowne-anderson: sorry. The response was according to workshop. One prompt engineering can be approached by logging inputs and outputs, evaluating iterating on prompts and context using knobs to reduce variance. It also is important to leverage domain expertise to evaluate the output.
+
+285
+00:57:32.440 --> 00:57:42.269
+hugo bowne-anderson: okay, I don't like. I don't like, and it gives it a fail. I would have given that a pass, and it says, the response does not directly answer the question with specific details from workshop one. It lack
+
+286
+00:57:42.270 --> 00:58:11.440
+hugo bowne-anderson: the 1st principles mentioned in the good example. So remember, we gave a few shot of examples to the Llm. As a judge already. We're seeing errors here. Okay, now, it's 1 thing is, it doesn't have access to workshop one. So that's something we, of course, need to fix. The other thing is, it's over indexing on the answer in the example, isn't it, in the few shot example? So we need to iterate to make sure that that doesn't happen. The Gemini one I liked, and it gave a pass. So that's good.
+
+287
+00:58:11.440 --> 00:58:20.940
+hugo bowne-anderson: But we've already got a sense of how to evaluate iterate on the judge. I showed this example because the question was, what is the difference between Lm fine tuning and prompt engineering?
+
+288
+00:58:21.320 --> 00:58:47.569
+hugo bowne-anderson: The Openai response was great, and it gave it a pass and gave a good reason why the Gemini response was sorry. An error occurred with Gemini 4, 2, 9. You exceeded your current quota. Right? So clearly the system isn't isn't working now. It gave it a fail which I like. I didn't like the response. The reason behind the fail, it said, the response does not address the question at all. Instead, it provides an error message related to api rate limits. So
+
+289
+00:58:48.230 --> 00:59:07.019
+hugo bowne-anderson: if this judge seems to think that this is actually the response, and in a sense it is, but I'd prefer a judge to say, Hey, you error it out. This is the actual failure mode here, and of course we can in the system, prompt help, help a judge to do that, and we'd iterate on that there.
+
+290
+00:59:07.250 --> 00:59:14.531
+hugo bowne-anderson: So this is, you know, to Roger's question, how do we determine the reliability of a judge.
+
+291
+00:59:17.750 --> 00:59:21.810
+hugo bowne-anderson: the best way I've seen to do it okay
+
+292
+00:59:21.970 --> 00:59:28.070
+hugo bowne-anderson: is. And I'll share. Actually, I shared this as
+
+293
+00:59:28.520 --> 00:59:33.400
+hugo bowne-anderson: yesterday in the Channel. I'm going to reshare it now.
+
+294
+00:59:39.110 --> 00:59:43.280
+hugo bowne-anderson: So this is.
+
+295
+00:59:46.350 --> 00:59:53.658
+hugo bowne-anderson: This is a way that I 1st really heard about, and it makes intuitive sense from Philip Carter at who's then at Honeycomb. Now he's at
+
+296
+00:59:55.630 --> 00:59:57.929
+hugo bowne-anderson: at Salesforce. But you know the
+
+297
+00:59:58.150 --> 01:00:22.330
+hugo bowne-anderson: this 1st row of building a judge. We've already talked about right? We build a prototype log inputs. And that means everything right and outputs hand label is pass or fail. Then you build a prompt for the judge. Now, how do you align the judge. What you want to do is score new outputs with your judge. And so that's hand labeling, yeah. So score new outputs with a judge and
+
+298
+01:00:22.640 --> 01:00:27.479
+hugo bowne-anderson: then you hand label the same outputs blind. So you don't look
+
+299
+01:00:27.630 --> 01:00:32.159
+hugo bowne-anderson: at the judges responses. Let's say you've got 10 or 20 of them and do it
+
+300
+01:00:32.650 --> 01:00:33.980
+hugo bowne-anderson: and hand, label them.
+
+301
+01:00:34.120 --> 01:00:37.889
+hugo bowne-anderson: Then you look at the judges, labels, and your own labels, and then
+
+302
+01:00:38.050 --> 01:01:03.820
+hugo bowne-anderson: write comments on the difference, and how you'd think on iterating on the judge prompt there and then you iterate on the judge. Prompt. So, and then you then you repeat, okay, and what you can do is if you do this over successive days, or weeks, or few days. What you can then do is plot. The percentage of agreement between Llm. Judge and human labeling, and if you're doing it well, you'll see
+
+303
+01:01:03.920 --> 01:01:10.649
+hugo bowne-anderson: the agreement. Just go go up up and to the right and let me just see whether
+
+304
+01:01:11.560 --> 01:01:17.420
+hugo bowne-anderson: Philip, and I'm sorry for going to linkedin
+
+305
+01:01:24.330 --> 01:01:27.730
+hugo bowne-anderson: So yeah, I didn't write here what
+
+306
+01:01:28.079 --> 01:01:32.900
+hugo bowne-anderson: how long it took, but I think it was a a week or 2 of doing this, that they got to
+
+307
+01:01:33.400 --> 01:01:40.449
+hugo bowne-anderson: 90% agreement between Llm as a judge and human labeling, okay, and and human judge.
+
+308
+01:01:40.730 --> 01:01:46.870
+hugo bowne-anderson: So just think about how we do this. And this is once again, what people object to. You put
+
+309
+01:01:47.930 --> 01:01:55.976
+hugo bowne-anderson: the prompt and response input and output in a spreadsheet. Then in one column you get the Llm. As a judges
+
+310
+01:01:56.700 --> 01:02:02.909
+hugo bowne-anderson: pass or fail and reason, and then in the next column, without looking at the judge, you get
+
+311
+01:02:03.040 --> 01:02:06.530
+hugo bowne-anderson: your parcel fail and reason. Then you look at both.
+
+312
+01:02:06.950 --> 01:02:13.340
+hugo bowne-anderson: Then in the next column you write what your comparison is, and how you would think about iterating on the prompt
+
+313
+01:02:14.420 --> 01:02:15.360
+hugo bowne-anderson: and
+
+314
+01:02:16.620 --> 01:02:43.589
+hugo bowne-anderson: after you have all of those you use that to go back and iterate and iterate on the prompt and rinse and repeat, Okay, now, this is incredibly unsexy in a lot of ways. But I do once again, it's actually incredibly exciting and fun. If you're curious about how your system works looking at it. And you've built a judge. And if you're curious about how your judge works, look at it and improve on it and iterate on it. That's actually where where the real magic happens, although it doesn't.
+
+315
+01:02:43.640 --> 01:03:08.530
+hugo bowne-anderson: it doesn't seem like the most magical, magical thing. And I did a whole podcast with Philip about this. Actually, it was a guest Q&A in our last cohort. But I do encourage you all. If you're interested in learning more about this, to listen to that talk or Q&A. And feel free to ask us any questions, because I speak with Philip quite often about this type of thing.
+
+316
+01:03:10.240 --> 01:03:11.740
+hugo bowne-anderson: There was one more thing I
+
+317
+01:03:13.310 --> 01:03:15.235
+hugo bowne-anderson: I wanted to add, there,
+
+318
+01:03:18.230 --> 01:03:21.320
+hugo bowne-anderson: yeah, there's a there's a meta point that it does.
+
+319
+01:03:21.440 --> 01:03:27.020
+hugo bowne-anderson: People complain, and I understand it. That for example.
+
+320
+01:03:27.720 --> 01:03:34.029
+hugo bowne-anderson: Claude Sonnet right seems to judge Claude Sonnet a bit more favorably than other models. Do. Okay,
+
+321
+01:03:35.340 --> 01:03:49.319
+hugo bowne-anderson: Now, that kind of makes sense, and it's interesting. And people object. Maybe you need to use a different different model. And what I've seen in in production is, if you do the alignment correctly or the process correctly.
+
+322
+01:03:49.760 --> 01:03:58.649
+hugo bowne-anderson: the details don't really really matter. You'll get the same type of alignment with with any model in in the end
+
+323
+01:03:59.860 --> 01:04:04.995
+hugo bowne-anderson: cool. So Cece has a great question.
+
+324
+01:04:05.550 --> 01:04:31.890
+hugo bowne-anderson: which is how companies with products already in production handle the judge alignment? How often are AI engineers aligning the judge daily once a week. What I see is initially daily, or, you know, even a couple of times a day checking in on it, and then, as they become like more confident in its response, then taking a bit more time. But it's all about building building that trust. And once again.
+
+325
+01:04:33.460 --> 01:04:37.700
+hugo bowne-anderson: oh, no, Julian, sorry the the judge alignment you you do.
+
+326
+01:04:38.080 --> 01:04:39.280
+hugo bowne-anderson: You can initially do
+
+327
+01:04:39.940 --> 01:04:45.100
+hugo bowne-anderson: just through prompt iteration. You don't. You don't need to change the weights or anything in
+
+328
+01:04:45.260 --> 01:04:49.029
+hugo bowne-anderson: anything along those lines. And to Cece's question once again.
+
+329
+01:04:49.250 --> 01:05:11.170
+hugo bowne-anderson: I'll give the example of you know, the engineers who 1st launched Netflix recommendations on their website and in their product, like their eyes, were glued to their dashboards for weeks afterwards, making sure that it wasn't breaking completely right, and once they became a bit more comfortable. Maybe, you know, they only checked a few times a day, and then, you know, every second day and those types of things.
+
+330
+01:05:12.930 --> 01:05:25.023
+hugo bowne-anderson: and to Pastor's point, it is very much dependent on on the use case, particularly like for Netflix recommendation engine, like their product depended on it. So it's your appetite appetite for risk.
+
+331
+01:05:26.010 --> 01:05:27.069
+hugo bowne-anderson: as well.
+
+332
+01:05:29.570 --> 01:05:37.332
+hugo bowne-anderson: Yeah. So, Tim. Great question in response to Julian's that I that I answered,
+
+333
+01:05:38.250 --> 01:06:03.629
+hugo bowne-anderson: yeah. So I wouldn't necessarily feed the alignment data back to the judge, but definitely feeding like few shot prompts and things that things that are good things that are bad. That type of stuff, fine tuning should be a method of last resort, if you need to, definitely. But most of the time you won't, you won't need to. And, Brad, can I ask a quick question about lifecycle stages, recommendations? Great? Why don't you turn your microphone on and ask the question.
+
+334
+01:06:04.360 --> 01:06:05.990
+brad morris: Yeah, thank you. Can you hear me? Okay.
+
+335
+01:06:05.990 --> 01:06:07.080
+hugo bowne-anderson: Yeah. Sound. Great man.
+
+336
+01:06:07.440 --> 01:06:13.259
+brad morris: Nice. It's kind of devil's advocate here a little bit. I'm just wondering in this particular
+
+337
+01:06:13.780 --> 01:06:16.759
+brad morris: example, like the rag app that you guys are building.
+
+338
+01:06:16.970 --> 01:06:27.080
+brad morris: I'm just wondering in which case you might choose to just try and stitch together a minimal viable product without doing any of this stuff. 1st to get the user responses in
+
+339
+01:06:27.320 --> 01:06:28.490
+brad morris: and then
+
+340
+01:06:28.770 --> 01:06:37.800
+brad morris: do the next step. I remember William mentioned this, I think, in his talk in cohort one where he said, you don't really know what you're evaluating in some cases until you actually get
+
+341
+01:06:37.970 --> 01:06:41.060
+brad morris: user responses. Does the question make sense.
+
+342
+01:06:41.420 --> 01:06:43.913
+hugo bowne-anderson: Perfect sense. So just to reflect it.
+
+343
+01:06:44.290 --> 01:07:11.632
+hugo bowne-anderson: you know, when generating synthetic queries and starting to build all of this stuff, can we just build something that kind of works via vibes. Serve it to users and see what's up. See how it works. You also mentioned a great talk that William gave that we we have in the resources that was about. You know, you don't actually know what you're measuring, really, or how to evaluate until until you've built until until you've launched something right.
+
+344
+01:07:12.200 --> 01:07:14.809
+hugo bowne-anderson: sorry there was. Just and knock it.
+
+345
+01:07:15.060 --> 01:07:17.990
+hugo bowne-anderson: The door can. Just give me 30 seconds. I'm sorry.
+
+346
+01:07:22.650 --> 01:07:29.800
+hugo bowne-anderson: Hi, sorry. I'm teaching at level. Okay? Sorry. Paul's not there. No. Okay, cool. Okay. Thanks.
+
+347
+01:07:33.510 --> 01:07:42.060
+hugo bowne-anderson: Alright. Sorry about that. Everyone. I'm I'm house sitting for someone at the moment. So I just wanted to make sure it wasn't a delivery for them, or something like that. Appreciate
+
+348
+01:07:43.100 --> 01:08:01.249
+hugo bowne-anderson: your patience, and the answer is, Yes, you can, you can definitely do that. This suggestion is really to start thinking about your system before launching it so that you can get a sense of what's what's happening in it to be honest, but depending what your appetite for risk is.
+
+349
+01:08:01.990 --> 01:08:31.789
+hugo bowne-anderson: you can really do whatever you want. I've also seen people hand roll things, roll things out internally first.st And this is actually one of one of the best ways to get initial feedback. Think about a customer support bot. And people did this like Pre Llms as well. If you have a customer support Bot classically, it's a great idea to roll it out to customer support agents. 1st when they're on calls with customers, right? So a customer support agent can use it. You can get real data. But you then you don't get
+
+350
+01:08:31.800 --> 01:08:42.710
+hugo bowne-anderson: the the challenges associated with serving something that you're not quite sure how it works to to customers as well, and you can also do limited limited rollouts also.
+
+351
+01:08:44.450 --> 01:09:09.400
+hugo bowne-anderson: so before we move on, I just do want to say I didn't say what this product Philip built at Honeycomb was, and in fact, it was actually one of the first, st if not the 1st Sas products in 2023 outside the major AI labs that that incorporated Llms. And it was. It was text to honeycomb, query, language, and it was a single turn conversation. And that's 1 of the reasons I really love this example as well. It wasn't multi turn sorry. It wasn't a conversation. It was prompt
+
+352
+01:09:09.510 --> 01:09:13.020
+hugo bowne-anderson: response, right? And
+
+353
+01:09:14.130 --> 01:09:25.270
+hugo bowne-anderson: and I think it's important to just say all the nuances that arise, even when you just have, like a single, a single turn before getting into, you know, multi-turn conversations.
+
+354
+01:09:25.529 --> 01:09:26.410
+hugo bowne-anderson: So
+
+355
+01:09:29.260 --> 01:09:55.019
+hugo bowne-anderson: a bit about observability, instrumentation in Devon prod, and which will be, you know, the main subject of pastor. I'm sorry of Stefan's talk getting ahead of myself. We've already seen. This is the call loop for evaluation. You have an AI system response, and you compare to ground truth, right cost, accuracy, latency, user and business metrics. Now to log your system. You want to log everything on the user end, such as system, prompt user, prompt
+
+356
+01:09:55.060 --> 01:10:08.930
+hugo bowne-anderson: tool calls function calls. You have your front end ui, and then you have your Llm. Api, and with your logging here you want to log the response. Outputs tokens used errors. Latency cost tracking all of these things right now.
+
+357
+01:10:09.720 --> 01:10:36.439
+hugo bowne-anderson: logging is one thing, logging doesn't give you observability, does it? So you want to make sure that you have some sort of monitoring and observability put in place that allows you to. I mean, I don't know if anyone's joined a startup as like a 1st data scientist or second data scientist. But if you do guaranteed 1st 12 to 18 months of your job becomes being a data engineer where your turn, like all the logs, are there. But there's no observability. There's no monitoring in place at all. Right, you can't find the schemas. So
+
+358
+01:10:36.440 --> 01:10:48.040
+hugo bowne-anderson: once you have your logging, you want to make sure you can monitor and observe. And and Stefan will talk a lot about this like this week. So tracking and optimizing cost, inspecting accuracy and errors, visualizing latency trends, user and business metrics.
+
+359
+01:10:48.832 --> 01:10:59.159
+hugo bowne-anderson: So just to reiterate. And this is, of course, what we'll be doing in the builders. Clubs as well with with pastor built a simple rag, app define personas and realistic scenarios.
+
+360
+01:10:59.160 --> 01:11:23.050
+hugo bowne-anderson: generated synthetic questions, labeled outputs built a basic harness compared outputs between models, use failure, analysis to drive iteration and improvement. And this is an Mve. A minimum viable Eval, a fast transparency loop for testing and improving Llm. Apps even before you have real users. But to Brad's point. There are so many ways of getting data. And if you've got a core set of users who you want to launch something to.
+
+361
+01:11:23.050 --> 01:11:44.610
+hugo bowne-anderson: and people who are on board with you in product development. Early users definitely definitely do that similarly roll things out internally. The Q. And A. We had with Alex from Zenml last week about his Llm. Ops, database, and all the agentic stuff happening in there. I'll try to find this blog post, but they had a post which showed a lot of the time
+
+362
+01:11:44.740 --> 01:11:59.210
+hugo bowne-anderson: when people roll out these systems, the most successful ones roll them out internally, then to like point one or 1% of users, then to 2%, then to 5%, and so on and rapidly iterate as they introduce more and more people into the system.
+
+363
+01:11:59.640 --> 01:12:04.720
+hugo bowne-anderson: So before moving on to the notebooks, I
+
+364
+01:12:07.705 --> 01:12:09.980
+hugo bowne-anderson: curtis has a wonderful question.
+
+365
+01:12:10.391 --> 01:12:19.449
+hugo bowne-anderson: Which we should talk about. This eval workflow is fairly manual. Are there commercial, open source tools that make it easier to compare different versions of a Gen. AI app
+
+366
+01:12:20.860 --> 01:12:22.240
+hugo bowne-anderson: so, Curtis.
+
+367
+01:12:25.940 --> 01:12:32.440
+hugo bowne-anderson: what parts of this are manual that that would solve. For what are the steps I've outlined that that will solve for.
+
+368
+01:12:33.120 --> 01:12:38.629
+Curtis Mitchell: Yeah, I think maybe it would only solve parts of it like, if you could
+
+369
+01:12:38.850 --> 01:12:44.550
+Curtis Mitchell: have something. For example, if you could deploy the same app with different foundation models.
+
+370
+01:12:44.980 --> 01:12:48.699
+Curtis Mitchell: There's maybe some tool like that that would make that easier and then track
+
+371
+01:12:48.960 --> 01:12:56.379
+Curtis Mitchell: the same track, the different outputs for the same input, and, you know, show you different ways to compare those. If you're doing
+
+372
+01:12:56.520 --> 01:13:01.970
+Curtis Mitchell: string, matching or yeah, something more qualitative.
+
+373
+01:13:02.220 --> 01:13:26.829
+hugo bowne-anderson: Totally yes, and the short answer is, Yes, there are lots of tools. So Samuel Colvin, who built pdante, has given a guest lecture in 45 min. A guest talk is working on logfire, which you all have $500 in credits for, so that can help with some parts of this Brain trust is another tool that you definitely should check out Phoenix. Arise is another Langsmith.
+
+374
+01:13:27.240 --> 01:13:34.310
+hugo bowne-anderson: These are all tools that help with certain parts of this I will tell you the pattern I've seen, though
+
+375
+01:13:34.630 --> 01:13:39.630
+hugo bowne-anderson: people adopt these tools and end up
+
+376
+01:13:40.080 --> 01:13:49.709
+hugo bowne-anderson: either building a lot of their own things on top of them or discarding them after 12 to 18 months, and and hand rolling their own tools. And maybe to
+
+377
+01:13:49.980 --> 01:13:55.500
+hugo bowne-anderson: get slightly big picture here. But I do think
+
+378
+01:13:56.040 --> 01:14:24.680
+hugo bowne-anderson: you know what like the example people like to give is react as a framework, right? So react like came out 10 to 15 years after the Internet. And people needed things like react. And so the point of that example is, react's a pretty nice abstraction layer to build those types of things with right, but it took that long to emerge. And if we're thinking about foundation models and the application layer on top of them, we have what is an incredibly horizontal.
+
+379
+01:14:24.720 --> 01:14:50.879
+hugo bowne-anderson: widely applicable technology of foundation models. And now we have a lot of people here in the course in particular, but elsewhere, trying to build applications on top of it, right? And in parallel. We have people building tools to try and support the application layer. Right? So we have this kind of coevolution of application, layer, foundation models, tools on top. And the truth of the matter is, none of the tools have really. We don't even know what we'll be doing on the application layer in the next few months.
+
+380
+01:14:50.940 --> 01:15:04.729
+hugo bowne-anderson: let alone the tools able to to do that type of thing. So that's why what we've actually seen is people, you know, using tools like Lancemith and brain trust. And these things, all of which have pros, pros and cons. But in the end people do
+
+381
+01:15:04.740 --> 01:15:30.219
+hugo bowne-anderson: end up hand rolling all of their own types of things, such as the custom Json viewer I showed you, and in all honesty you can spin something like that up with cursor in 5 min and get a huge way. Now, if you want to be doing this together on a team and those types of things and make sure you have authentication and security sorted, and all those types of things adopting a vendor based framework will be important there. But I just want to make sure
+
+382
+01:15:30.510 --> 01:15:32.459
+hugo bowne-anderson: we don't put the cart before the horse.
+
+383
+01:15:33.600 --> 01:15:36.780
+hugo bowne-anderson: The other thing you'll notice if you go to any of
+
+384
+01:15:37.170 --> 01:15:40.350
+hugo bowne-anderson: nearly all of these frameworks. Documentation on
+
+385
+01:15:40.500 --> 01:15:58.620
+hugo bowne-anderson: like evaluation. Start with Llm. As a judge. Virtually none of them encourage you to do any hand labeling, and and a lot of them don't even have any ways to get like hand labels from the platform down to your own local system, programmatically and and vice versa. And these types of things and
+
+386
+01:15:58.970 --> 01:16:24.369
+hugo bowne-anderson: what that I mean. Part of my job here in convincing people to hand label things is because the frameworks have told people the opposite, essentially, and I understand there's a venture backed tragedy of the Commons, where their limited partners and and and venture capitalists, you know, need them to put their documentation and or marketing material in in a scalable form. But it is. It is hurting the space to be honest. So what I want to make sure is, people are to
+
+387
+01:16:24.430 --> 01:16:37.524
+hugo bowne-anderson: able to adopt tools and build their own tools that allow them to rapidly iterate, and that does include some some hand labeling. But the short answer to your question is, yes, there, there definitely are are tools. But
+
+388
+01:16:38.180 --> 01:16:47.246
+hugo bowne-anderson: adopt mindfully. And we'll get to this a bit later in in the course. But there are several vectors to think around. Think about tool adoption around.
+
+389
+01:16:49.870 --> 01:16:51.220
+hugo bowne-anderson: one is, does it do
+
+390
+01:16:51.720 --> 01:17:12.879
+hugo bowne-anderson: most of the things you need at the moment the 2 others are, does it have a big community around it? Right? So go to their slack or discord, or whatever, and see what's up. See how many poor see how many issues are being right. If there are a lot of unsolved issues on Github, that's often a good sign as long as they're not years old. Right? The 3rd is betting on
+
+391
+01:17:14.560 --> 01:17:25.304
+hugo bowne-anderson: people with proven track records. So my bias is is obvious, I think, but one reason I'm a i'm a fan of logfire. And Samuel Colvin, who's giving the guest talk today is
+
+392
+01:17:26.820 --> 01:17:40.579
+hugo bowne-anderson: He's built pydantic right and maintained pydantic for a significant amount of time, and very interested in engineering best best practices when it comes to the python and generative AI landscape. So I'm
+
+393
+01:17:40.940 --> 01:17:43.110
+hugo bowne-anderson: I'm bullish on
+
+394
+01:17:46.420 --> 01:17:59.020
+hugo bowne-anderson: people with with proven proven track records, and I just want to make sure you all don't adopt tools from vendors that don't exist in 12 to 18 months as well. Okay, so sorry for that long winded answer, but I hope it. I hope it was, was helpful.
+
+395
+01:17:59.020 --> 01:18:00.450
+Curtis Mitchell: Yeah, definitely, thank you.
+
+396
+01:18:01.230 --> 01:18:09.169
+hugo bowne-anderson: Fantastic. So look what Pastor built. We have a channel and pastor, maybe you can link to the channel in in the chat.
+
+397
+01:18:10.540 --> 01:18:12.730
+hugo bowne-anderson: where you can interact with
+
+398
+01:18:13.050 --> 01:18:22.659
+hugo bowne-anderson: the build with AI bot. So I said to it, what are the main principles for building rag systems? And it replied, all of this cool stuff, and pastels build in a plus one minus one. So this annotates
+
+399
+01:18:23.020 --> 01:18:38.430
+hugo bowne-anderson: it. So you get logs and you can give feedback. And so I said, gave it a plus one, but not sure if it came from workshop transcripts or the weights of the model. So something, of course, we want to start seeing in this rag system is inspecting the chunks so we can
+
+400
+01:18:38.550 --> 01:18:56.699
+hugo bowne-anderson: the chunks retrieved, so we can evaluate the retrieval part of the process. Now this is another example of something. Mike Powers asked, that what is the single, most important lesson of this course so far, which is a wonderful question, because it will break the system. I mean, it won't literally break it, but it will.
+
+401
+01:18:57.080 --> 01:19:24.779
+hugo bowne-anderson: This is the type of question, I think, as we discussed that rag is horrible for right? Because, remember, you're putting these chunks in, whereas this question is broad across the entire thing, and of course well, 3 people gave it a minus one, and Mike gave it an extra one, saying, he thinks this is pretty much hallucinated, which is great feedback. So we want to stress, test it with things we think it can't or shouldn't answer as well. Now, Pastor can also provide links
+
+402
+01:19:25.090 --> 01:19:43.730
+hugo bowne-anderson: a link to this, but these are the logs, so you can start looking into the logs and see what's up when you ask it, a question. That log may take a bit of time to appear, but definitely jump in and have a play around. And, pastor, maybe you can correct me if I'm wrong. But this week next steps the current
+
+403
+01:19:44.110 --> 01:19:53.800
+hugo bowne-anderson: Discord bot is all on previous workshop transcripts. But what we're doing is we're attempting to migrate it to transcripts for this cohort. Is that correct?
+
+404
+01:19:54.800 --> 01:20:06.840
+Pastor Soto: Yeah, yeah, we already migrated to this. So to these workshops. So we are currently have just 2 workshops. And tonight we will have 3 planting. This. Yeah.
+
+405
+01:20:06.840 --> 01:20:10.149
+hugo bowne-anderson: Fantastic. And so thinking about process.
+
+406
+01:20:10.966 --> 01:20:12.319
+hugo bowne-anderson: Did you?
+
+407
+01:20:12.810 --> 01:20:24.659
+hugo bowne-anderson: When so it was originally on previous cohort, and then you tried it on the new transcripts. Did you do that in a different branch, and run some synthetic queries through it to make sure that it responded to them correctly, or.
+
+408
+01:20:25.820 --> 01:20:36.169
+Pastor Soto: Yeah, I created a different branch and test that it works correctly. But it didn't run evals on it so clearly is just
+
+409
+01:20:36.490 --> 01:20:40.319
+Pastor Soto: using the the old system on top of the new transcript.
+
+410
+01:20:40.510 --> 01:20:45.210
+hugo bowne-anderson: Right, but it didn't do robust evals. But you did it via vibes right? You saw with the synth.
+
+411
+01:20:45.210 --> 01:20:45.690
+Pastor Soto: Yeah.
+
+412
+01:20:45.690 --> 01:20:47.840
+hugo bowne-anderson: That the responses looked okay.
+
+413
+01:20:48.030 --> 01:20:50.860
+Pastor Soto: Yeah, exactly. That's that's sadly what I did.
+
+414
+01:20:50.860 --> 01:20:56.640
+hugo bowne-anderson: And that's a wonderful new answer to Brad's question as well like, when do you start doing like
+
+415
+01:20:56.760 --> 01:21:04.140
+hugo bowne-anderson: Eval harnesses and that type of stuff with this case, because it's low risk, we put in, you know, 20 or something synthetic queries, and looked at the responses
+
+416
+01:21:04.220 --> 01:21:28.600
+hugo bowne-anderson: with our eyes and thought that was chill. But we'll see what happens when we start to include the 3rd and 4th Transcript and those types of things. So of course, this is divergent from the main path of this entire course. But if you're doing the homework, please do feel free to continue with that. If, instead of the homework, you want to start working on this rag transcript. But with us, please, please do that as well. So
+
+417
+01:21:28.790 --> 01:21:34.450
+hugo bowne-anderson: I'm I'm just offering as many options as possible for you to get get your teeth really in into it all.
+
+418
+01:21:34.980 --> 01:21:40.009
+hugo bowne-anderson: So in terms of the project homework for
+
+419
+01:21:41.700 --> 01:21:55.410
+hugo bowne-anderson: this workshop, I want you to update the Mvp. From workshop 2 and start building out some evals. And I've written see the notebook for more instructions. We'll put it in discord as well. But when we go through the notebook we'll see exactly
+
+420
+01:21:56.170 --> 01:22:03.480
+hugo bowne-anderson: what I mean by that. Okay, so now it's time to go to Github.
+
+421
+01:22:05.510 --> 01:22:06.600
+hugo bowne-anderson: Wow!
+
+422
+01:22:20.360 --> 01:22:21.390
+hugo bowne-anderson: Why not?
+
+423
+01:22:23.730 --> 01:22:28.080
+hugo bowne-anderson: I'm actually going to just switch to another
+
+424
+01:22:28.650 --> 01:22:33.460
+hugo bowne-anderson: tab because my chrome accounts are there we go.
+
+425
+01:22:35.710 --> 01:22:37.529
+hugo bowne-anderson: People can see Github correct.
+
+426
+01:22:40.680 --> 01:22:43.459
+Caleb Tutty: No, no, no, it's the slides.
+
+427
+01:22:43.690 --> 01:22:44.480
+hugo bowne-anderson: Oh, okay.
+
+428
+01:22:44.480 --> 01:22:45.060
+Pastor Soto: Nice time.
+
+429
+01:22:45.060 --> 01:22:45.989
+hugo bowne-anderson: Try that again!
+
+430
+01:22:51.340 --> 01:22:52.849
+Pastor Soto: That's this column.
+
+431
+01:22:54.310 --> 01:22:55.170
+hugo bowne-anderson: Discord.
+
+432
+01:22:55.290 --> 01:23:03.809
+hugo bowne-anderson: Wow, man, the hardest problem in computer science is time zones and sharing screens.
+
+433
+01:23:04.850 --> 01:23:06.370
+Pastor Soto: They're asking, yeah.
+
+434
+01:23:06.370 --> 01:23:08.010
+hugo bowne-anderson: Okay, beautiful.
+
+435
+01:23:09.260 --> 01:23:15.290
+hugo bowne-anderson: So let me just restart this code space. And what I, we're going to go through 2 notebooks.
+
+436
+01:23:16.750 --> 01:23:17.980
+hugo bowne-anderson: The 1st one
+
+437
+01:23:21.740 --> 01:23:24.049
+hugo bowne-anderson: we're going to talk about the basics of
+
+438
+01:23:24.650 --> 01:23:48.309
+hugo bowne-anderson: evaluation and iteration, and how we think about what we're trying to measure. And then in the second one, we're going to go through a particular example. Okay? So we have 35 min. And I do want to, you know, end maybe 5 min early. Just so you have a chance to do the survey and then have a bio break before the guest. Talk. If if you're joining so I won't.
+
+439
+01:23:48.550 --> 01:23:58.970
+hugo bowne-anderson: we won't spend a huge amount of time. On this. So this is session 3 dot ipy, y and B, and there's no code to execute in this. By the way. Okay.
+
+440
+01:23:59.830 --> 01:24:08.420
+hugo bowne-anderson: so what I really want you to get out of this notebook is start to think about understanding
+
+441
+01:24:08.860 --> 01:24:13.459
+hugo bowne-anderson: approaches to evaluating outputs. And then, as we've discussed the mechanics of iteration. And
+
+442
+01:24:13.560 --> 01:24:23.294
+hugo bowne-anderson: I want you to understand that you really need to understand your data. Okay? So once again, we'll go back to Winnie. The pooh! The tower of Poo here.
+
+443
+01:24:24.060 --> 01:24:26.660
+hugo bowne-anderson: And what we?
+
+444
+01:24:27.500 --> 01:24:32.439
+hugo bowne-anderson: I just want to remind you that we can evaluate at different levels, right? We can evaluate at
+
+445
+01:24:32.650 --> 01:24:50.449
+hugo bowne-anderson: a micro Llm call level in the Linkedin email generation. Example, you can ask is the information it extracts? Correct? Okay? Then you can ask a slightly broader question, or like a more high level question or more systems, level question, do the email generator resemble the emails the domain expert sent previously?
+
+446
+01:24:50.670 --> 01:25:01.239
+hugo bowne-anderson: But then, what's the goal of the system to the emails result in hiring good candidates more efficiently. So just remember when evaluating you have these different levels of of evaluation. Right? And
+
+447
+01:25:02.790 --> 01:25:06.370
+hugo bowne-anderson: so once again, it's a huge challenge defining
+
+448
+01:25:06.530 --> 01:25:13.640
+hugo bowne-anderson: what is good. Okay, so think about these common Lm tasks and their potential success. Criteria.
+
+449
+01:25:15.870 --> 01:25:44.414
+hugo bowne-anderson: we have extraction? Does the output accurately extract all required information? Summarization? Does it concisely capture the key points, then generative tasks? Is the response, clear, polite, and helpful. Then rag or retrieval? Does the output provide accurate, relevant, and complete answers to the query, okay, now, we're not going to go through these topics now. But if if you want to chat with anyone about it, or have these conversations in discord,
+
+450
+01:25:45.220 --> 01:25:51.119
+hugo bowne-anderson: I and I very much encourage it, and I just want to also make clear.
+
+451
+01:25:51.240 --> 01:26:06.661
+hugo bowne-anderson: We've got these highly sophisticated technologies we're working with now. And we're still figuring out like, hello worlds of them. We're still figuring out extraction and summarization and how to measure. You know, success of generative tasks and that type of thing. And it actually reminds me, I don't know
+
+452
+01:26:08.080 --> 01:26:09.360
+hugo bowne-anderson: Atari.
+
+453
+01:26:09.930 --> 01:26:14.270
+hugo bowne-anderson: If anyone ever played a game called Adventure.
+
+454
+01:26:14.800 --> 01:26:20.690
+hugo bowne-anderson: if you were born in the eighties or seventies, maybe you know this game. This is this is the 1st
+
+455
+01:26:20.890 --> 01:26:25.169
+hugo bowne-anderson: known adventure game, I think on on the Atari console, and you can see
+
+456
+01:26:26.740 --> 01:26:32.199
+hugo bowne-anderson: you can see you've got like a dude, a key. You've got to go around collect stuff. And
+
+457
+01:26:32.720 --> 01:26:40.410
+hugo bowne-anderson: that's this is the basic premise of all modern adventure games. And now we have.
+
+458
+01:26:41.300 --> 01:26:54.479
+hugo bowne-anderson: you know, Zelda, tears of the kingdom, or whatever right, which is a wild, open world game, with mostly the same principles. But it's a totally different experience. And why am I even saying that
+
+459
+01:26:54.480 --> 01:27:12.529
+hugo bowne-anderson: now, not only because I'm kind of a geek in in some ways, but I feel like we're at the Atari Adventure stage of how we're building with Llms. Currently, right? There's there's a not so distant future in which we've nailed all of these things down and able to really focus on.
+
+460
+01:27:12.530 --> 01:27:27.409
+hugo bowne-anderson: you know, really, far more, far more valuable aspects. But I just wanted to state that to, you know, just really make clear how very much we're in the early days of AI powered application development. Okay?
+
+461
+01:27:28.780 --> 01:27:29.590
+hugo bowne-anderson: So
+
+462
+01:27:31.920 --> 01:27:57.800
+hugo bowne-anderson: I'm interested. Let's have a look at some pre-generated outputs for summarization. So the annual financial report details, the Company's performance over the past year. Highlighting a 20% increase in revenue, driven by improved customer acquisition strategies. The report also discusses profit. Margins which remain stable despite increased operational costs. Additionally, the report outlines plans for future investments in product innovation and market expansion.
+
+463
+01:27:58.000 --> 01:28:04.100
+hugo bowne-anderson: 3 possible outputs, one. The annual report highlights growth in sales, revenue and customer acquisition.
+
+464
+01:28:04.530 --> 01:28:11.549
+hugo bowne-anderson: 2 includes several financial details discovered discusses, profit, margin, revenue growth.
+
+465
+01:28:11.700 --> 01:28:15.410
+hugo bowne-anderson: The company experienced a successful year, but the details are vague in in the report.
+
+466
+01:28:16.700 --> 01:28:18.189
+hugo bowne-anderson: Can anyone tell me what?
+
+467
+01:28:19.130 --> 01:28:21.809
+hugo bowne-anderson: What? What they think is the best one there, for example.
+
+468
+01:28:30.010 --> 01:28:32.330
+hugo bowne-anderson: feel free to turn your microphone on if you'd like.
+
+469
+01:28:55.840 --> 01:28:58.239
+Urs Peter: Yeah, my name is yours. I suppose it's number one.
+
+470
+01:28:59.870 --> 01:29:04.598
+hugo bowne-anderson: So that's the one i i'd choose for sure.
+
+471
+01:29:06.200 --> 01:29:11.540
+hugo bowne-anderson: so it highlights. So yeah, what are the things we want it to? Highlight? We want.
+
+472
+01:29:11.620 --> 01:29:26.270
+hugo bowne-anderson: We want it to highlight growth. And we want a few details there. So clearly, 3 isn't great. 2 is okay, but it isn't firstly, it's longer than one, and it contains less information. Okay, now, but once again, you may want
+
+473
+01:29:26.310 --> 01:29:53.770
+hugo bowne-anderson: a system that actually gives you the number. You may want it to say, a 20% increase in a summary. So in that case one wouldn't be acceptable either. Right? So these are the types of things you really want to be thinking about, and I'm not going to go through these other examples. But you see, we've got examples around rag around generative tasks such as customer service, and we've talked about a lot of extraction tasks already. So
+
+474
+01:29:53.770 --> 01:30:07.900
+hugo bowne-anderson: just a bit on what and how you could evaluate. There are lots of academic metrics. You can use Nlp metrics such as blur, which was designed for translation, and it measures text similarity by comparing in grams.
+
+475
+01:30:08.230 --> 01:30:37.769
+hugo bowne-anderson: It can be used well for translation tasks, highly structured outputs. When you have clear reference tasks, there's also rouge, which is which focuses for recall and precision which makes it great for summarization, for example, and it measures overlap between output and reference. There are many variants you can try, and it's best for summarization, content, comparison. And when you require preservation of key information. Okay? Now, in practice.
+
+476
+01:30:38.170 --> 01:31:03.320
+hugo bowne-anderson: there are lots of other things such as correctness and accuracy as we've discussed. There's task completion, okay, format and structure, and feel free to go through all these all these examples in detail. But we've discussed a bunch of them, and style and tone as well, right, and a lot of the time you may want to start evaluating multiple dimensions at some point. But at the start you really want to want to nail down.
+
+477
+01:31:03.540 --> 01:31:09.970
+hugo bowne-anderson: Is your output acceptable or not? Okay, then
+
+478
+01:31:12.180 --> 01:31:41.389
+hugo bowne-anderson: an exercise for those interested. Choose one of these tasks and create a rubric that scores each quality dimension between one and 5. Okay, now, once again, you want to start by doing binary pass or fail. But that doesn't mean at some point. You can't start thinking about this. You want to project it down, to pass or fail at the end. But these are ways to think about a slightly more general scale for correctness and accuracy and task completion.
+
+479
+01:31:42.025 --> 01:31:47.280
+hugo bowne-anderson: And you can also integrate these with other evaluation methods.
+
+480
+01:31:48.036 --> 01:31:53.593
+hugo bowne-anderson: Now, I'm not going to go through a lot more of this. Now I do want to.
+
+481
+01:31:54.540 --> 01:32:21.660
+hugo bowne-anderson: just say a bit more about Lm, as a judge before we dive into the other notebook. This is an example where I'm suggesting to get it to evaluate, you know, accuracy on a scale relevance on a scale. Then, as we've discussed calibrating with human evaluations and also monitoring performance. But of course you do in the end want to project it down from this scale to pass or fail once again. Okay, so
+
+482
+01:32:22.070 --> 01:32:49.829
+hugo bowne-anderson: to wrap up on this notebook in this section, the recipe for evaluation. I want you to align on business value. First, st define the core requirements. Okay, what problem are you solving? Who are your users? What defines success? Set measurable goals? Okay, whether they're, you know, thresholds for quality performance targets, business metrics. Now, if you're if you just want to build a rag system and play around with it, have a proof of concept definitely. Do that.
+
+483
+01:32:50.190 --> 01:32:53.100
+hugo bowne-anderson: In that case you don't need to do, and any of this, but that isn't what
+
+484
+01:32:53.240 --> 01:33:21.520
+hugo bowne-anderson: where we're in this course for, right where in this course, to figure out how to take it beyond proof of concept. So after aligning on business value by defining core requirements and setting measurable goals, I want you to start categorizing errors. Okay, and then I mean, we've gone through all of that. And then starting to fix and use appropriate measures. Okay, only after that, do you use an Llm. As a judge to scale? So you start small.
+
+485
+01:33:21.780 --> 01:33:41.020
+hugo bowne-anderson: You begin with human evaluation, establish baselines, create clear criteria. Then you scale. Gradually you start with low risk. Evaluations maintain human oversight, monitor performance, regular calibration, and I gave you a recipe for that. With respect to human and element judge as alignments. Now.
+
+486
+01:33:41.220 --> 01:33:43.400
+hugo bowne-anderson: this is hard right?
+
+487
+01:33:43.880 --> 01:33:53.130
+hugo bowne-anderson: Because you need to know business context and the goal of the task. And if you're not a domain expert or understand. Understand the input context, you'll need some ground truth to compare it to. So once again.
+
+488
+01:33:54.080 --> 01:34:12.569
+hugo bowne-anderson: if you're generating emails based on structured output from Linkedin profiles very much. Encourage you to sit down with the domain expert who used to draft those emails and say, Is this an email which you'd be happy to send. Why? Why not these types of things and then build your system based around that that domain expertise.
+
+489
+01:34:12.890 --> 01:34:13.850
+hugo bowne-anderson: So
+
+490
+01:34:19.180 --> 01:34:22.798
+hugo bowne-anderson: what I want you to
+
+491
+01:34:24.560 --> 01:34:29.549
+hugo bowne-anderson: think about is how you would apply this to the Linkedin profile case. Right? So
+
+492
+01:34:30.650 --> 01:34:34.310
+hugo bowne-anderson: in terms of understanding the business context that will help you
+
+493
+01:34:34.630 --> 01:34:46.220
+hugo bowne-anderson: determine what to evaluate. And I want you to start generating data for evaluation. Okay, then start to categorize errors and document rationale and come up with some evaluations that will help you identify the errors.
+
+494
+01:34:46.290 --> 01:35:11.836
+hugo bowne-anderson: and then try to fix the errors by tweaking the model. So you will have seen in the notebook that I started this workshop is, I did this all by vibes. I was like, Oh, lowercase names and structured output. And and these these types of things. I want you to start encoding these into a more robust evaluation harness and Lm. As a judge as well, and then start to iterate log and monitor and and
+
+495
+01:35:12.240 --> 01:35:18.150
+hugo bowne-anderson: then start to use their Llm. As a judge to scale up evaluation. Okay, now.
+
+496
+01:35:20.460 --> 01:35:48.579
+hugo bowne-anderson: just to make very clear, we've talked a lot about how to evaluate the outputs. How do we bring this into the software development lifecycle we kind of already have. This is the iterative process of tweaking based on judgments. Right? So what are we doing at a high level? We create a data set of inputs and outputs and valuations. Each row is a data point, which is a particular input output valuation. And we can iterate on our evaluations using this type of for loop to know how we're improving.
+
+497
+01:35:48.920 --> 01:36:10.889
+hugo bowne-anderson: we need to aggregate the evaluations and determine some threshold for what is acceptable, and this this answers a couple of questions in in the chat as well. But once again. What you want to do is if it's a fail, if it's failed. You then want to introspect and see how you can improve it, and if it's success, you want to make sure that that's that's absolutely absolutely what you want. So
+
+498
+01:36:13.050 --> 01:36:24.749
+hugo bowne-anderson: the other thing to note once again, there are some tools around this. But versioning is is important. Keeping track of changes made, and what scores they result is is important. In the early days, I mean, I don't necessarily, when I'm like
+
+499
+01:36:25.010 --> 01:36:31.530
+hugo bowne-anderson: doing eval by vibes and prompt iterating. I don't always like store every prompt but
+
+500
+01:36:31.870 --> 01:36:46.520
+hugo bowne-anderson: but in the end, once you're once you've got something in production. And and you're making changes to it. The versioning part of the story is important. That means you won't get lost in the sea of changes that should be. CI do like SE. Sea of changes, though.
+
+501
+01:36:47.810 --> 01:36:49.519
+hugo bowne-anderson: Let me just edit this
+
+502
+01:36:55.040 --> 01:37:04.019
+hugo bowne-anderson: because what you want to do is if things degrade you, you want to be able to, you know, revert to a previous version. Essentially.
+
+503
+01:37:04.560 --> 01:37:11.270
+hugo bowne-anderson: So. What I want to do now is jump into to. I really want to like, show you
+
+504
+01:37:12.190 --> 01:37:15.680
+hugo bowne-anderson: how this works in practice.
+
+505
+01:37:15.940 --> 01:37:22.319
+hugo bowne-anderson: Okay, so this is an actual example I'm going to. We're going to clear all outputs, and
+
+506
+01:37:24.240 --> 01:37:26.740
+hugo bowne-anderson: I won't clear all out, because I won't be executing.
+
+507
+01:37:26.880 --> 01:37:32.519
+hugo bowne-anderson: I won't execute this code in the interest of time, but you all can can do so. So
+
+508
+01:37:33.150 --> 01:37:42.580
+hugo bowne-anderson: what we're doing is we're using a hugging face data set and pastel. Maybe you could link to the data set in discord. But this is a factual consistency
+
+509
+01:37:43.360 --> 01:38:10.240
+hugo bowne-anderson: data set which contains newspaper articles that were summarized. Then it gives 2 summaries, one correct, one incorrect, and it tells you which one's correct and incorrect, and then it gives you information about the distracted generation models. And what I want to do is show you in code and in process in spreadsheets. How everything we've just talked about applies to this particular
+
+510
+01:38:11.320 --> 01:38:12.420
+hugo bowne-anderson: use case.
+
+511
+01:38:14.410 --> 01:38:20.310
+hugo bowne-anderson: So we'll load and preprocess the data set containing source text correct summaries.
+
+512
+01:38:20.610 --> 01:38:29.410
+hugo bowne-anderson: I'll show you how I annotated summaries for factual consistency using binary labels. Then we'll calculate metrics like accuracy. Precision recall.
+
+513
+01:38:30.475 --> 01:38:36.509
+hugo bowne-anderson: Well, have an Lm as a judge. And talk about monitoring that over time. Okay, so
+
+514
+01:38:36.950 --> 01:38:42.219
+hugo bowne-anderson: what I did was for some reason this wasn't in my requirements. So you may need to pip, install
+
+515
+01:38:42.942 --> 01:38:51.700
+hugo bowne-anderson: pi arrow. And then I imported the data set as a data frame. And let's just have a look at the head of the data set where we have the input.
+
+516
+01:38:52.489 --> 01:38:57.940
+hugo bowne-anderson: great. So this would be a whole newspaper article. Then we have
+
+517
+01:38:58.526 --> 01:39:12.553
+hugo bowne-anderson: the correct choice for the summary, and then we have the choices. And then we're told what? The how the distractor model was created. Okay, for some reason I got too excited and printed the head of that data set twice.
+
+518
+01:39:14.090 --> 01:39:16.800
+hugo bowne-anderson: so the interesting thing is.
+
+519
+01:39:17.220 --> 01:39:31.470
+hugo bowne-anderson: what I want to do now is we can consider this as some form of ground truth, right, and what I want to do now is not. Look at the ground truth, and go and label it myself to see how my judgments align.
+
+520
+01:39:32.650 --> 01:39:33.660
+hugo bowne-anderson: With
+
+521
+01:39:35.450 --> 01:39:40.969
+hugo bowne-anderson: with the ground truth and essentially right, and what I do to do that is, I just.
+
+522
+01:39:41.410 --> 01:39:49.119
+hugo bowne-anderson: I prepare it for annotation. So I put it in a slightly nicer form, where what we actually get is
+
+523
+01:39:51.040 --> 01:39:56.760
+hugo bowne-anderson: each row now is turned into 2 rows. So the article is in 2 rows, and
+
+524
+01:39:57.710 --> 01:40:06.130
+hugo bowne-anderson: one row has one of the summaries, the other has the other summary, and it doesn't say which is which. So that I can't when I'm labeling them. I don't.
+
+525
+01:40:06.720 --> 01:40:23.279
+hugo bowne-anderson: I can't use the ground truth essentially. So, yeah. And that's what we see here. And then what I did was I exported it for manual annotation. And in fact, the export here is in data. So this is all in the repository.
+
+526
+01:40:25.300 --> 01:40:32.809
+hugo bowne-anderson: Factual consistency data set open anyway. See? See what happens then? Okay, so we have
+
+527
+01:40:34.150 --> 01:40:40.459
+hugo bowne-anderson: that data set there. And so what I, what I literally did was I exported that and then
+
+528
+01:40:40.620 --> 01:40:43.849
+hugo bowne-anderson: put it in a spreadsheet, and let's just have a look.
+
+529
+01:40:49.780 --> 01:41:05.690
+hugo bowne-anderson: Add it here. So this is the spreadsheet that I labeled right. I brought in what I just exported. We have the input vehicles and pedestrians will now embark and disembark, etc. And there was one summary and then another summary
+
+530
+01:41:05.810 --> 01:41:10.559
+hugo bowne-anderson: right, and what I did. I didn't have the ground truth
+
+531
+01:41:11.110 --> 01:41:27.697
+hugo bowne-anderson: yet, or I wasn't looking at it, and I gave it my human human assessment. Okay, now, once again, you may want to put reasons in, and all of that type of stuff. This is an Mvp. Of how how you think about hand labeling in order to get your evaluation framework,
+
+532
+01:41:28.180 --> 01:41:31.750
+hugo bowne-anderson: to to Bootstrap it essentially. Let me now.
+
+533
+01:41:37.760 --> 01:41:44.550
+hugo bowne-anderson: okay, great. So what I did then I I literally hand labeled 20 rows. And that's not
+
+534
+01:41:45.110 --> 01:41:47.689
+hugo bowne-anderson: the correct notebook either. Let's
+
+535
+01:41:51.960 --> 01:41:57.969
+hugo bowne-anderson: right. And so now I have my hand labeled data. I can then get it back into
+
+536
+01:41:58.470 --> 01:42:09.779
+hugo bowne-anderson: Jupiter, for example. My notebook here in order to start looking at how well I did versus ground truth and that type of stuff. So what we have is
+
+537
+01:42:09.890 --> 01:42:19.449
+hugo bowne-anderson: in the code I wrote below. We have our manual annotations of the human assessment, original ground truth labels, source text and summaries. So we'll want to think about
+
+538
+01:42:19.790 --> 01:42:38.620
+hugo bowne-anderson: accuracy. So how? How overall did I do in my judgments? Precision? So that's how factually, how accuracy of our factually consistent labels. Then how well did we identify truly consistent labels? And then a confusion matrix to understand error patterns. Okay, so
+
+539
+01:42:38.870 --> 01:42:40.850
+hugo bowne-anderson: what I did was, this is me.
+
+540
+01:42:40.980 --> 01:42:47.940
+hugo bowne-anderson: reloading it and merging it, and so on. And what we see here is
+
+541
+01:42:48.310 --> 01:42:53.810
+hugo bowne-anderson: my assessment, and then the correct choice. And as we go down
+
+542
+01:42:54.160 --> 01:42:59.839
+hugo bowne-anderson: I built a confusion matrix. So I predict for the ones I predicted. I'm sorry
+
+543
+01:43:00.020 --> 01:43:03.749
+hugo bowne-anderson: predicted isn't isn't the best term here, but it is my label.
+
+544
+01:43:05.120 --> 01:43:15.934
+hugo bowne-anderson: So I compared the ground truth labels versus mine. Okay, and I got
+
+545
+01:43:17.290 --> 01:43:19.140
+hugo bowne-anderson: the ones that it labeled one.
+
+546
+01:43:19.250 --> 01:43:23.329
+hugo bowne-anderson: And and I labeled one. There were 23 of those, the ones I labeled
+
+547
+01:43:23.600 --> 01:43:36.509
+hugo bowne-anderson: Incorrect, and it labeled Incorrect. There were 23 of those and the ones that I labeled correct, that were actually incorrect. There were 2 of those, and vice versa. Just quick spot check. Can anyone tell me why this is
+
+548
+01:43:36.920 --> 01:43:39.480
+hugo bowne-anderson: a symmetric array?
+
+549
+01:43:40.480 --> 01:43:42.219
+hugo bowne-anderson: There are 2 types of symmetry. There!
+
+550
+01:44:06.590 --> 01:44:08.040
+hugo bowne-anderson: Hey, Evan, what's up, man?
+
+551
+01:44:09.140 --> 01:44:16.060
+Evan Williams: Hey? Since it's a binary choice. If you get one correct, you're gonna get the other one correct kind of definitionally.
+
+552
+01:44:16.430 --> 01:44:22.840
+hugo bowne-anderson: Exactly exactly so, because there are 2 summaries, and one is correct, and one is incorrect.
+
+553
+01:44:23.060 --> 01:44:35.486
+hugo bowne-anderson: If I get one of them correct, the other will be correct, because I'm labeling them one and 0. And if I get one wrong, the other one will be wrong. Okay, so I did, relatively relatively well here. Okay,
+
+554
+01:44:36.630 --> 01:45:02.580
+hugo bowne-anderson: and after that we want to go in and start to analyze classification errors. Right? We want to understand what made us mark incorrect summaries as consistent. And why do we miss some consistent summaries as well? And I'm not going to go through these. We've discussed other examples earlier. I will encourage you all to go through the ones I got wrong. I also like Trigger Trigger warning. This is some of these news articles have, like pretty challenging
+
+555
+01:45:02.670 --> 01:45:13.889
+hugo bowne-anderson: material in them. So I just do want to. You know warn you about that, in case anyone jumps in without thinking that it that it may, which I wouldn't expect.
+
+556
+01:45:15.800 --> 01:45:16.580
+hugo bowne-anderson: So
+
+557
+01:45:16.840 --> 01:45:37.949
+hugo bowne-anderson: what are the takeaways here? We had an overall accuracy of 92% clear patterns in the types of factual consistency errors, binary classification provided clear evaluation structure, paired summaries help control for length and style. And we saw well, once you go through it, you can see the specific patterns in judgment. Okay, now.
+
+558
+01:45:39.010 --> 01:45:41.870
+hugo bowne-anderson: after this, what we want to start doing.
+
+559
+01:45:42.398 --> 01:45:48.440
+hugo bowne-anderson: You know, these were just these were summaries from a data set right. But remember, we're interested in building
+
+560
+01:45:48.670 --> 01:46:10.770
+hugo bowne-anderson: software applications in this case, one that summarizes for this this toy example. So what what I then did was I generated summaries using an Llm. There won't be ground truth to those, so you'll need to hand. Label those yourself, and then what you would do is use an Llm as a judge to do the comparison that I just did for myself and ground truth. Right? So
+
+561
+01:46:10.950 --> 01:46:32.359
+hugo bowne-anderson: we have our input data. It's the same data set. I just did a bit of summary statistics here. I wanted to see, like the average length and these types of things, so that when I get an Llm. To generate something I can use some of that information, and I used Gemini here. Gemini has a free tier
+
+562
+01:46:32.470 --> 01:46:45.000
+hugo bowne-anderson: that you can check out. But Paige should be getting us all our $300 of credits for Gemini super soon. And so what I did was I created 2 prompts to summarize
+
+563
+01:46:45.310 --> 01:46:46.460
+hugo bowne-anderson: each text.
+
+564
+01:46:47.780 --> 01:47:11.279
+hugo bowne-anderson: focusing on brevity, then one on nuance and detail. So summarize the following text in a single concise sentence, only include the most critical details that cannot be omitted was the 1st one, then the second one is, summarize. The following text in one or 2 sentences, capture both the key points and any important context or nuance that provides clarity. Okay, and what we see there. When I executed this, it took some time. I think it took an
+
+565
+01:47:11.500 --> 01:47:13.659
+hugo bowne-anderson: 3 or 4 min.
+
+566
+01:47:13.850 --> 01:47:22.990
+hugo bowne-anderson: we can see all all the different types of responses there. So we have. This is the 1st prompt and the input and then we see.
+
+567
+01:47:23.770 --> 01:47:30.250
+hugo bowne-anderson: you know, and what you can do is go through and have a look at the different types of responses we get here
+
+568
+01:47:30.350 --> 01:47:41.580
+hugo bowne-anderson: once again. I then went through and started to annotate these things. So we don't have ground truth. Now, we want to annotate them. Okay? And actually, I can share this spreadsheet
+
+569
+01:47:42.130 --> 01:47:43.390
+hugo bowne-anderson: after the fact.
+
+570
+01:47:43.640 --> 01:47:50.770
+hugo bowne-anderson: This is the generated summaries and the labels I gave. Okay?
+
+571
+01:47:51.346 --> 01:48:00.080
+hugo bowne-anderson: So I assigned pass or fail right? And then what I did was I imported all these annotations back into my notebook
+
+572
+01:48:00.915 --> 01:48:01.600
+hugo bowne-anderson: and
+
+573
+01:48:01.820 --> 01:48:09.314
+hugo bowne-anderson: had a look at what the success rates were for each, and in fact, we saw in this case that they they performed
+
+574
+01:48:10.080 --> 01:48:12.814
+hugo bowne-anderson: equal equally well, okay, I'm just
+
+575
+01:48:16.920 --> 01:48:30.389
+hugo bowne-anderson: yeah, equally well. But neither neither wonderfully right. So this is this is, I mean, and we wouldn't expect them to for the 1st 2 prompts. But this is something we'd want to iterate on prompt wise so
+
+576
+01:48:31.480 --> 01:48:32.740
+hugo bowne-anderson: to wrap up
+
+577
+01:48:34.160 --> 01:48:38.089
+hugo bowne-anderson: What I want you. All who want to do the homework to start thinking about is
+
+578
+01:48:38.300 --> 01:48:53.589
+hugo bowne-anderson: to review the full text of both prompts, examine inputs and outputs to identify patterns or issues diagnose why certain outputs were labeled as correct or incorrect, propose a new prompt that combines the strength of both and iterate to achieve better performance across all inputs.
+
+579
+01:48:53.770 --> 01:49:01.899
+hugo bowne-anderson: And then you can start thinking about scaling as a judge. Right? So define the evaluation criteria in a prompt to give a judge.
+
+580
+01:49:02.170 --> 01:49:08.750
+hugo bowne-anderson: So the evaluation criteria you you will want to think about is factual consistency relevance clarity.
+
+581
+01:49:08.980 --> 01:49:30.989
+hugo bowne-anderson: Prepare a shoe. A few prepare few shot examples. So create a set of labeled examples for few shot learning, including the input text candidate. Summary annotations, passes fail with explanations for the decision. Okay? Then you can write your few shot prompt. So this is an example. I don't suggest you use this, although
+
+582
+01:49:31.500 --> 01:49:42.024
+hugo bowne-anderson: you know you can. You are an expert evaluator of text summaries for each summary evaluate its quality based on factual consistency relevance clarity and then give
+
+583
+01:49:42.630 --> 01:49:58.969
+hugo bowne-anderson: examples. Right? So this is, I've given an example here of how to create such a prompt. So I create the few shot examples. Then I add them from the data frame. And then I create the prompt. And we can see.
+
+584
+01:49:59.430 --> 01:50:11.629
+hugo bowne-anderson: you know, once we concatenate, you know, this prompt. This is what what we get. Essentially, we get the expert evaluation prompt followed by the examples. And then it says, Now
+
+585
+01:50:12.030 --> 01:50:17.959
+hugo bowne-anderson: evaluate the following with, we give it the input candidate summary and ask it for its evaluation.
+
+586
+01:50:19.600 --> 01:50:30.509
+hugo bowne-anderson: After that, what you can do is you can generate Llm judgments, use this prompt to evaluate new summaries in the data set. Call the Api with a few shot. Judge for each candidate summary, then
+
+587
+01:50:30.630 --> 01:50:33.079
+hugo bowne-anderson: collect the outputs, including the pass.
+
+588
+01:50:33.580 --> 01:50:49.660
+hugo bowne-anderson: fail, label and reasoning, and then compare these Llm. Judgments with human annotations along the lines of the aligning as a judge method that I showed you from Philip Carter at Honeycomb and plus plus and then you want to calculate metrics of
+
+589
+01:50:49.700 --> 01:51:01.697
+hugo bowne-anderson: relevance. Okay, after this. You want to start taking your Lm. As a judge, seeing how well it aligns iterating on that and then using the Llm. As a scalable judge to evaluate
+
+590
+01:51:02.040 --> 01:51:27.879
+hugo bowne-anderson: large data sets. I don't necessarily suggest you do this for the homework, but you can set up a pipeline to periodically validate Llm. Judgments against human labeled samples. This is something we'll go through a lot more with Stefan later in this week, and maybe and this is something we could do with the ragbot pastor is just setting up some Github actions like Ci CD stuff, for whenever we change something to run a few tests and that type of stuff, and you can set up.
+
+591
+01:51:28.420 --> 01:51:37.218
+hugo bowne-anderson: you can set up a cron job that runs like the power of cron jobs. Right? You can set up a cron job that runs, you know, every Sunday night, or whatever it is right.
+
+592
+01:51:37.590 --> 01:51:39.480
+hugo bowne-anderson: so these are all
+
+593
+01:51:39.650 --> 01:51:59.949
+hugo bowne-anderson: ways to think about the process that I that I hope you all feel enabled and liberated to play around with now. And we're very. Of course we're so here to support and work on this stuff with you in discord in builders, club and and in workshops as well. So if you want to continue working on the Linkedin
+
+594
+01:52:00.100 --> 01:52:01.070
+hugo bowne-anderson: task.
+
+595
+01:52:01.536 --> 01:52:07.719
+hugo bowne-anderson: What you. What we encourage you to do is to start thinking about dimensions of interest
+
+596
+01:52:07.720 --> 01:52:33.499
+hugo bowne-anderson: when extracting structured data. What specific fields are you most interested in? I want you to start designing an annotation process, create a spreadsheet for annotation or spin up a custom, Json view or vibecode something right? Or if you want to use brain trust or or comment and opic, or these types of things jump in and do that. And, for example, also, if you're doing this for the homework, and you just want to record a quick loom or something like that to share it with, people.
+
+597
+01:52:33.880 --> 01:52:42.870
+hugo bowne-anderson: Love that. Okay? And then start iterating on the process and reflect on your your approach. And I hope we get to hear from some of you with
+
+598
+01:52:43.000 --> 01:52:50.010
+hugo bowne-anderson: with respect to this. So we're nearly at time, pastor. Would you mind sharing the link to the survey in the workshop channel?
+
+599
+01:52:50.490 --> 01:53:02.099
+hugo bowne-anderson: Once again, everyone that the more feedback we get. The more we can tailor this course. To to your needs. So please do complete the the survey
+
+600
+01:53:03.030 --> 01:53:16.663
+hugo bowne-anderson: and last time we had a lot of great responses. We had even more after workshop one, but it would be fantastic. So just a small teaser for what's ahead?
+
+601
+01:53:18.120 --> 01:53:43.018
+hugo bowne-anderson: Stefan's workshop on observability and debugging and monitoring in development and production, is on Thursday. We have a wonderful guest talk by Nathan Danielson, wonderfully titled guest talk. Your next customer could be your mother. Human centered AI product product development. Nathan works on all aspects of generative AI product development at Carvana and
+
+602
+01:53:43.790 --> 01:54:03.609
+hugo bowne-anderson: really like ahead in the curve of adoption for the type of things they're building there. And we were. We were blessed to have Nathan join our 1st cohort, and he came back as a builder in residence last time, so we've invited him back to give another talk and then a talk I'm really excited about is John Berryman, who I mentioned earlier. Who
+
+603
+01:54:03.620 --> 01:54:30.800
+hugo bowne-anderson: was it Github? He's now got his own consulting Arcturus Labs. He just spends so much of his time building and thinking about building AI systems and sees all the mistakes people made. So we're going to have a Q&A about patterns and anti-patterns for building AI systems. All the things can go wrong that can go wrong, and the antidotes for those. So I'd love if you can fill out the survey in the next few minutes, and then in 4 min I'm
+
+604
+01:54:30.820 --> 01:54:44.530
+hugo bowne-anderson: very excited that Samuel Colvin, who made pydantic and now is making logfire is giving a talk on self-improving agents. And if you're interested, I did a live stream and podcast with Samuel
+
+605
+01:54:44.530 --> 01:55:03.400
+hugo bowne-anderson: a couple of weeks ago, and it was actually on that live stream that he said, hey, why don't we sponsor the course with $500 in credits? So it's thanks to this live stream. We've got $500 more in credits for for you all. But the real premise of what I was discussing with Samuel, and that he'll talk more about is exactly this quotation that the amount of engineering it takes to move from a demo
+
+606
+01:55:03.910 --> 01:55:06.510
+hugo bowne-anderson: from move a demo from 85 to a hundred
+
+607
+01:55:06.700 --> 01:55:17.930
+hugo bowne-anderson: production ready is many multiples of what it took to build that demo. And of course we've got a flavor of the evaluation and iterative process that we need
+
+608
+01:55:17.940 --> 01:55:41.299
+hugo bowne-anderson: in order to move from prototype to real production quality. Samuel's doing really interesting work about what he calls human seated evaluation, which is about hand, labeling less than I would expect, and then, having something agentic help you iterate on the system there, which I think is probably a very nice vision for the future. The jury's out
+
+609
+01:55:42.070 --> 01:55:50.160
+hugo bowne-anderson: at the moment quite on how how it will work, but I think it's a very, very exciting space for a bit more context. And I think we chatted about this last week.
+
+610
+01:55:50.692 --> 01:55:53.990
+hugo bowne-anderson: I know a handful of companies that have
+
+611
+01:55:53.990 --> 01:56:21.529
+hugo bowne-anderson: what we call self healing machine learning systems where you don't need a human in the loop as much as possible. It's still pretty sophisticated, and state of the art, and not a lot of people do it. But I definitely think if we can figure out to get the signal from humans on what works and what doesn't, and then getting machine learning and agentic approaches to scaling that. That's a very bright future. But we definitely need human learning before machine learning. And we need machine learning before agent learning right. So if there's
+
+612
+01:56:22.320 --> 01:56:38.039
+hugo bowne-anderson: if there's a single takeaway from this workshop it's sadly a boring one, which is human learning first, st and then let's figure out clever ways to to scale it. And also on that point. Human learning is important, not only for the process, but because
+
+613
+01:56:38.340 --> 01:56:53.760
+hugo bowne-anderson: we should be interested in the systems. We're building right? So I think it's probably time to wrap up now, but really appreciate all the wonderful engagement and and questions and super excited to continue the conversation in discord
+
+614
+01:56:53.760 --> 01:57:13.049
+hugo bowne-anderson: in our optional talk now or in our workshop later this week, and please keep the great questions coming through. Not only do we love hearing your questions, but we love engaging with them, and it helps us, you know, build an even better course for you all in future cohorts. So thanks everyone and hopefully see you in a minute.
+
