@@ -289,7 +289,8 @@ def query_collection(collection, query_text, n_results=DEFAULT_MAX_CHUNKS, works
     
     query_params = {
         "query_embeddings": [query_embedding],
-        "n_results": n_results
+        "n_results": n_results,
+        "include": ["documents", "metadatas", "distances"]  # <- ensure distances are returned
     }
     
     if workshop_filter:
@@ -311,11 +312,14 @@ def retrieve_relevant_chunks(question, collection_name=COLLECTION_NAME, n_result
     chunks = []
     if results and 'documents' in results and results['documents'] and len(results['documents'][0]) > 0:
         for i in range(len(results['documents'][0])):
+            distance = results['distances'][0][i]
+            relevance = max(0, 1 - (distance / 2))  # Normalize to 0–1 range
+
             chunk = {
                 'text': results['documents'][0][i],
                 'metadata': results['metadatas'][0][i],
                 'id': results['ids'][0][i],
-                'relevance': 1.0
+                'relevance': relevance
             }
             chunks.append(chunk)
     
