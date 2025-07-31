@@ -78,8 +78,6 @@ def fastapi_app():
                 "total_chunks": len(formatted_chunks)
             }
         except Exception as e:
-            import traceback
-            traceback.print_exc()
             return {
                 "error": f"Failed to retrieve chunks: {str(e)}",
                 "chunks": [],
