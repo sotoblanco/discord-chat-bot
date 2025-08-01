@@ -1,0 +1,2706 @@
+WEBVTT
+
+1
+00:00:15.540 --> 00:00:32.880
+hugo bowne-anderson: Welcome everyone. Hugo bound Anderson here probably don't need to say that every time we start a workshop I think. It's by force of habit from doing a podcast often, probably don't need to even say it in the podcast actually. But I'm really excited for today's workshop.
+
+2
+00:00:33.643 --> 00:00:37.029
+hugo bowne-anderson: One reason I'm really excited about it is.
+
+3
+00:00:37.900 --> 00:00:56.610
+hugo bowne-anderson: you all gave wonderful feedback on what you wanted to be covered this week. And it was just super exciting to kind of dig into the types of things you wanted to cover, and really consolidate and prepare more material around those things. As I'm sure you all appreciate.
+
+4
+00:00:56.740 --> 00:01:13.590
+hugo bowne-anderson: There are certain things in this course that stay somewhat constant over the the different times we run it, and some things that necessarily change because we're in such a a rapidly, rapidly moving, moving space. Pardon me. So for that reason, today.
+
+5
+00:01:13.650 --> 00:01:42.940
+hugo bowne-anderson: we're actually, we'll be covering multi. We'll be diving into multimodal generative, AI and retrieval and rag. We'll start to talk more about agents and agentic rag and then getting into agentic research. After that we'll be jumping into time, permitting the basics of fine tuning, particularly for image generation. And then, after that, Zach Muller, from from hugging face, will be running. What's an optional workshop on fine tuning
+
+6
+00:01:43.270 --> 00:02:08.128
+hugo bowne-anderson: Llms. And Lms. I mean, I always joke that. I think it's very silly that we live in a space where we say small Llms. Because small large language models is a stupid term, as far as I'm concerned, and it shows how our attention has been dragged towards the largeness of everything. The workshop with Zach, of course, is optional but a not insignificant
+
+7
+00:02:08.780 --> 00:02:21.410
+hugo bowne-anderson: number of people here expressed significant interest in fine tuning. So that's why, in the final quarter of this workshop I'll be showing you the basics of fine tuning and how to think about it.
+
+8
+00:02:21.630 --> 00:02:24.679
+hugo bowne-anderson: Maybe even do it time permitting
+
+9
+00:02:25.200 --> 00:02:46.840
+hugo bowne-anderson: with image generative image models. If we don't get to that, we'll cover it at the start of the next workshop, and then in the next workshop. Stephan will be covering these types of things, and more, but really, from a production and operational point of view as well as you all appreciate. And we've discussed
+
+10
+00:02:46.840 --> 00:03:05.959
+hugo bowne-anderson: quite quite a bit. Stefan's skill set of operationalizing all these things from Ops perspective, is is complementary to a lot of the kind of scientific and data and Ml, stuff that that I bring so as always, if you could turn your camera on, if possible and microphone off
+
+11
+00:03:06.954 --> 00:03:11.740
+hugo bowne-anderson: unless you're talking to to us.
+
+12
+00:03:12.195 --> 00:03:14.120
+hugo bowne-anderson: That would be that would be fantastic.
+
+13
+00:03:15.180 --> 00:03:20.359
+hugo bowne-anderson: And can someone, Caleb, can you just give me a thumb up if you can see my screen.
+
+14
+00:03:22.230 --> 00:03:42.580
+hugo bowne-anderson: Fantastic. So multimodal AI agentic AI, and and retrieval and fine tuning basics is what we're what we're sorry. Fine tuning basics. It's not multimodal basics and that type of stuff. Having said all that, we because of all the feedback we got on what we wanted to cover what you wanted to cover. We'll be going
+
+15
+00:03:43.080 --> 00:04:04.980
+hugo bowne-anderson: slightly, more for breadth than depth. The depth will be in slides and not in in code, but happy to provide many resources and how to get up and running with code for these types of things, but in the interest of covering as as much as possible in the concepts as deep as possible. We won't be jumping into notebooks, except perhaps, for fine tuning.
+
+16
+00:04:05.350 --> 00:04:22.180
+hugo bowne-anderson: So as I've already said, optional workshop after this, and I very much appreciate feedback that we we have back to back workshops and guests and all of these things. Which I tell you like, if if you responded and said, Hey, it's a bit much having all these in a row.
+
+17
+00:04:22.330 --> 00:04:27.323
+hugo bowne-anderson: I feel your pain completely. So that's why Vincent's workshop. We
+
+18
+00:04:27.810 --> 00:04:45.289
+hugo bowne-anderson: just ran until 10 to the hour, and we'll wrap up here 10 to or 5 to the hour. Just so everyone can have a bio break before we come back for Zach as well. Workshop 8 will be production Llm. Applications with Stefan Crouchik and and myself, of course, and and the entire team.
+
+19
+00:04:45.290 --> 00:05:03.510
+hugo bowne-anderson: as I said today, we'll be covering multimodal generative AI rag agentic rag. Then going into agentic research, then the basics of fine tuning. I also just want to give a big shout out to everyone on the course team builders in residence, and Stefan for helping to
+
+20
+00:05:03.560 --> 00:05:17.710
+hugo bowne-anderson: prepare some of the new material that we have for you today shout out to previous builders in residents who are here, and were very helpful in preparing this material as well. Nathan and William also.
+
+21
+00:05:18.000 --> 00:05:32.950
+hugo bowne-anderson: So bit of housekeeping before we get started. Demo Day, the calendar hold I sent was for 2 h, which I should have mentioned. We rarely take the whole 2 HI just want to like block that essentially, for myself, it'll be 60 to 90 min long.
+
+22
+00:05:33.251 --> 00:05:56.900
+hugo bowne-anderson: We have a submission form that I shared in the workshop. 7 Channel pastor, if you wouldn't mind just resharing that, I'd really appreciate that. But also, if you don't want to fill out the form, and just want to ping me or pastor on discord to say, Hey, I'd love to show something for 5 min. Would really appreciate that, and super excited to see what you what you're all working on, whether it's a work in progress.
+
+23
+00:05:56.900 --> 00:06:04.199
+hugo bowne-anderson: whether it's massive, something you can fit into 5 min or just something small that you'd like like to share. It's really.
+
+24
+00:06:04.430 --> 00:06:16.099
+hugo bowne-anderson: you know, there are no like strong expectations around like the size of the project, or how far along you are with it. As well. Just make sure you're able to talk about it in in 5 min.
+
+25
+00:06:16.250 --> 00:06:25.120
+hugo bowne-anderson: Now, I also just want to just give. I just want to just give like a massive shout out to to Pastor, and I'm going to share this
+
+26
+00:06:26.300 --> 00:06:36.082
+hugo bowne-anderson: again. I want to say a few things about the course Wiki as as you all appreciate, we've had lovely feedback on it. Pastor has been at at the helm doing so much
+
+27
+00:06:36.590 --> 00:07:05.030
+hugo bowne-anderson: help with course materials, helping answer questions in discord, helping with administration, and building out this this course. Wiki, which I don't know how many of you have jumped into it in detail, but I've received significant feedback from from a bunch of you. I just wanted to show you once again the types of things we have there. So if you go through to the course schedule, each workshop has its own page. So if you want to catch up on workshop one and and go back there at some point. What we have are the slides.
+
+28
+00:07:05.250 --> 00:07:16.229
+hugo bowne-anderson: the recordings. And now this actually goes through to Maven. I'm so glad that worked because we had errors with that type of stuff previously. But Maven engineering got onto that immediately. Workshop summaries.
+
+29
+00:07:16.711 --> 00:07:40.280
+hugo bowne-anderson: homework, these types of things and those who were in a previous cohort will attest to the fact that this is a resource that that they come back to very often. So I just want to encourage you all, you know, as we wrap up this week, and then, with the future of everything you're doing, please consider this a resource to continually, continually go back to. The other thing
+
+30
+00:07:40.280 --> 00:07:57.329
+hugo bowne-anderson: I'll mention is that we have as promised guest lecture archive from cohort, one with, you know, legends such as William William Horton, who's here on the call, and was a student in cohort. One more from Eric Nathan Hamill.
+
+31
+00:07:57.840 --> 00:08:18.940
+hugo bowne-anderson: Charmaine's talk from Lorackey, is incredible. Revan from Kumar Brand, Bischoff. So just if you feel I know there's a huge amount here, but if there are things that you want to dive deeper into. Please do that, and what pastor has done. Over the weekend is compiled. All the guest talks from the second second cohort as well. So please do
+
+32
+00:08:19.160 --> 00:08:25.274
+hugo bowne-anderson: jump into those something I do hope to work on at some point is some sort of map to navigate all this material.
+
+33
+00:08:27.260 --> 00:08:52.669
+hugo bowne-anderson: a bit more more easily. So you could imagine something like this which is even interactive where you can click on certain things. And it will take you to particular videos. For that's what that's worth. If anyone wants to work on that with me, please do reach out. And you could imagine at some point we actually have a multimodal AI AI journey through all the course, content and and more. But just give a round of applause to Pastor for all the incredible work that that he's done done here.
+
+34
+00:08:53.681 --> 00:09:03.719
+hugo bowne-anderson: particularly, and then we'll get on with the course as pastor also just finished medical school, and has started his his Residency in a hospital recently.
+
+35
+00:09:04.290 --> 00:09:27.360
+hugo bowne-anderson: Final thing. Really appreciate your patience on Gemini and Gcp. Credits. They are coming, they are coming soon. We definitely wanted them earlier in the course. It may actually happen just after the course know that the deep mind and Gemini team are onto it. They have a few internal things happening at the moment which are taking serious prioritization over this. But really appreciate your your patience with all of that.
+
+36
+00:09:27.610 --> 00:09:36.870
+hugo bowne-anderson: So without further ado, it's time to jump into multimodal AI, so Llms
+
+37
+00:09:37.100 --> 00:09:39.980
+hugo bowne-anderson: and Lms more generally, text in text out.
+
+38
+00:09:40.860 --> 00:09:48.690
+hugo bowne-anderson: So we have these things called large multimodal models. Perhaps you could write in the chat what
+
+39
+00:09:49.120 --> 00:09:52.720
+hugo bowne-anderson: what you think a large multimodal model is.
+
+40
+00:09:53.490 --> 00:09:55.500
+hugo bowne-anderson: or what what would it be capable of?
+
+41
+00:09:58.600 --> 00:10:05.529
+hugo bowne-anderson: And we'll just take a minute to get a variety of responses, and it's not not a trick question, but there are actually different different responses as well
+
+42
+00:10:21.000 --> 00:10:25.109
+hugo bowne-anderson: and different correct responses. I should say. Of course there are different responses.
+
+43
+00:10:41.021 --> 00:10:47.050
+hugo bowne-anderson: Kevin and Laura have already hit hit the nail on the head. It's
+
+44
+00:10:47.710 --> 00:11:04.430
+hugo bowne-anderson: many modes in and and many modes out and and some people do do think of it because a lot of people do utilize multimodal AI in terms of many modes out, and still think of it as as text in. But the truth is, it is any number of modes going in, and any number of modes going out so we can have.
+
+45
+00:11:04.470 --> 00:11:27.600
+hugo bowne-anderson: We know about text in text out. But we can also have audio in image, in video, in and all of these out as well. And, as we've seen before, Chat gpt as a product itself, is eminently multimodal. You can drag images in there. You can speak to it. Now, of course it isn't it for the audio it doesn't use.
+
+46
+00:11:27.920 --> 00:11:31.980
+hugo bowne-anderson: It's a multimodal, a multimodal system actually,
+
+47
+00:11:34.020 --> 00:11:43.229
+hugo bowne-anderson: as opposed to Gemini. We don't know what happens in Gpt under the hook. But if, for example, the audio going to chat, Gpt is then
+
+48
+00:11:43.590 --> 00:11:54.639
+hugo bowne-anderson: speech to text using whisper, and then text to text, using Gpt. 4 0. Or whatever it is. That's a multimodal system made up of components which aren't
+
+49
+00:11:54.920 --> 00:12:21.820
+hugo bowne-anderson: as multimodal as as what we're describing here. Similarly, when it creates images. It is using Dali 3, for example. Now, when you put in images, of course it's doing something different there, and we'll get to the types of ways. How that that works. Laura's comments, something something for models in a trench coat is is so so on point.
+
+50
+00:12:21.900 --> 00:12:27.235
+hugo bowne-anderson: or you can even remove the L and have just 4 modes, you know, in a trench coat, I I suppose?
+
+51
+00:12:27.770 --> 00:12:30.650
+hugo bowne-anderson: right. But oh, no, I didn't wanna
+
+52
+00:12:31.510 --> 00:12:35.899
+hugo bowne-anderson: ruined the punchline there, Hugo. So okay, let's just
+
+53
+00:12:38.210 --> 00:12:42.610
+hugo bowne-anderson: delete that I'm wondering if people would tell me
+
+54
+00:12:43.180 --> 00:12:53.770
+hugo bowne-anderson: like, why, multimodal, we've seen like a lot of like valuable use cases for text to text. What are what are some valuable use cases? And I'm
+
+55
+00:12:53.890 --> 00:13:00.030
+hugo bowne-anderson: I'm saying economically, but even personal use cases.
+
+56
+00:13:00.370 --> 00:13:11.009
+hugo bowne-anderson: I think, are pretty economically valuable because they they save us a huge amount of time. So we can make more money. Half joking. But yeah, if could people put in the the chat. Just an idea of
+
+57
+00:13:11.170 --> 00:13:12.670
+hugo bowne-anderson: you know what one
+
+58
+00:13:12.890 --> 00:13:19.489
+hugo bowne-anderson: use case for a large multi multi modal model. Try saying that 10 times fast could be.
+
+59
+00:13:37.590 --> 00:13:42.259
+hugo bowne-anderson: Alona has a great example. Medical healthcare domain for diagnosis detection.
+
+60
+00:13:47.180 --> 00:13:49.109
+hugo bowne-anderson: That's an amazing example. William.
+
+61
+00:13:50.440 --> 00:13:55.221
+hugo bowne-anderson: A job interview practice app that William built for his wife that used voice to voice.
+
+62
+00:13:55.720 --> 00:13:59.707
+hugo bowne-anderson: which is more realistic than if it would just text love it?
+
+63
+00:14:00.540 --> 00:14:05.911
+hugo bowne-anderson: I hope you're not automating yourself out of your marriage as well, William. That's clearly a joke. By the way,
+
+64
+00:14:08.060 --> 00:14:13.470
+hugo bowne-anderson: Kevin, transcribing of a voicemail to text. Exactly video transcripts beautiful.
+
+65
+00:14:13.690 --> 00:14:24.219
+hugo bowne-anderson: All of these are absolutely fantastic examples. And I'm I'm so great that even in, you know the space of 30 seconds we've been able to to generate these.
+
+66
+00:14:25.210 --> 00:14:28.530
+hugo bowne-anderson: so I came up with 3
+
+67
+00:14:29.010 --> 00:14:33.799
+hugo bowne-anderson: that I that I think are interesting. But there, there are just so many more here. Right? So
+
+68
+00:14:34.370 --> 00:14:37.589
+hugo bowne-anderson: the 1st one I came up with is.
+
+69
+00:14:38.150 --> 00:14:41.169
+hugo bowne-anderson: and cause I'm traveling a lot at the moment. Like
+
+70
+00:14:41.340 --> 00:14:45.219
+hugo bowne-anderson: getting receipts into my like. My business.
+
+71
+00:14:46.171 --> 00:14:49.659
+hugo bowne-anderson: For expenses is top of mind.
+
+72
+00:14:50.237 --> 00:14:54.960
+hugo bowne-anderson: Okay. So, being able to take a receipt and turn it into a table.
+
+73
+00:14:55.865 --> 00:14:58.140
+hugo bowne-anderson: and export as a Csv
+
+74
+00:14:58.723 --> 00:15:04.649
+hugo bowne-anderson: or put in a database incredibly useful. Now, I've also included in this example
+
+75
+00:15:04.770 --> 00:15:10.490
+hugo bowne-anderson: an ability to reason. Can anyone see in this receipt something that.
+
+76
+00:15:11.870 --> 00:15:25.789
+hugo bowne-anderson: and quote unquote reason right where I can maybe just chat with an Lm. Or it can tell me something about the receipt. Can anyone see here something which I might might want the Lms feedback on, or the large multimodal model.
+
+77
+00:15:28.150 --> 00:15:30.590
+hugo bowne-anderson: Yep, Lori Lori hit the nail on the head.
+
+78
+00:15:32.000 --> 00:15:35.470
+hugo bowne-anderson: The pie! It says 7 bucks, and it
+
+79
+00:15:35.957 --> 00:15:41.990
+hugo bowne-anderson: I was charged $10 for it. Okay, so America.
+
+80
+00:15:42.468 --> 00:15:46.529
+hugo bowne-anderson: Just kidding. But you know, tax tax and tip a rail.
+
+81
+00:15:47.890 --> 00:16:03.960
+hugo bowne-anderson: So these are the types of things that we may want to have conversations over or get feedback on. Okay, another example which actually predated generative AI I've got friends who worked in as as data and Mlas in insurance.
+
+82
+00:16:04.541 --> 00:16:08.770
+hugo bowne-anderson: I mean, the 1st case I heard of was maybe 2015, which didn't generate
+
+83
+00:16:09.050 --> 00:16:21.989
+hugo bowne-anderson: a claim form but what it? There were applicant apps where you could take a photo of something that happened to your car and send it to your insurer through their app immediately. Right? And it performs some form of
+
+84
+00:16:24.140 --> 00:16:29.319
+hugo bowne-anderson: image classification. So Kevin just mentioned the numbers in the right don't add up
+
+85
+00:16:32.070 --> 00:16:45.779
+hugo bowne-anderson: totally, man. I didn't even I didn't even notice that. And funnily, when I spoke with the Llm. About it, it didn't notice it either. So really important point. This. This wasn't something I I bought, by the way, just for context.
+
+86
+00:16:46.280 --> 00:17:09.199
+hugo bowne-anderson: particularly because I I don't go to New Jersey. That's that's a joke. I'm actually going there this weekend so, but the ability to send a photo to your insurers put in their app and perhaps include some text and then get out a claim form which then you can be a human in the loop with and edit, I think, is a really important use case here.
+
+87
+00:17:10.268 --> 00:17:15.199
+hugo bowne-anderson: Oh, Laura has a great example from lemonade as well.
+
+88
+00:17:17.620 --> 00:17:21.920
+hugo bowne-anderson: One example which I'm seeing more and more particularly from friends working in
+
+89
+00:17:22.824 --> 00:17:36.565
+hugo bowne-anderson: working for Sas companies and and people in product at these companies is internal systems. Where you can ask about people using the product. So this is a toy example where a Pm,
+
+90
+00:17:37.313 --> 00:17:56.529
+hugo bowne-anderson: product manager could put in this search bar, show me videos or transcripts where customers had trouble with billing, and then they get the top 3 billing related issues right? And you can see there's a video from a Zoom Meeting. There's a support chat Transcript. And then there's a billing issues report as well.
+
+91
+00:17:56.906 --> 00:18:07.020
+hugo bowne-anderson: And just note that here, you know ideally, we have links and sources and and and that type of stuff as well as we want with retrieval systems more more generally.
+
+92
+00:18:08.220 --> 00:18:10.670
+hugo bowne-anderson: So how to build
+
+93
+00:18:11.730 --> 00:18:22.450
+hugo bowne-anderson: with these things? The 1st question is, what type of models do we want to use. Okay, and state of the art multimodor models today, right now, may change
+
+94
+00:18:22.670 --> 00:18:24.575
+hugo bowne-anderson: during this workshop.
+
+95
+00:18:26.090 --> 00:18:40.120
+hugo bowne-anderson: Gemini, 2.5 pro is the one that I go to immediately. And most people that that I work with go to immediately. We may use Gpt. 4. 0, at at some point. But
+
+96
+00:18:40.430 --> 00:18:46.720
+hugo bowne-anderson: I feel like 2.5 pro is almost the python of
+
+97
+00:18:46.890 --> 00:19:05.949
+hugo bowne-anderson: multimodal models, and what I remember we have always referred to Python as a Swiss army knife of programming. And for data science, it won't always be the best tool for the job, but it can do all the things pretty much right, and that's kind of how I feel. About 2.5 pro. At the moment flash and flashlight
+
+98
+00:19:06.090 --> 00:19:15.629
+hugo bowne-anderson: very good and and quicker as well. Then we have gpt 4 0, and a couple of clawed models, but the clawed models are text and image at the moment.
+
+99
+00:19:16.367 --> 00:19:24.620
+hugo bowne-anderson: Caleb, when we discussed this over the weekend. You mentioned a couple of other open AI models. I think that maybe you'd you'd care to share.
+
+100
+00:19:25.450 --> 00:19:36.885
+Caleb Tutty: Yeah, I think some of the O class models not o, 1 but O, 3 can take images. O, 3 Mini, O, 4 mini.
+
+101
+00:19:37.470 --> 00:19:46.085
+Caleb Tutty: yeah, I I think all 3 of them can take image inputs. I think 4.1 even 4.1 nano.
+
+102
+00:19:46.660 --> 00:19:48.660
+Caleb Tutty: But yeah, for
+
+103
+00:19:49.000 --> 00:19:58.570
+Caleb Tutty: audio. You have to use the 4 0 audio preview at the moment. Yeah. So so there's a few other options with Openai.
+
+104
+00:20:00.280 --> 00:20:10.379
+hugo bowne-anderson: Fantastic. I appreciate that. And I learned a bunch new about this over the weekend as well. It's I mean, it's impossible to stay on top of all of all of the developments. Right?
+
+105
+00:20:14.270 --> 00:20:34.279
+hugo bowne-anderson: don't get decision paralysis. People make a decision. And then, as we'll get to figure out a basic evaluation framework once again, nothing super sophisticated how to do your basic evals. And then you can switch things. And once you have a working system, you can switch things in and out. In order to see what's more performing. Okay?
+
+106
+00:20:34.610 --> 00:20:54.660
+hugo bowne-anderson: So these are models that you can start start working with and running with today, and I'll actually show you in in a second the Gemini model. Now, open weight. Multimodor models are so much fun. The the Gemma models are some of some of my my favorite ones, Gemma, 3 in in particular. There's.
+
+107
+00:20:54.660 --> 00:21:04.754
+hugo bowne-anderson: you know, because we now have 4 b, 12 B and 27 B, and the 12 B model can can run relatively quickly on a lot of modern consumer grade.
+
+108
+00:21:05.300 --> 00:21:13.713
+hugo bowne-anderson: Mac laptops as well. Right? So that type of stuff is super powerful. I do, and I'm sorry I didn't have this link earlier.
+
+109
+00:21:14.330 --> 00:21:22.279
+hugo bowne-anderson: I think I shared a link to my agentic live stream with Ravin
+
+110
+00:21:22.920 --> 00:21:28.190
+hugo bowne-anderson: Kumar. But we also have this one.
+
+111
+00:21:28.310 --> 00:21:29.969
+hugo bowne-anderson: Just make sure it's the correct one.
+
+112
+00:21:31.130 --> 00:21:36.970
+hugo bowne-anderson: From images to agents, building and evaluating multimodal modal AI AI workflows.
+
+113
+00:21:38.750 --> 00:21:51.689
+hugo bowne-anderson: so I'll link to that for those interested, and I can share the notebook or notebooks after the fact as well. But if you want to get up and running with multimodal models, we use the Gemma models in that
+
+114
+00:21:52.730 --> 00:21:58.109
+hugo bowne-anderson: our video and and live stream as well. Now, I would actually
+
+115
+00:21:58.310 --> 00:22:14.090
+hugo bowne-anderson: encourage everyone to. I I think we've talked about this, but if you want to get models up and running locally several ways to do so, Olama is a fantastic way to do so. And you can do Olama. Run, Gemma, 3, 2 b, 7 B, 4, like 27 B. Whatever whatever it is.
+
+116
+00:22:16.340 --> 00:22:22.159
+hugo bowne-anderson: Okay, fantastic. So the question, then, is like.
+
+117
+00:22:22.830 --> 00:22:45.900
+hugo bowne-anderson: if I want to play around with open weight models and even gemini. And and these these types of things. Is there an easy way to do it? Or is there a less friction, full way of doing it than setting something up locally pinging the Apis, that type of stuff. And and there actually is. So you see here, actually, let me just go to it. I think I have it
+
+118
+00:22:47.210 --> 00:22:51.359
+hugo bowne-anderson: here. Can you see Google AI studio, Caleb?
+
+119
+00:22:52.170 --> 00:22:53.930
+hugo bowne-anderson: So you'll see here.
+
+120
+00:22:54.150 --> 00:23:12.980
+hugo bowne-anderson: What I've done is I've actually and I'll show you how to do this from the get go in in a second. This is what I did beforehand, just to make sure it actually worked for today. But I have exactly the same query which is just this image in Gemini, 2.5 pro. And I'm using the open white model.
+
+121
+00:23:13.090 --> 00:23:21.140
+hugo bowne-anderson: Gemma, 3, 27 B. So I drop it in and you can see that this is the response from Gemma.
+
+122
+00:23:21.530 --> 00:23:37.049
+hugo bowne-anderson: 3, 27 B. Here's a breakdown of the receipt. Tells me a few things. Burger salad, soft drink pie. Then I just said, Give me his table and Csv, and it did that, and it actually use code with caution. Great! It
+
+123
+00:23:37.450 --> 00:23:38.590
+hugo bowne-anderson: gave me.
+
+124
+00:23:41.350 --> 00:23:53.149
+hugo bowne-anderson: It almost gave me a Csv, it gave me something that looks like a Csv, but it's actually a dot txt, right? So you need to be careful about those types of things. Oh, sorry. Can you actually, Caleb, can you? Can you see text edit here.
+
+125
+00:23:54.720 --> 00:23:57.640
+Caleb Tutty: I can't see text edit. Still, your browser.
+
+126
+00:23:57.920 --> 00:24:03.110
+hugo bowne-anderson: Yep, I will just share my entire screen. So you can.
+
+127
+00:24:07.860 --> 00:24:08.769
+hugo bowne-anderson: How about now?
+
+128
+00:24:12.480 --> 00:24:14.250
+hugo bowne-anderson: Great. So you can actually see
+
+129
+00:24:14.590 --> 00:24:36.400
+hugo bowne-anderson: this created something I could download, which I asked for a Csv. It actually gave me something that looks like a Csv. But it was saved as a text file, right? So you need to be careful about those types of things. But that worked immediately out of the box, and then you can see on the right you can see the Gemini 2.5 pro response, and funnily.
+
+130
+00:24:36.480 --> 00:24:57.594
+hugo bowne-anderson: like, there's a bunch of formatting issues in this response. It but it also picked up. You know, this is like Kevin, 2.5 pro. Actually, it picked up the this is Hugo, 27 B. And Kevin, 2.5 pro because this picked up the calculation error as well, and I asked to give me as a table and a Csv. And it did that
+
+131
+00:24:58.500 --> 00:24:59.420
+hugo bowne-anderson: as well.
+
+132
+00:25:01.250 --> 00:25:02.340
+hugo bowne-anderson: Now
+
+133
+00:25:05.020 --> 00:25:20.990
+hugo bowne-anderson: yep, great, and in fact, it also. This one just gave me the price. This one gave me the listed value, the correct value, and the difference right which speaks to kind of the power of these models. Now, I do just want to see whether
+
+134
+00:25:22.020 --> 00:25:23.560
+hugo bowne-anderson: I can do a live demo
+
+135
+00:25:24.020 --> 00:25:39.119
+hugo bowne-anderson: of using this. So? Yes, if you go to AI studio, so perhaps pastel, you could put a link to AI studio in the chat. And if you go to compare model. I'm going to choose Gemma 3, 27 B. And
+
+136
+00:25:40.040 --> 00:25:42.209
+hugo bowne-anderson: Gemma, 2.5 pro.
+
+137
+00:25:42.570 --> 00:25:57.000
+hugo bowne-anderson: And what I'm going to do is actually Maven Hugo Stefan Llms. I'm actually going to
+
+138
+00:25:58.690 --> 00:26:01.960
+hugo bowne-anderson: what I want to do. So we have a cohort in
+
+139
+00:26:06.220 --> 00:26:14.070
+hugo bowne-anderson: in November. And I'm gonna just take a screenshot of that. And oh, of course.
+
+140
+00:26:15.640 --> 00:26:19.940
+hugo bowne-anderson: I wonder what's the sorry? Because my Zoom bar is getting in
+
+141
+00:26:20.220 --> 00:26:25.009
+hugo bowne-anderson: the way. Okay, the prompt goes in the bottom at the bottom there.
+
+142
+00:26:25.180 --> 00:26:26.150
+hugo bowne-anderson: So
+
+143
+00:26:26.880 --> 00:26:45.909
+hugo bowne-anderson: I mean also the fact that this is how you know one common way of doing this type of stuff these days. Hopefully, Mcps things. Esque. Things can do this. I'm gonna drop this in here and say, this is the timing for an upcoming course. Week 2. Could you give it to me as a table.
+
+144
+00:26:46.750 --> 00:26:47.819
+hugo bowne-anderson: see what it does.
+
+145
+00:26:48.890 --> 00:27:02.435
+hugo bowne-anderson: And so let's say I mean pastor and I, for example, like we work in spreadsheets right when, like developing course, content scheduling that type of stuff. And I have this now in Maven. So getting it into a spreadsheet is actually,
+
+146
+00:27:02.980 --> 00:27:04.619
+hugo bowne-anderson: you know, incredibly useful.
+
+147
+00:27:07.640 --> 00:27:08.600
+hugo bowne-anderson: Look at this.
+
+148
+00:27:11.760 --> 00:27:21.710
+hugo bowne-anderson: So this is, this is okay. It gave me solely okay.
+
+149
+00:27:22.370 --> 00:27:29.950
+hugo bowne-anderson: You got me most things. Let me. I've just got my zoom toolbar in the way great.
+
+150
+00:27:30.220 --> 00:27:43.579
+hugo bowne-anderson: I really like this this response, and it says, note, the project has no specified schedule time. I could then get that out as a Csv something along those lines. And similarly, here, you'll see that this took longer, and it will be more expensive.
+
+151
+00:27:43.994 --> 00:28:01.980
+hugo bowne-anderson: Right? Oh, well, of course, this is an open weight model, so cost cost is different. But what you'll see is if you ran it against, you know, flash or flashlight, flash or flashlight would be quicker. You'd you'd get likely get as good a response, and it would be more cost efficient as well.
+
+152
+00:28:02.240 --> 00:28:17.749
+hugo bowne-anderson: so the reason I wanted to just show you that briefly is, it's a wonderful tool, and there are other ones, of course, but it's a wonderful tool to just iterate quickly on different types of models in the Gemma and gemini ecosystem you're working with.
+
+153
+00:28:18.132 --> 00:28:41.429
+hugo bowne-anderson: You can actually build similar tools yourself pretty easily using gradio. Now, once again, gradio, I would never use for production but to spin up these types of tools, and you can use a bunch of open weight models locally using a llama or ping Apis and see what the different responses response times are. That type of stuff. So I definitely encourage you all to
+
+154
+00:28:41.890 --> 00:28:43.070
+hugo bowne-anderson: play around with that.
+
+155
+00:28:43.910 --> 00:28:59.360
+hugo bowne-anderson: Okay, so just a bit more about open weight models to check out once again the the space is moving so so quickly. But I mentioned Gemma. 3. There's intern vl. 3 mistral models, such as Mistral, small and Pix jewel quen as well. And you know
+
+156
+00:28:59.660 --> 00:29:09.877
+hugo bowne-anderson: the modalities here. Licenses here just quickly. This is to be announced. All that means is that they haven't actually specified a license yet.
+
+157
+00:29:10.590 --> 00:29:16.330
+hugo bowne-anderson: and then a few notes on context and native multimodal, and how quick it is, and that type of stuff for future reference.
+
+158
+00:29:17.180 --> 00:29:18.020
+hugo bowne-anderson: So
+
+159
+00:29:19.890 --> 00:29:29.580
+hugo bowne-anderson: that's about the models. Now, I want to think about retrieval right? And most of the time I mean rag or otherwise. Retrieval is incredibly important, and
+
+160
+00:29:30.220 --> 00:29:35.749
+hugo bowne-anderson: you may recall that the way we do this is, we take the content.
+
+161
+00:29:36.560 --> 00:29:53.210
+hugo bowne-anderson: you know, whatever is in our corpus of documents. And then we embed that in some multidimensional vector, space or embedding space. And then we take the prompt and embed that as well, and we look at which parts of our corpus which chunks were closest as possible. Okay.
+
+162
+00:29:53.810 --> 00:29:56.540
+hugo bowne-anderson: So when we have many modes.
+
+163
+00:29:57.450 --> 00:30:06.749
+hugo bowne-anderson: such as audio and text and image and video, how how would we even think about embedding these? Would we embed them in the same embedding space?
+
+164
+00:30:07.020 --> 00:30:10.319
+hugo bowne-anderson: And if so, how would we embed them in different spaces?
+
+165
+00:30:10.510 --> 00:30:12.630
+hugo bowne-anderson: If so, what do we actually return
+
+166
+00:30:13.280 --> 00:30:19.870
+hugo bowne-anderson: from queries? I'll give everyone a minute to just throw down some ideas. In in discord.
+
+167
+00:30:49.840 --> 00:30:58.949
+hugo bowne-anderson: Laura's got a nice idea, maybe 2 different embedding spaces that get quantized or compressed into a 3rd multimode space.
+
+168
+00:31:02.230 --> 00:31:06.339
+hugo bowne-anderson: So that would be the the second second option.
+
+169
+00:31:07.280 --> 00:31:09.999
+hugo bowne-anderson: Well, it's actually the second. But then
+
+170
+00:31:10.560 --> 00:31:13.490
+hugo bowne-anderson: you do something to make it the the 1st option.
+
+171
+00:31:17.700 --> 00:31:23.569
+hugo bowne-anderson: I love it. I see 3 people typing furiously. Discord should say furiously, when it is. You know.
+
+172
+00:31:24.780 --> 00:31:27.560
+hugo bowne-anderson: several people are typing now. Incredible
+
+173
+00:31:40.720 --> 00:31:41.906
+hugo bowne-anderson: love it.
+
+174
+00:31:44.250 --> 00:31:58.759
+hugo bowne-anderson: so Tim has written, he thinks, same embedding space, so that text description of dogs and image representations can be compared. Exactly so. We want like photos of dogs and text about dogs to kind of be close. So when you embed
+
+175
+00:31:58.860 --> 00:32:21.460
+hugo bowne-anderson: a prompt, or when you have a prompt about dogs, it's actually close to to both of those. William has made a wonderful point that your system will be simpler if you can embed them in the same space, but it does introduce complexity in designing and training the model or system, and then also evaluation and iteration as well.
+
+176
+00:32:25.140 --> 00:32:28.529
+hugo bowne-anderson: David has a wonderful point. Do you convert
+
+177
+00:32:29.163 --> 00:32:37.426
+hugo bowne-anderson: the multimodal object, or, you know, image or video to text, and then embed. That seems like a bunch. More work.
+
+178
+00:32:38.330 --> 00:32:47.630
+hugo bowne-anderson: it is more work. It isn't necessarily a bunch more work, because there are wonderful models to do this as well these days. So let's let's now have a look at this
+
+179
+00:32:48.870 --> 00:32:51.070
+hugo bowne-anderson: so funnily.
+
+180
+00:32:51.260 --> 00:32:58.150
+hugo bowne-anderson: Tim and I, in all all our canine joys. Both gave the example of a dog. So
+
+181
+00:32:58.270 --> 00:33:08.719
+hugo bowne-anderson: let's say, this is like, this is a two-dimensional, or it's actually 3D. But an embedding space here. No, it's 2D embedding space here. What we would want is
+
+182
+00:33:08.910 --> 00:33:15.459
+hugo bowne-anderson: a dog, the sentence. A dog running to be kind of close to a photo of a dog running
+
+183
+00:33:15.580 --> 00:33:23.330
+hugo bowne-anderson: right, and we'd want the sentence. The cat slept all day kind of close to a photo of a cat sleeping right
+
+184
+00:33:23.850 --> 00:33:26.239
+hugo bowne-anderson: now. More than that, we want.
+
+185
+00:33:26.570 --> 00:33:27.240
+hugo bowne-anderson: Okay.
+
+186
+00:33:28.160 --> 00:33:39.679
+hugo bowne-anderson: These 2 cannot be close to these 2 down here, right? It isn't enough that these 2 map to the same place. We want to have some sort of separation there. Okay.
+
+187
+00:33:40.230 --> 00:33:48.640
+hugo bowne-anderson: so just give me one second. I've been disconnected from my external monitor, and I'll just fix this
+
+188
+00:33:56.360 --> 00:33:57.690
+hugo bowne-anderson: one second.
+
+189
+00:34:07.350 --> 00:34:08.820
+hugo bowne-anderson: My apologies, people.
+
+190
+00:34:14.290 --> 00:34:19.870
+hugo bowne-anderson: I'll try one more time, and if I if it doesn't work.
+
+191
+00:34:23.300 --> 00:34:24.640
+hugo bowne-anderson: Okay, we're back.
+
+192
+00:34:26.260 --> 00:34:30.029
+hugo bowne-anderson: So the question is.
+
+193
+00:34:30.750 --> 00:34:40.600
+hugo bowne-anderson: how do we do such a thing? And there's actually something called contrastive learning which allows us to do this?
+
+194
+00:34:41.780 --> 00:34:55.229
+hugo bowne-anderson: relatively well. And really this one of the the state of the art ways to do this is with clip pastor. Would you mind just asking the question, who has heard of Clip? And we can get a thumbs up or thumbs down?
+
+195
+00:34:55.799 --> 00:35:04.790
+hugo bowne-anderson: So this came out of Openai, as you see in 2021. They referred to it as a milestone, which I agree with completely.
+
+196
+00:35:05.481 --> 00:35:08.389
+hugo bowne-anderson: It was huge and all
+
+197
+00:35:10.010 --> 00:35:13.139
+hugo bowne-anderson: put the link here, and then.
+
+198
+00:35:17.310 --> 00:35:24.330
+hugo bowne-anderson: there's also this paper. So maybe Pastor or Caleb, you could find this paper and and link to it as well for those interested in
+
+199
+00:35:25.176 --> 00:35:29.760
+hugo bowne-anderson: diving into a lot of the technical technical details. Right?
+
+200
+00:35:29.880 --> 00:35:35.061
+hugo bowne-anderson: But what this does is it allows us to embed
+
+201
+00:35:36.180 --> 00:35:44.090
+hugo bowne-anderson: images and text. For example, in in the same space. Okay. Now, Openai has
+
+202
+00:35:45.300 --> 00:36:04.374
+hugo bowne-anderson: not released the entire model, but they've released. The pre-trained weights which what that means is, it has allowed people to build on top on top of them. So this is a model from some some friends of mine called fashion clip which has
+
+203
+00:36:05.200 --> 00:36:17.489
+hugo bowne-anderson: taken the clip model and fine-tuned it, and and retrained it to be applicable to the use case of fashion. So you'll see you can do a search. A t-shirt
+
+204
+00:36:18.060 --> 00:36:20.089
+hugo bowne-anderson: with a tiger, and it will return this.
+
+205
+00:36:20.450 --> 00:36:30.919
+hugo bowne-anderson: And you can see here we have a T-shirt with a cat. Okay? And it returns this funny funny thing. What I will do is
+
+206
+00:36:31.280 --> 00:36:40.270
+hugo bowne-anderson: let me just linked to this for those interested.
+
+207
+00:36:40.830 --> 00:36:42.600
+hugo bowne-anderson: Let me just find this again.
+
+208
+00:36:46.458 --> 00:37:10.009
+hugo bowne-anderson: This is a blog post from Frederico at Stanford, or he was at Stanford talking about the process of teaching Clip some fashion, and they actually have a colab notebook which I encourage. You know, if you're interested in these types of things, to play around with it as well to get a sense of how how clip works and and what they built
+
+209
+00:37:11.300 --> 00:37:12.390
+hugo bowne-anderson: on top of it.
+
+210
+00:37:12.700 --> 00:37:13.510
+hugo bowne-anderson: Okay,
+
+211
+00:37:14.540 --> 00:37:19.710
+hugo bowne-anderson: So once we have these types of models which allow us to
+
+212
+00:37:22.260 --> 00:37:25.440
+hugo bowne-anderson: to get different modes into the same embedding space.
+
+213
+00:37:26.370 --> 00:37:29.889
+hugo bowne-anderson: How, then, do we build products using them? And
+
+214
+00:37:30.000 --> 00:37:33.963
+hugo bowne-anderson: this is an example of how to use multimodal rag,
+
+215
+00:37:35.360 --> 00:37:46.172
+hugo bowne-anderson: use how to use it in multimodal rag pipelines, and I will just provide the link to this as well. This is a case study from Nvidia, which I think is quite illuminating.
+
+216
+00:37:47.030 --> 00:37:53.100
+hugo bowne-anderson: because it provides a lot of the kind of the implementation details around everything we've been talking about in this course with respect to
+
+217
+00:37:53.320 --> 00:38:12.690
+hugo bowne-anderson: modularizing our AI system workflows by having individual best of breed components, that then we can. After evaluating, we can come in and see what levers to pull where the problems are and and work on those right. So that isn't to say
+
+218
+00:38:12.740 --> 00:38:30.340
+hugo bowne-anderson: that I discourage you from starting by just getting a huge multimodal model, throwing stuff in seeing how it works. But once again, what you'll see after that is when you start to see some failure modes and try to improve your model. You won't have a strong sense of which part of the pipeline
+
+219
+00:38:30.918 --> 00:38:32.670
+hugo bowne-anderson: to to improve right.
+
+220
+00:38:32.810 --> 00:38:36.260
+hugo bowne-anderson: So in Nvidia's pipeline, they started with
+
+221
+00:38:36.670 --> 00:38:50.359
+hugo bowne-anderson: websites, and it was a bunch of technical websites for them. And they did some pre-processing into text and image right? And then what they did was they chunked the text, threw it in an embedding model.
+
+222
+00:38:50.480 --> 00:38:52.092
+hugo bowne-anderson: and then they
+
+223
+00:38:52.810 --> 00:39:04.219
+hugo bowne-anderson: took all the images, and they generated image descriptions, and then took that text and put them in the embedding model and then put those both in a vector store. Now.
+
+224
+00:39:05.010 --> 00:39:08.290
+hugo bowne-anderson: one thing, just thinking about the pipeline here, when you
+
+225
+00:39:08.350 --> 00:39:35.790
+hugo bowne-anderson: put these image descriptions in the embedding model. You better have metadata that tells you which image it comes from right. So not only do you want like forward movement in this data flow and AI pipeline. You want to make sure that there's provenance in the sense that when you have something up downstream you can tell where it came from upstream right? So when we're generating image descriptions, this was a big question that that Tim spoke.
+
+226
+00:39:35.790 --> 00:39:42.719
+hugo bowne-anderson: I'm sorry. No, it was, David asked. Seems like a bunch more bunch bunch more work.
+
+227
+00:39:44.660 --> 00:39:54.729
+hugo bowne-anderson: I'm interested in how we do this, but Kevin has has a point. Something doesn't feel right about having one embedding for an image.
+
+228
+00:39:55.150 --> 00:40:01.570
+hugo bowne-anderson: but multiple embeddings for text.
+
+229
+00:40:04.620 --> 00:40:16.899
+hugo bowne-anderson: Wonderful! Hey, Kevin? If if you're at liberty, could you turn your microphone on and just tell me a a bit about your concern here. I think I understand, or an example where this may be may be problematic.
+
+230
+00:40:18.590 --> 00:40:24.275
+Kevin Markham: Sure. And and if there starts to be audio feedback, let me know, because I don't have my headphones in
+
+231
+00:40:24.740 --> 00:40:35.840
+Kevin Markham: so like with a rag system. Let's say you dump a ton of documents into your rag system, and then your chunks are like a thousand
+
+232
+00:40:36.340 --> 00:40:53.190
+Kevin Markham: tokens per chunk, and then let's say you throw in a hundred documents into your Ag system, and you throw a hundred images in. And I'm not sure exactly the context of what these documents are what the images are, but the documents the 100 documents will produce.
+
+233
+00:40:53.280 --> 00:41:07.350
+Kevin Markham: let's say, a thousand or 10,000 embeddings, because each of those documents will get turned to in a chunk a chunk of, let's say, a thousand tokens. And so
+
+234
+00:41:07.440 --> 00:41:25.829
+Kevin Markham: somehow, these 100 documents get to be like 99.9% of the vector store. And then your 0 point 1% is embeddings that relate to images. So it seems like, almost never will the closest embedding
+
+235
+00:41:26.110 --> 00:41:28.480
+Kevin Markham: be the image.
+
+236
+00:41:28.870 --> 00:41:37.950
+Kevin Markham: because the text, every text document for every 1,000 characters, or whatever the chunk size is, will become an embedding.
+
+237
+00:41:37.970 --> 00:42:06.210
+Kevin Markham: and it just feels like, if a text document, let's say on average gets 10 embeddings, then somehow, the image should be better represented in the vector store. And maybe I wouldn't feel this way if I had, like a real world example, and could think through whether that makes sense. But it just feels like the images are not well represented enough in the same way that, if you like, does that make sense.
+
+238
+00:42:06.380 --> 00:42:15.920
+hugo bowne-anderson: It makes perfect sense, and I have an additional concern, and I'll try to figure out which which one it was here. But speaking to that one way. People
+
+239
+00:42:15.920 --> 00:42:39.309
+hugo bowne-anderson: people solve for this is you. So to Kevin's Point, when you do retrieval, you'll return the top 3 top 5 top 10 results something like that. And if only 1% images, then just by, you know, sampling statistics, you'll rarely get images, returned. What you can do and what you want to do is make sure each chunk has, or in the embedding model each chunk
+
+240
+00:42:39.310 --> 00:42:40.320
+hugo bowne-anderson: has
+
+241
+00:42:41.710 --> 00:42:59.459
+hugo bowne-anderson: metadata associated, whether it's an image or it's comes from text, and then what you can do is make sure that you retrieve a certain proportion from each, and then re-rank them if you want. So that's 1 way to to solve for this, but it's a very important concern. The
+
+242
+00:42:59.740 --> 00:43:04.230
+hugo bowne-anderson: the other concern that I have so firstly, is, that is, that helpful.
+
+243
+00:43:06.190 --> 00:43:24.719
+Kevin Markham: Yeah. And it makes me think that you could also do the other way. It's kind of like the difference between up sampling and down sampling like you could up sample in the sense of like. Oh, I'm going to generate 10 embeddings for each image, describing different aspects of it, and you could do the same thing for video. You could be like.
+
+244
+00:43:24.740 --> 00:43:37.529
+Kevin Markham: we're going to generate one embedding, describing each 2 seconds of videos. I I don't know. It would depend on the application. But something like that. But your point about the metadata seems seems right.
+
+245
+00:43:37.760 --> 00:43:43.689
+hugo bowne-anderson: Yeah. And your your second point actually speaks to my other concern, which I think Mike has spoken to
+
+246
+00:43:44.510 --> 00:43:46.170
+hugo bowne-anderson: as well, is
+
+247
+00:43:46.860 --> 00:43:56.739
+hugo bowne-anderson: like 1 1 text, chunk for an image may not, may not be chill. So, for example, what if we had a photo in which there was a dog.
+
+248
+00:43:56.740 --> 00:44:18.939
+hugo bowne-anderson: a cat sleeping and a dog running in the background. That's a silly example, right? But you'd you'd want both these queries to return that. And where would you? Where would you put this chunk then? So actually, you may want to send it to 2 different parts or 2 different points in in the embedding space, and that may seem like a silly example. But let's say you had
+
+249
+00:44:20.750 --> 00:44:21.340
+hugo bowne-anderson: each
+
+250
+00:44:22.050 --> 00:44:45.389
+hugo bowne-anderson: I don't know of, like a resort with some people doing something, some a lake background, something else. And you want to make sure that all of these things are captured. One embedding may not actually may not actually make sense. So one thing you can do there, is, do some sort of image classification first, st and identify the different components like multi
+
+251
+00:44:45.390 --> 00:44:52.409
+hugo bowne-anderson: class image classification, and then use that to generate different embeddings as well. But these are these are wonderful questions, and they do
+
+252
+00:44:52.410 --> 00:44:56.919
+hugo bowne-anderson: come out. I mean, when you, when you start building these types of things immediately.
+
+253
+00:44:57.260 --> 00:44:58.060
+hugo bowne-anderson: So.
+
+254
+00:45:14.700 --> 00:45:16.909
+hugo bowne-anderson: Hey, everyone! I'm sorry. Did I just disappear?
+
+255
+00:45:18.986 --> 00:45:19.819
+Caleb Tutty: Yes! Yes!
+
+256
+00:45:20.230 --> 00:45:22.590
+hugo bowne-anderson: That's I mean, that's crazy.
+
+257
+00:45:24.730 --> 00:45:27.899
+hugo bowne-anderson: Well, glad I came back so quickly and apologies for the
+
+258
+00:45:28.370 --> 00:45:35.510
+hugo bowne-anderson: the, the 2 distinct technical issues I've had New York's definitely heating up today. I can, I can tell you that.
+
+259
+00:45:36.830 --> 00:45:43.916
+hugo bowne-anderson: I'm I'm interested in, and we've talked about this a bit. But how? So we in this. And this is something. David spoke to.
+
+260
+00:45:44.460 --> 00:45:48.030
+hugo bowne-anderson: there's an issue. How do we? How do we generate image descriptions?
+
+261
+00:45:49.730 --> 00:45:51.449
+hugo bowne-anderson: So any any ideas.
+
+262
+00:45:52.150 --> 00:45:56.460
+hugo bowne-anderson: Just feel free to put some stuff in in the chat, and we'll just take a minute.
+
+263
+00:46:23.230 --> 00:46:27.680
+hugo bowne-anderson: I love Laura's response. I absolutely love Laura's response.
+
+264
+00:46:28.590 --> 00:46:52.250
+hugo bowne-anderson: Alt text. Who would have thought, this is why we were writing alt text for all all these years. Right, of course, that I mean, you probably all know this, but the original motivation behind having alt text on websites is in case the image isn't rendered properly. And so there's something visible there to let people know what's up. So yeah, that's 1 1 way to do it.
+
+265
+00:46:57.290 --> 00:46:58.770
+hugo bowne-anderson: What if we don't have old text?
+
+266
+00:47:01.840 --> 00:47:03.459
+hugo bowne-anderson: And I've definitely been
+
+267
+00:47:04.830 --> 00:47:12.100
+hugo bowne-anderson: been bad in terms of like when doing blog posts, and not having enough time to write all my old text to, you know, leaving leaving it out. I can tell you that.
+
+268
+00:47:25.810 --> 00:47:32.519
+hugo bowne-anderson: So Pastor says, perhaps we can identify individual elements and aggregate the meaning to create a description. So
+
+269
+00:47:32.960 --> 00:47:38.510
+hugo bowne-anderson: so once again, how would we do that, though, would like. Would that be, I suppose, is that automated? Or we do we do that manually?
+
+270
+00:48:08.250 --> 00:48:11.040
+hugo bowne-anderson: Sean? Bergman's answer of using
+
+271
+00:48:11.960 --> 00:48:15.479
+hugo bowne-anderson: a multimodal model is is probably the
+
+272
+00:48:15.880 --> 00:48:22.429
+hugo bowne-anderson: the best way to do it. I think if there is an alt text already, and there aren't captions right?
+
+273
+00:48:25.340 --> 00:48:36.090
+hugo bowne-anderson: Oh, David's making a great point, how does this change with respect to data related images? And we'll get to that in a second. In this Nvidia case study. Actually. So the 1st way you can do it is use a vision model.
+
+274
+00:48:36.200 --> 00:48:44.227
+hugo bowne-anderson: You can also use pre-existing caps like clip. For example, you can use pre-existing captions and alt text.
+
+275
+00:48:45.070 --> 00:48:48.889
+hugo bowne-anderson: actually, what is that? There's a wonderful model, I think, from salesforce.
+
+276
+00:48:54.950 --> 00:48:57.569
+hugo bowne-anderson: I haven't used this. Oh, yeah, blip
+
+277
+00:49:01.200 --> 00:49:02.679
+hugo bowne-anderson: course. A variation on
+
+278
+00:49:02.850 --> 00:49:11.820
+hugo bowne-anderson: on on clip but once again, as you can see can. Caleb, can you just give me a thumb up if you can see hugging face salesforce blip model.
+
+279
+00:49:12.010 --> 00:49:15.280
+hugo bowne-anderson: Yeah. So as you can once again, like.
+
+280
+00:49:15.570 --> 00:49:40.189
+hugo bowne-anderson: whenever I look at a new model, firstly, I look at what it can do. I look at the model card. And then one thing, just to get a sense of whether I want to try using something. I look at the number of downloads. Okay, so once again, this is over 1.5 million downloads last month, which means it's something. And I have used Blip. But just to give you a sense of heuristics, for whether to try try things. So this is an image captioning model
+
+281
+00:49:40.310 --> 00:49:54.600
+hugo bowne-anderson: straight out, straight out of salesforce. And and as Brad has mentioned, there are specific image captioning models. And to David's point earlier there are even specific ones for data related tasks. So let's now kind of dig into this a bit deeper.
+
+282
+00:49:54.840 --> 00:50:18.789
+hugo bowne-anderson: So what Nvidia actually did, and I love that they showed us in this schematic what what they did here is, they had their pre-processing, extracting, and cleaning. So they extracted text, including tables and figures from Pdfs, cleaned it, and then they split it into images and text. They turned the text into structured. Json had some custom logic to split the text. Then they chunked it
+
+283
+00:50:19.240 --> 00:50:20.700
+hugo bowne-anderson: with the images.
+
+284
+00:50:20.860 --> 00:50:29.339
+hugo bowne-anderson: 1st they used a multimodal model to generate an image description.
+
+285
+00:50:29.680 --> 00:50:41.310
+hugo bowne-anderson: Actually, this isn't quite right. I don't like this label here because I think they did that. But what they actually did was classification right. So they used a multimodal language model to generate an
+
+286
+00:50:42.240 --> 00:50:51.130
+hugo bowne-anderson: image. Describe, is it what or okay? Now, why did they do that?
+
+287
+00:50:51.240 --> 00:50:53.610
+hugo bowne-anderson: So they did that because
+
+288
+00:50:54.850 --> 00:51:10.459
+hugo bowne-anderson: if not, they just use the image description. If yes, they used a specific multimodal model that is more performant at telling you what what is happening in figures and charts and plots. Then they took
+
+289
+00:51:10.870 --> 00:51:19.930
+hugo bowne-anderson: the result of that and turned it into a linearized table as text, stored it as metadata put it into an Llm. And then
+
+290
+00:51:20.110 --> 00:51:33.410
+hugo bowne-anderson: put the summary in the embedding model as a chunk. Okay, so just to repeat, I know that's a not insignificant amount to to grok but all this pre-processing
+
+291
+00:51:33.520 --> 00:51:51.240
+hugo bowne-anderson: separate images from texts embed the text. After you know, some splitting logic and chunking, and that type of stuff for the images. They 1st got a description, then they got an Llm. To decide. Is this a chart or plot? If no, they use the description in the image model.
+
+292
+00:51:51.998 --> 00:51:54.591
+hugo bowne-anderson: And if yes, they
+
+293
+00:51:56.720 --> 00:52:05.529
+hugo bowne-anderson: they used a specific model for charts that then they turned into the result into text as a table and and
+
+294
+00:52:06.517 --> 00:52:16.722
+hugo bowne-anderson: embedded that. Sorry? The reason? I paused slightly. I saw David's wonderful comment. Ha! That is a lot more work, I think, to William's point earlier. It's
+
+295
+00:52:18.170 --> 00:52:27.989
+hugo bowne-anderson: It's some more work upfront. You'd be surprised that like that this isn't necessarily significantly more work than than otherwise.
+
+296
+00:52:30.330 --> 00:52:46.140
+hugo bowne-anderson: But to William's point earlier doing this work upfront, or on your second or 3rd iteration of your AI system, means you can actually evaluate it and have different levers to pull once again. If you, if you notice that.
+
+297
+00:52:46.270 --> 00:52:54.979
+hugo bowne-anderson: you know you have a particular failure mode that image descriptions aren't correct. Then, as opposed to text chunking. You can then go in and say, was it
+
+298
+00:52:55.090 --> 00:52:56.650
+hugo bowne-anderson: this part of the pipeline, though.
+
+299
+00:52:57.430 --> 00:53:01.840
+hugo bowne-anderson: that had the biggest, the biggest errors, or this part, or this part right?
+
+300
+00:53:02.437 --> 00:53:07.210
+hugo bowne-anderson: So Sid has asked, is the embedding model just a text embedding?
+
+301
+00:53:09.175 --> 00:53:14.659
+hugo bowne-anderson: Yes, this embedding this embedding model is, it is is a text embedding model. Exactly.
+
+302
+00:53:15.190 --> 00:53:44.950
+hugo bowne-anderson: But once again you have governance and lineage. So when you get a chunk you can get the image back. And I do want to say, the specific model they used in this case. And Pastor or Caleb, if you wouldn't mind just doing a quick Google search for this to get dplot, which is a 1 shot, visual language understanding by plot to text translation which works on figures like this. And it did in the Nvidia case. And you can see this is an example from Nvidia, where Annie Surla asked
+
+303
+00:53:45.534 --> 00:54:07.880
+hugo bowne-anderson: and they called it. This is, I mean calling it Schrodinger, and giving it a cat. I mean, you know, this is this is genius, comedy. But what is the difference in performance between these 2? And the response is this is the performance difference. And then it says, the image referred to. Is this so? It was able to answer the question.
+
+304
+00:54:08.443 --> 00:54:15.700
+hugo bowne-anderson: and then, because it had metadata associated, to which figure it was using, which capture Sorry, which figure
+
+305
+00:54:16.170 --> 00:54:23.719
+hugo bowne-anderson: corresponded to the caption that it used to generate this generative response. It was able to provide. The figure as well.
+
+306
+00:54:25.170 --> 00:54:30.830
+hugo bowne-anderson: So I want to wrap up this section on multimodal AI systems in a minute. And I've
+
+307
+00:54:32.140 --> 00:54:36.000
+hugo bowne-anderson: I've mentioned this throughout this hour in a variety of ways.
+
+308
+00:54:36.760 --> 00:54:40.220
+hugo bowne-anderson: But when you build these things you will get into purgatory.
+
+309
+00:54:40.340 --> 00:54:41.300
+hugo bowne-anderson: Now.
+
+310
+00:54:42.060 --> 00:54:47.949
+hugo bowne-anderson: the wonderful thing is, there's a way out right? And that's what this entire course has been been about.
+
+311
+00:54:48.320 --> 00:55:03.910
+hugo bowne-anderson: And so I just want to let you know that the same principles we've been doing this entire course other way out here, and as Philip Carter from previously honeycomb. And now Salesforce says, you know it is, it is the hard work, and if you
+
+312
+00:55:04.210 --> 00:55:20.950
+hugo bowne-anderson: a lot of the time. If you eyes, he said. If your eyes aren't bleeding from looking at spreadsheets, you're probably not looking at enough data, and he was half joking, but you you want to make sure you can evaluate, and then figure out which levers to pull in order to improve your system.
+
+313
+00:55:21.050 --> 00:55:30.609
+hugo bowne-anderson: Once again from Hamel's blog post. Building AI products to successfully build AI products.
+
+314
+00:55:30.960 --> 00:55:37.849
+hugo bowne-anderson: You need processes for evaluating quality debugging issues and changing the behavior of your system.
+
+315
+00:55:39.330 --> 00:55:46.630
+hugo bowne-anderson: So many people focus merely on 3, such as switching out a model, trying a different chunking that type of stuff. Right? And
+
+316
+00:55:46.740 --> 00:56:04.799
+hugo bowne-anderson: that's the the other 2 things are really what we're focusing on on this course, and because the other 2 are what allow you to improve your Llm product beyond a demo evaluating and then debugging. And of course the debugging involves logging, inspecting, monitoring. So
+
+317
+00:56:04.960 --> 00:56:06.359
+hugo bowne-anderson: once again.
+
+318
+00:56:06.580 --> 00:56:09.960
+hugo bowne-anderson: And we're going to bring this back to multimodal AI in a second.
+
+319
+00:56:10.850 --> 00:56:12.119
+hugo bowne-anderson: How do we do this?
+
+320
+00:56:12.620 --> 00:56:36.740
+hugo bowne-anderson: Now? I framed this previously, as you can do this with synthetic data. But you do it with with user queries and and real user data. More generally, you have a product at the start. And Mvp, you have, you have queries, you label responses by hand, even 2050, whatever it is. And then you use a label data set to start to build a basic harness and iterate on your product. And this can be a test set.
+
+321
+00:56:36.860 --> 00:56:44.910
+hugo bowne-anderson: Llms. Judge whatever is necessitated by your system in our case, when you have a part of your pipeline
+
+322
+00:56:47.710 --> 00:56:56.819
+hugo bowne-anderson: that is classifying an image as like figure, like data chart or not.
+
+323
+00:56:57.000 --> 00:57:11.459
+hugo bowne-anderson: You do not need an Llm. As a judge for that. In fact, you can have, like a basic test train split in order to in in order to do that and and use your classification model there. Now, once again, in this particular case.
+
+324
+00:57:11.870 --> 00:57:15.639
+hugo bowne-anderson: how would we turn the information we get into fixes.
+
+325
+00:57:16.020 --> 00:57:16.820
+hugo bowne-anderson: Right?
+
+326
+00:57:17.830 --> 00:57:34.220
+hugo bowne-anderson: So remember, I've said log traces in spreadsheet. In this particular case I don't think a spreadsheet is the best tool I think you can like even vibe code or hand roll a custom viewer right? Why is a spreadsheet? Not the best tool? Because we have images in in the pipeline, and perhaps images returned, and
+
+327
+00:57:35.360 --> 00:57:44.940
+hugo bowne-anderson: I don't particularly like looking at images in spreadsheets. It's it's doable. But you want to log your traces somehow. Then you want to accept or reject a response. You want a reason.
+
+328
+00:57:45.341 --> 00:57:57.709
+hugo bowne-anderson: for, accept, reject, and you want to classify the failure mode. In this particular case. We've had a look at a different different types of failure modes. It could be a hallucination. It could be a retrieval error. It could be incorrect captioning. Okay?
+
+329
+00:57:57.900 --> 00:58:06.310
+hugo bowne-anderson: Then we pivot table and rank them by frequency, and then we think about what type of actionable fix. So if it's incorrect captioning.
+
+330
+00:58:06.560 --> 00:58:18.090
+hugo bowne-anderson: then we go to the captioning part of of the model, and we improve it somehow, right? Either working on the model, prompt engineering, perhaps even fine tuning at some point or switching out a different model.
+
+331
+00:58:18.210 --> 00:58:25.240
+hugo bowne-anderson: Among other, among other things, once we've done the pivot table, we see things like 30%
+
+332
+00:58:25.420 --> 00:58:32.119
+hugo bowne-anderson: of errors are hallucinations. 25% are retrieval errors, 20% incorrect captioning.
+
+333
+00:58:32.350 --> 00:58:42.030
+hugo bowne-anderson: 15% are wrong captioning model use. So this means the classification step. introduce 15% of our errors.
+
+334
+00:58:42.660 --> 00:58:53.250
+hugo bowne-anderson: So once again I've introduced you to multimodal models, and then how to think about building multimodal AI pipelines through any retrieval pipelines through an example from from Nvidia.
+
+335
+00:58:53.550 --> 00:58:57.580
+hugo bowne-anderson: But to really make these applications work the process
+
+336
+00:58:58.550 --> 00:59:04.311
+hugo bowne-anderson: a lot of the implementation details change. But the process is exactly the same in terms of
+
+337
+00:59:05.170 --> 00:59:10.910
+hugo bowne-anderson: making sure you're able to iterate having your failure, mode, analysis, and all your observability and monitoring.
+
+338
+00:59:11.630 --> 00:59:17.499
+hugo bowne-anderson: So now I'd like to move on and talk about agentic rag.
+
+339
+00:59:18.277 --> 00:59:32.550
+hugo bowne-anderson: and super excited. And I'll say this at the end. If anyone is working on the homework or any other projects where they can consider, including multimodality. Now, I'd really love to hear hear about that. But we're going to move on to a gentic rag now, and
+
+340
+00:59:34.620 --> 00:59:39.740
+hugo bowne-anderson: we've done a bunch of stuff on retrieval and rag in in this course. So I'm wondering
+
+341
+00:59:39.890 --> 00:59:42.739
+hugo bowne-anderson: if anyone can just give me some examples
+
+342
+00:59:42.910 --> 00:59:48.609
+hugo bowne-anderson: of what rag is bad at. And what I mean by that is like, what type of prompts
+
+343
+00:59:49.030 --> 00:59:54.779
+hugo bowne-anderson: would you ask a rag system that rag just isn't actually designed to handle?
+
+344
+00:59:59.440 --> 01:00:01.120
+hugo bowne-anderson: So we'll take a couple of minutes here.
+
+345
+01:00:07.700 --> 01:00:19.869
+hugo bowne-anderson: Amazing, Kevin has said, answering a question that requires reading every single chunk. So one very common example that we see is like, what is this all about? What? What are these documents about?
+
+346
+01:00:22.670 --> 01:00:32.249
+hugo bowne-anderson: Sean? Exactly, Sean? So Sean's Sean's example, Rad can have difficulty summarizing the entire corpus, which is a specific example. Of of Kevin's.
+
+347
+01:00:36.200 --> 01:00:43.530
+hugo bowne-anderson: Oh, great Sean, unless you have a summary engine that already doesn't provides summaries as a tool. Amazing. And so. But that
+
+348
+01:00:44.090 --> 01:00:52.300
+hugo bowne-anderson: wouldn't just be rag, would it? It'd be rag rag plus plus, in some sense. And if you have a tool, maybe we're already talking about agentic rag. Wonderful!
+
+349
+01:00:56.140 --> 01:01:01.340
+hugo bowne-anderson: William beautiful. A common failure mode is that the user asks the rag system. What kinds of things can you answer?
+
+350
+01:01:02.064 --> 01:01:04.850
+hugo bowne-anderson: I've also made made that mistake.
+
+351
+01:01:07.290 --> 01:01:09.519
+hugo bowne-anderson: Great, Brad, open-ended questions.
+
+352
+01:01:12.230 --> 01:01:22.849
+hugo bowne-anderson: And one of the big problems in in William's example is a lot of time. It'll it'll hallucinate unless you're specifically designed in the prompt for it. Not to.
+
+353
+01:01:24.740 --> 01:01:35.289
+hugo bowne-anderson: And, in fact, in in Rag you'll see people like they'll have a list of questions in the prompt saying, Hey, if the user asks questions like this, then definitely say, I cannot answer that.
+
+354
+01:01:39.300 --> 01:01:41.690
+hugo bowne-anderson: So I see Sean's typing, and I'll wait for Sean's
+
+355
+01:01:41.840 --> 01:01:48.432
+hugo bowne-anderson: sean's sean's already, you know, said so many great things, and I'll I'll wait for his thoughts here, and then I'll I'll show you some of the things that
+
+356
+01:01:50.040 --> 01:01:54.430
+hugo bowne-anderson: Oh, dude! I'm so. I'm so glad you
+
+357
+01:01:55.140 --> 01:01:57.730
+hugo bowne-anderson: you said that. I mean people hear what they want to hear. Right?
+
+358
+01:02:00.340 --> 01:02:01.350
+hugo bowne-anderson: All right.
+
+359
+01:02:04.850 --> 01:02:07.119
+hugo bowne-anderson: I don't have a good solution.
+
+360
+01:02:07.510 --> 01:02:12.709
+hugo bowne-anderson: The best solution I've seen, which people also ignore is actually putting it in the product as well.
+
+361
+01:02:14.120 --> 01:02:23.456
+hugo bowne-anderson: saying, this is what to use this thing for these are things to not not use it. For for example, particularly with internal clients. But once again,
+
+362
+01:02:24.760 --> 01:02:26.173
+hugo bowne-anderson: People definitely
+
+363
+01:02:28.300 --> 01:02:46.060
+hugo bowne-anderson: see what they want to see and hear what they hear, what they want to hear. So I mean, most of these have been covered. So the 1st one. What are what are these docs all about? Which Kevin gave a a met like an overarching theme of what this is answering, a question that requires reading every single chunk. Right?
+
+364
+01:02:47.688 --> 01:03:13.750
+hugo bowne-anderson: How about something like summarize the pros and cons of technique? A versus technique? B, based on everything in this Doc set, so it requires it to read everything, but on top of that it requires kind of 4 things, or 5 things, even like pros of a pro cons of a pros of B, cons of B, then summarizing them and comparing them, or something along those lines, and what you'll find most of the time.
+
+365
+01:03:14.251 --> 01:03:20.169
+hugo bowne-anderson: Is that if you give it something like this, it'll give you something about A or something about B,
+
+366
+01:03:21.100 --> 01:03:22.419
+hugo bowne-anderson: or give you something
+
+367
+01:03:22.790 --> 01:03:31.249
+hugo bowne-anderson: grounded about a hallucinate about B, and add a hallucinated comparison as as well. So this is something that rag is horrible at
+
+368
+01:03:31.924 --> 01:03:34.499
+hugo bowne-anderson: how about some form of
+
+369
+01:03:35.200 --> 01:03:43.049
+hugo bowne-anderson: quote, unquote reasoning or analysis, right? So which department had the largest budget increase last year.
+
+370
+01:03:43.240 --> 01:03:47.399
+hugo bowne-anderson: There may be information in the documents that it can retrieve about the largest
+
+371
+01:03:48.064 --> 01:03:52.619
+hugo bowne-anderson: sorry about budget increases, or about budgets in departments over time.
+
+372
+01:03:53.188 --> 01:04:06.109
+hugo bowne-anderson: But to figure out which was the largest it may need to, you know, compare different chunks, and then perform some sort of actual analysis there. So this is getting towards like reasoning of some sort.
+
+373
+01:04:06.763 --> 01:04:11.986
+hugo bowne-anderson: And then there are and I do this all the time as well.
+
+374
+01:04:12.360 --> 01:04:40.079
+hugo bowne-anderson: asking too many questions, and like as a podcaster as well, I like break the number one rule of interviewing all the time, which is asking 2 questions at once. Also, humans are like this. Have you ever tried to ask someone 2 questions in an email. Do you understand the likelihood of them responding to both right and you not having to follow up? So if I have 3 questions, sometimes I can send 3 different emails depending how well I know the person. But if you ask if there's a corpus about foundation models, and you say.
+
+375
+01:04:40.080 --> 01:04:47.919
+hugo bowne-anderson: what are the or about Llms more generally, or AI. What are the 3 foundation models mentioned? Give me a detailed explanation of the second one.
+
+376
+01:04:47.930 --> 01:05:00.970
+hugo bowne-anderson: It will rarely, it may get 3, but they may be in different chunks. You'll have Buckley's chances, as we say. I don't know if that's an American term at all. I'm sorry, but it means no chance
+
+377
+01:05:01.530 --> 01:05:05.499
+hugo bowne-anderson: of then answering the second one, okay.
+
+378
+01:05:05.972 --> 01:05:13.239
+hugo bowne-anderson: and look. A gentic rag is a buzz term in a lot of ways, but it is actually an an approach which has been.
+
+379
+01:05:16.720 --> 01:05:24.740
+hugo bowne-anderson: when done in moderation and built up gently. It's an approach that is very good at solving these types of issues.
+
+380
+01:05:25.000 --> 01:05:25.780
+hugo bowne-anderson: So
+
+381
+01:05:26.070 --> 01:05:35.769
+hugo bowne-anderson: Sean has already led led the witness led the Australian, what are these docs all about? Okay, now, what you can do
+
+382
+01:05:35.890 --> 01:05:43.259
+hugo bowne-anderson: is actually have an Llm that has a couple of tools. Okay? And one tool is your.
+
+383
+01:05:44.110 --> 01:05:53.830
+hugo bowne-anderson: So it's just rag, right? It's a it's a search. Docs tool which essentially calls rag with a over a vector index of some sort. Right now, the other tool
+
+384
+01:05:54.403 --> 01:05:57.789
+hugo bowne-anderson: it can have access to is summarize, and
+
+385
+01:05:58.020 --> 01:06:25.729
+hugo bowne-anderson: there are several ways to do this. You can do some sort of live live summary, which, if it's way too long in general, you don't want to do that there are tools such as summary index in Lama Index, and you can. You can hand roll your own summaries as well. And I actually, I corresponded with Mike Powers about this over the weekend, and I thought, Mike, you could just say a few words about summary index, and I also, I think, was it.
+
+386
+01:06:26.160 --> 01:06:31.950
+hugo bowne-anderson: Sean, who mentioned it as well.
+
+387
+01:06:32.250 --> 01:06:34.389
+hugo bowne-anderson: A summary engine, so maybe like.
+
+388
+01:06:34.390 --> 01:07:02.089
+Mike Powers: I kind of got nerd sniped by this slide because I saw early access version of it. And I'm curious. What is a summary index. And how does it work? And so I'll post a session I had back and forth with perplexity. But the Tldr for you all is the summary index is not really an index. It's just a storage of all the text chunks in some sort of efficient format. And then at query time it creates the it
+
+389
+01:07:02.300 --> 01:07:27.740
+Mike Powers: grabs all those chunks and creates a summary, and it it accesses an Llm. In order to create a summary, using one of the following, using a number of techniques. But here are the kind of the 2 most interesting to me, which was sort of a 1 is called tree summarize. So it's a recursive summarization. So it picks as many chunks as it can that fits within the context of the Llm. That it's hooked up to
+
+390
+01:07:28.010 --> 01:07:43.880
+Mike Powers: creates a summary of those repeats that, and then iteratively recombines those summaries down, so it boils down into a into a combined summary. And then the other mode. It's called the Synthesis mode was called refine. Where it
+
+391
+01:07:44.720 --> 01:07:56.429
+Mike Powers: 1st grab a. It refines an initial answer with each additional chunk, so it has a summary, and then feeds the chunks one by one to to regenerate it, and an overall summary.
+
+392
+01:07:57.450 --> 01:08:00.469
+hugo bowne-anderson: Really appreciate that, Mike? And were you gonna link to something in the.
+
+393
+01:08:00.470 --> 01:08:06.839
+Mike Powers: Also, I'll I'll post it momentarily in in in discord. But I guess the point is, it looks it.
+
+394
+01:08:07.450 --> 01:08:17.510
+Mike Powers: It walks over all of the chunks, you know in with 1 1 of these techniques or another, then, and it uses, and it involves an Llm. To construct the summary.
+
+395
+01:08:18.370 --> 01:08:37.450
+hugo bowne-anderson: I love it, and the other thing is like you can pre compute this. You can have the summary already done, and so once again batch when possible, as I said, as I've told you, like my former colleagues, who were at Netflix when they 1st rolled out. Well, they still do their recommendation system. Like in the app, they compute
+
+396
+01:08:37.630 --> 01:08:47.219
+hugo bowne-anderson: all recommendations for everyone once a week. Okay, they do not do it. Live for latency concerns among many other things. So if you can pre-compute things, do that as well.
+
+397
+01:08:47.229 --> 01:09:13.169
+Mike Powers: So I'll just throw in the Llama Index summary index. I would have thought, that's what it was doing, because it used the word index, but it does not seem to store or cache those, so that would be another. I may agree that you would cache that either on a per query, or even a semantic caching of a semantic version of the query. But that would be another part of your wireframe here an add on to what I think Lama Index does out of the box.
+
+398
+01:09:13.410 --> 01:09:30.716
+hugo bowne-anderson: Yeah, exactly. And once again, I mean Lama Index. They do a lot of great work and build a lot of great tools for all of us, but it isn't always obvious how to how to see what's happening under the hood. And that's, you know, very challenging for them as well. And actually, Sid makes a great point. This is
+
+399
+01:09:33.627 --> 01:09:47.380
+hugo bowne-anderson: john Berryman, who came and talked about the 7 deadly sins of AI app development last week. I did a lightning lesson with him on several things, including something he has called roaming rag. I'm wondering, Sid, if you're able
+
+400
+01:09:47.510 --> 01:09:48.380
+hugo bowne-anderson: to
+
+401
+01:09:50.590 --> 01:09:58.380
+hugo bowne-anderson: find his blog post on roaming rag and put it here. And I'll dig up the video. It is like behind, like an email sign in on
+
+402
+01:09:58.850 --> 01:10:04.709
+hugo bowne-anderson: Maven. But I'll get a copy of it and share it with and put it in the the course. Wiki
+
+403
+01:10:06.190 --> 01:10:16.717
+hugo bowne-anderson: sean has an amazing point that you can use clawed code to review and inspect these tools, reverse, engineer them, and make them better. I totally agree it does. And thank you so much, Sid.
+
+404
+01:10:17.290 --> 01:10:18.570
+hugo bowne-anderson: It does
+
+405
+01:10:18.830 --> 01:10:32.210
+hugo bowne-anderson: like using Claude Code to do that. I mean by beware once again, because it can generate a lot of not great code as well. But totally agree that it can help you reverse engineer these types of things. And so just to be clear.
+
+406
+01:10:33.610 --> 01:10:36.590
+hugo bowne-anderson: When you query this Llm.
+
+407
+01:10:37.380 --> 01:10:39.619
+hugo bowne-anderson: with, what are these docs all about?
+
+408
+01:10:40.080 --> 01:10:41.830
+hugo bowne-anderson: The output of the Llm.
+
+409
+01:10:41.950 --> 01:10:47.190
+hugo bowne-anderson: Will trigger which tool it uses. Remember, we saw
+
+410
+01:10:47.470 --> 01:10:49.690
+hugo bowne-anderson: in the in in the last workshop
+
+411
+01:10:51.950 --> 01:11:00.639
+hugo bowne-anderson: the get weather tool call, and I said, What's the weather in Sydney? And I got the answer wrong, for whatever reason. But that question triggered.
+
+412
+01:11:01.120 --> 01:11:07.449
+hugo bowne-anderson: or the it, returned the tool call. And then we did the tool call ourselves, of course.
+
+413
+01:11:07.650 --> 01:11:09.249
+hugo bowne-anderson: but the whole point is that
+
+414
+01:11:09.770 --> 01:11:36.730
+hugo bowne-anderson: this is like a minimal agent which can do rag and also summarize, based on a failure mode that we've seen. How do we know? People will ask this? Well, because we've done it all the time, but also we see that users do it as well. So once again, maybe we start with rag. Then we see questions like this, and we add a summarize tool. Okay? And the Llm has these 2 calls and the output of the Llm based on the input triggers.
+
+415
+01:11:37.350 --> 01:11:38.920
+hugo bowne-anderson: Rag will summarize.
+
+416
+01:11:40.670 --> 01:11:46.020
+hugo bowne-anderson: There's another thing, that tool calling can be very helpful with.
+
+417
+01:11:46.140 --> 01:11:51.410
+hugo bowne-anderson: and Rag is not great at. So let's say we're looking at a book
+
+418
+01:11:52.621 --> 01:11:56.840
+hugo bowne-anderson: called. This is a from a book called V. It's V. Dot.
+
+419
+01:11:56.970 --> 01:12:14.170
+hugo bowne-anderson: By Thomas Pynchon, his second novel. It's actually called V. Little Known Fact. And if you read it, you actually start to recognize the chapters alternate, and the 2 main characters come closer and closer until the final chapter. So the book itself forms a V for what that's worth.
+
+420
+01:12:14.813 --> 01:12:19.340
+hugo bowne-anderson: But let's say you ask what happened to Benny Profane in Chapter 2. Now.
+
+421
+01:12:19.810 --> 01:12:27.779
+hugo bowne-anderson: like normal rag, has no idea like what what chapters or what when it chunks it, it doesn't include that as metadata, right?
+
+422
+01:12:28.160 --> 01:12:30.200
+hugo bowne-anderson: So we need metadata for our chunks.
+
+423
+01:12:30.711 --> 01:12:37.090
+hugo bowne-anderson: And so what we want then is that when we, when the search Docs tool is called.
+
+424
+01:12:37.340 --> 01:12:41.459
+hugo bowne-anderson: we want it to have an argument for the chapter. Right?
+
+425
+01:12:44.560 --> 01:12:50.725
+hugo bowne-anderson: So glad you read gravity's rainbow. William in in college. Beautiful novel.
+
+426
+01:12:52.440 --> 01:13:10.650
+hugo bowne-anderson: It's been announced recently that Thomas Pinchon, I think he's nearly 90 now. He's got a new novel coming out later this year as well, which I'm very excited about. I hope to spot him in Nyc. One day, because he he lives on the Upper West side is my understanding. So we want metadata. We want to have this tool called know
+
+427
+01:13:11.520 --> 01:13:27.629
+hugo bowne-anderson: what chapter we're asking about. And this isn't only a chapter about a pension novel this is, you know, what page did this happen on, or which section did this? Did this happen on like? It's a very, very common question for us to want to drill down into a particular subsection. Okay, so.
+
+428
+01:13:27.760 --> 01:13:32.070
+hugo bowne-anderson: but but then, what we really want is
+
+429
+01:13:32.950 --> 01:13:39.850
+hugo bowne-anderson: when we ask a question like this is for the Llm. To quote unquote, know, or extract
+
+430
+01:13:42.780 --> 01:13:51.269
+hugo bowne-anderson: the particular chapter we're looking for. So we kind of want the tool call the query to become what happened to Benny profane, and it to pass
+
+431
+01:13:51.860 --> 01:13:56.020
+hugo bowne-anderson: the keyword, argument or argument. Keyword argument. Chapter equals 2.
+
+432
+01:13:56.930 --> 01:14:01.210
+hugo bowne-anderson: So just take a minute. Can anyone give a sense of
+
+433
+01:14:01.400 --> 01:14:07.189
+hugo bowne-anderson: like with a query like this, how? How a tool call would be able to do something like that?
+
+434
+01:14:12.050 --> 01:14:15.250
+hugo bowne-anderson: Not a trick question, and also think back to
+
+435
+01:14:15.660 --> 01:14:17.710
+hugo bowne-anderson: the tool calls we did on Thursday.
+
+436
+01:14:25.470 --> 01:14:33.240
+hugo bowne-anderson: Great. So in your chunks, William, you're absolutely right. You'd want your chunks to include the metadata. Correct now. But how does
+
+437
+01:14:34.070 --> 01:14:38.260
+hugo bowne-anderson: the tool call know what we've asked in the question?
+
+438
+01:14:42.930 --> 01:14:49.600
+hugo bowne-anderson: And if someone else would like to even just give an idea of how this could work any thoughts.
+
+439
+01:14:50.970 --> 01:14:52.949
+hugo bowne-anderson: It's not obvious. I'll give you a hint.
+
+440
+01:14:54.830 --> 01:15:03.489
+hugo bowne-anderson: It was surprising to see that it worked without us doing anything on Thursday. That's a slightly oblique hint. But we saw it. We saw exactly the same thing happen.
+
+441
+01:15:08.140 --> 01:15:08.900
+hugo bowne-anderson: Okay,
+
+442
+01:15:11.350 --> 01:15:15.630
+hugo bowne-anderson: So remember when I said, What's the weather in Sydney today.
+
+443
+01:15:17.700 --> 01:15:23.380
+hugo bowne-anderson: But the keyword arguments for the tool called Get weather well, latitude and longitude.
+
+444
+01:15:24.270 --> 01:15:26.110
+hugo bowne-anderson: But somehow the Llm.
+
+445
+01:15:26.740 --> 01:15:28.650
+hugo bowne-anderson: New to supply those
+
+446
+01:15:29.100 --> 01:15:34.210
+hugo bowne-anderson: to the tool call. Okay? So it's exactly the same here. When we ask a query.
+
+447
+01:15:36.020 --> 01:15:38.419
+hugo bowne-anderson: an Llm that is good enough
+
+448
+01:15:38.700 --> 01:15:47.769
+hugo bowne-anderson: will recognize that this is the keyword argument that it that it needs that it needs there. So once again, let's have a look
+
+449
+01:15:48.550 --> 01:16:04.679
+hugo bowne-anderson: at the example. From last week, remember, I defined the tool as get current temperature, name description get current temperature. I told it the properties right? And I said, required. Then I said, What's the weather like in Sydney today? And the response was
+
+450
+01:16:04.960 --> 01:16:23.499
+hugo bowne-anderson: this function call or to call? And these are the latitude and longitude. Okay, so sufficiently trained. Quote unquote, intelligent Llms will be able to will be able to do this, and a lot, I mean, modern ones are particularly good at this to. If we tell
+
+451
+01:16:23.620 --> 01:16:31.110
+hugo bowne-anderson: it that the tool call requires a chapter. It will extract it from the query just as it extracted
+
+452
+01:16:33.080 --> 01:16:35.199
+hugo bowne-anderson: the correct arguments here.
+
+453
+01:16:37.690 --> 01:16:44.289
+hugo bowne-anderson: Even though we didn't even give them all we gave was the location right? Sid has put it far better than
+
+454
+01:16:44.780 --> 01:16:46.310
+hugo bowne-anderson: I did in
+
+455
+01:16:48.020 --> 01:17:03.780
+hugo bowne-anderson: 7 or 8 words instead of 7 or 8 min for your tools. You need a good description and argument documentation right? And in this format is generally very good, and, like modern state of the art, Llms will do this out of the box.
+
+456
+01:17:11.290 --> 01:17:14.540
+hugo bowne-anderson: Laura has a good question for a user. Prompt. You can't assign.
+
+457
+01:17:14.800 --> 01:17:16.579
+hugo bowne-anderson: Assume the chap polluted.
+
+458
+01:17:19.710 --> 01:17:28.550
+hugo bowne-anderson: So this example was to show when users want things from particular. Oh, I'm frozen.
+
+459
+01:17:31.690 --> 01:17:37.240
+hugo bowne-anderson: Sorry. I'm back now. And once again my external monitor keeps
+
+460
+01:17:39.200 --> 01:17:42.250
+hugo bowne-anderson: disconnecting. Can you still see my screen.
+
+461
+01:17:43.890 --> 01:17:48.079
+hugo bowne-anderson: Great Laura, would you mind turning your microphone on and just asking a question.
+
+462
+01:17:49.300 --> 01:18:13.109
+Laura Summers: Oh, yeah, I mean, I was just wondering if you were thinking of like making that chapter key value pair required in the properties like you did here in the tool definition, because, like you can't well, it's harder to enforce structured inputs from users versus structured outputs from models. So like, if you did want to do that, how would you do that? And or were you thinking
+
+463
+01:18:13.530 --> 01:18:15.259
+Laura Summers: like an optional thing.
+
+464
+01:18:15.840 --> 01:18:19.799
+hugo bowne-anderson: So no, so to be clear, we're never enforcing anything for users.
+
+465
+01:18:21.650 --> 01:18:24.139
+hugo bowne-anderson: This is saying, if we call this tool.
+
+466
+01:18:24.260 --> 01:18:39.669
+hugo bowne-anderson: we require these things right? And this particular case, what I'm trying to do is show you how you can solve for users asking something about particular chapters or particular pages or particular sections. So
+
+467
+01:18:40.060 --> 01:18:42.110
+hugo bowne-anderson: if they ask this question.
+
+468
+01:18:42.790 --> 01:18:47.540
+hugo bowne-anderson: this is how that's solved, but if they don't it, it won't be done this way essentially.
+
+469
+01:18:50.420 --> 01:18:55.040
+hugo bowne-anderson: But once again, these are very common common questions that that we get. So
+
+470
+01:18:55.850 --> 01:19:07.972
+hugo bowne-anderson: I want to say a bit more. So realize we're building things up slowly as as well. Now we're going to go to anthropics recent blog post soon. On their research agents.
+
+471
+01:19:08.350 --> 01:19:33.139
+hugo bowne-anderson: And that will be taking the opposite approach of taking something massive and starting to look. What's up? What's up in there? But what we've done is we've started to add a small number of tools that solve particular issues and then figuring out how those tools can get required arguments. And these types of things once again, so important for debug ability and being able to iterate quickly to improve performance.
+
+472
+01:19:33.530 --> 01:19:48.939
+hugo bowne-anderson: 2 other questions that we noticed that rag isn't particularly good at are like multi-step questions. For example, what are the 3 foundation models mentioned. Give a detailed explanation of the second one, or summarize the pros and cons of 2 techniques based on everything in the Doc, set
+
+473
+01:19:50.330 --> 01:19:57.109
+hugo bowne-anderson: so can anyone give a sense of what needs to change
+
+474
+01:20:00.070 --> 01:20:02.719
+hugo bowne-anderson: in the systems we've built so far.
+
+475
+01:20:03.270 --> 01:20:11.030
+hugo bowne-anderson: And I know that's so. Let's let's just have a look at this. There's a quality of this.
+
+476
+01:20:11.600 --> 01:20:21.050
+hugo bowne-anderson: a characteristic of this system that will need to change for us to answer the other 2 questions will
+
+477
+01:20:28.770 --> 01:20:46.580
+hugo bowne-anderson: I appreciate? That's yeah. So, Kevin? Great. And I do appreciate it was a slightly oblique question. Kevin answered it very well, and then said, Is this what you mean? So I appreciate both of that. Yes, that the way I'd frame it is this is a single single step process, right where we have input tool call output right?
+
+478
+01:20:47.090 --> 01:20:50.009
+hugo bowne-anderson: But with this we need some sort of
+
+479
+01:20:50.420 --> 01:20:56.239
+hugo bowne-anderson: multi-step process, a lot of the time. Right? And you may recall from
+
+480
+01:20:58.568 --> 01:21:09.360
+hugo bowne-anderson: anthropics blog post which we looked at a lot of the patterns last week building effective AI agents. One of the one of the patterns, was orchestrator, worker. And so
+
+481
+01:21:09.887 --> 01:21:31.499
+hugo bowne-anderson: one way that we can solve for this is building a simple orchestrator worker pattern. And by simple, I mean, compared to some of the like the wild stuff people are building. I'm not necessarily, I'm not saying that this is, you know, necessarily simple to build and or iterate on, but that really speaks to why we want to start small as well.
+
+482
+01:21:31.500 --> 01:21:51.979
+hugo bowne-anderson: But we'll have an orchestrator which this prompt goes into, and then the orchestrator will send a prompt in this case to 1 1 worker. Send a slightly different prompt, perhaps, and what we want to do is give this orchestrator a lot of instructions for what to send, how to break up this prompt, that type of stuff. And then this agent worker
+
+483
+01:21:52.170 --> 01:22:00.051
+hugo bowne-anderson: could have access to 2 tools, for example, could have access to search docs and summarize, as we've just seen, and then
+
+484
+01:22:00.700 --> 01:22:21.509
+hugo bowne-anderson: the worker will send the response back to the agent, including information about what tools it used, etc, and state, and these types of things. And then the agent will use that in order to either say, we're done and give the output to the user, or it will delegate another task to the worker.
+
+485
+01:22:22.050 --> 01:22:39.649
+hugo bowne-anderson: And then we go. Then we go in this loop. Okay? So Kevin put it really well in terms of it, needing to be a loop. Another way to think is, it's multi-step as well. But this is a pen that we saw last week at least, the the orchestrator workout. We didn't see them in a loop, although we did see
+
+486
+01:22:40.290 --> 01:22:50.790
+hugo bowne-anderson: the optum evaluator optimizer in a loop. Okay, so let's just have a look at how a particular instance of this would work.
+
+487
+01:22:51.180 --> 01:22:51.930
+hugo bowne-anderson: So
+
+488
+01:22:52.600 --> 01:22:58.529
+hugo bowne-anderson: let's say, we ask it, what are the 3 foundation models mentioned? Give me a detailed explanation of a second one.
+
+489
+01:22:58.720 --> 01:23:03.789
+hugo bowne-anderson: so a good orchestrator will recognize that
+
+490
+01:23:04.290 --> 01:23:06.829
+hugo bowne-anderson: it will know the tools available to the worker.
+
+491
+01:23:06.990 --> 01:23:10.639
+hugo bowne-anderson: it will recognize as a rag tool and a summarize tool.
+
+492
+01:23:11.880 --> 01:23:17.110
+hugo bowne-anderson: And so it will then give the worker the 1st question, so
+
+493
+01:23:17.590 --> 01:23:24.100
+hugo bowne-anderson: it will say, Find and list foundation models mentioned, 3 foundation models in the Corpus.
+
+494
+01:23:24.670 --> 01:23:30.140
+hugo bowne-anderson: And this worker may use a summarized tool. Okay, now.
+
+495
+01:23:30.350 --> 01:23:32.670
+hugo bowne-anderson: and send the response back to the orchestrator.
+
+496
+01:23:32.840 --> 01:23:33.690
+hugo bowne-anderson: Now.
+
+497
+01:23:33.980 --> 01:23:47.459
+hugo bowne-anderson: if you're if you're thinking, is the summarize tool, the best tool for that, I'd say, maybe not right. And so that's why, when you once again you want to do end to end evaluation, see what the output is, and then start to diagnose
+
+498
+01:23:48.100 --> 01:23:55.400
+hugo bowne-anderson: what went wrong or what could happen better, and you might see that in this case the summarize tool isn't the best tool to use.
+
+499
+01:23:55.765 --> 01:24:01.139
+hugo bowne-anderson: You may want to use the search tool, or you may want to do a loop of summarize and search itself.
+
+500
+01:24:01.558 --> 01:24:16.360
+hugo bowne-anderson: And what you can do, then the 1st way to solve for this is, start to iterate on the prompt right. That the orchestrators given in order to nudge it, to not use the summarize tool in cases where you don't think it should be used. So
+
+501
+01:24:16.510 --> 01:24:20.769
+hugo bowne-anderson: then, so we send the response back to the orchestrator.
+
+502
+01:24:21.500 --> 01:24:26.940
+hugo bowne-anderson: Then the orchestrator gets 3 models returned and
+
+503
+01:24:27.090 --> 01:24:30.660
+hugo bowne-anderson: sends to the worker. Give a detailed explanation of Model B,
+
+504
+01:24:32.040 --> 01:24:38.670
+hugo bowne-anderson: then the worker, for example, uses the search. Docs tool right once again, may not be the best tool, but this is.
+
+505
+01:24:39.660 --> 01:24:41.489
+hugo bowne-anderson: for example, I mean, we'll use one of them.
+
+506
+01:24:41.690 --> 01:24:42.680
+hugo bowne-anderson: And then
+
+507
+01:24:43.250 --> 01:24:50.639
+hugo bowne-anderson: the worker gives the response back to the orchestrator. Now the orchestrator has memory of all tool calls all responses and then
+
+508
+01:24:50.900 --> 01:25:16.339
+hugo bowne-anderson: synthesizes them. And it's done and gives the output to a user. Okay, so this is a very bare bones case. But this is where I would want you to start when building these these types of systems. Because once again, once you see the input and output and then start introspecting into what's happening. You can decide to make it more complex then. But this will tell you which levers you need to pull in order to improve improve your system.
+
+509
+01:25:18.450 --> 01:25:21.199
+hugo bowne-anderson: So then, once again, how do we iterate on this?
+
+510
+01:25:21.400 --> 01:25:22.470
+hugo bowne-anderson: And
+
+511
+01:25:23.060 --> 01:25:32.539
+hugo bowne-anderson: I almost want to apologize for saying the same thing over and over again. But this is the process you want to look at your logs and turn them into fixes.
+
+512
+01:25:32.770 --> 01:25:37.590
+hugo bowne-anderson: You want to log. In this case a spreadsheet is a good solution because we're not doing multimodal stuff.
+
+513
+01:25:37.770 --> 01:25:38.540
+hugo bowne-anderson: So
+
+514
+01:25:38.770 --> 01:25:49.790
+hugo bowne-anderson: you give, accept, or reject response. You give a reason for accepting or rejecting, and then you classify the failure mode? Was it a hallucination? Was it incorrect? Tool use? Was it retrieval, error?
+
+515
+01:25:50.170 --> 01:25:52.409
+hugo bowne-anderson: Then you do a pivot table
+
+516
+01:25:52.590 --> 01:26:04.850
+hugo bowne-anderson: failure, mode ranked by frequency, and then you have actionable fixes, whether it's prompt engineering tool access. Perhaps you want to create another tool, in fact, and and or fine tuning. So
+
+517
+01:26:04.980 --> 01:26:07.329
+hugo bowne-anderson: when you do your failure. Mode analysis.
+
+518
+01:26:08.520 --> 01:26:17.860
+hugo bowne-anderson: you'll see. For example, perhaps incorrect tool use is 30% of errors. Retrieval error is 25% hallucination. 20 incorrect metadata.
+
+519
+01:26:20.360 --> 01:26:41.531
+hugo bowne-anderson: I was just making sure my percentages added up to 100 incorrect metadata, 15 and other 10%. And once you do this you'll know what to iterate on, and of course, once again you can. Then, after this, start iterating on evaluation and building an Llm. As a judge or basic
+
+520
+01:26:42.090 --> 01:26:48.040
+hugo bowne-anderson: you know, you can even do classification on on tool usage. You may not need a judge for that as well.
+
+521
+01:26:48.400 --> 01:26:59.279
+hugo bowne-anderson: So once you're able to like, build these, these basic agents, this type of failure, mode, analysis is the way to iterating on them to to make them make them performant.
+
+522
+01:27:00.350 --> 01:27:02.500
+hugo bowne-anderson: So now
+
+523
+01:27:02.810 --> 01:27:18.030
+hugo bowne-anderson: I think you all have the tools, or at least the conceptual scaffolding, to build a simple, simple research agent. And if you, if you'd like to do this, and I'll give it as an idea for for homework. You can add these types of things to the retrieval systems that that you've been building in in this course.
+
+524
+01:27:20.700 --> 01:27:24.070
+hugo bowne-anderson: So I shared this earlier today.
+
+525
+01:27:24.840 --> 01:27:36.089
+hugo bowne-anderson: I wanted to take a step back, because, remember, you know, an incredibly reductive version of my message
+
+526
+01:27:36.220 --> 01:27:39.379
+hugo bowne-anderson: or things I say is, stop building agents. And clearly
+
+527
+01:27:39.920 --> 01:27:47.159
+hugo bowne-anderson: I don't quite mean that I I think there are too many people building complex agents, and if we want to build reliable software, we need to
+
+528
+01:27:48.220 --> 01:28:09.650
+hugo bowne-anderson: rein those tendencies in but what I realized is really missing from that, from from the statements. The statement I make is, it doesn't take into account humans in the loop because I use agents daily. I mean, I use cursor and clawed code all the time. So how can I tell people to stop building agents when I use them? And as as I've said
+
+529
+01:28:10.230 --> 01:28:38.749
+hugo bowne-anderson: to you all for me, it's about how you have humans in the loop. So what I've done, and this is like a first, st second approximation of how I think about this. But what I've done is developed a 2 by 2 plot of thinking through AI agency and autonomy. And this is kind of the agentic spectrum of how much agency, the system.
+
+530
+01:28:39.040 --> 01:28:52.330
+hugo bowne-anderson: the the agent itself has versus human in the loop. And so the types of things that I think you know are working well for us when done correctly. Are having
+
+531
+01:28:53.080 --> 01:29:11.243
+hugo bowne-anderson: a high agency agent as a collaborator where there's strong supervision around it. Okay? So using cursor or clawed code or Devon, or deep research, or open AI assistance right when there's a human seriously in the loop. That doesn't mean it can't be infuriating a lot of the time. Right?
+
+532
+01:29:12.100 --> 01:29:22.560
+hugo bowne-anderson: but I think these are. These are wonderful cases for using and building agents, or having, like a data, a data analyst assistant, or something along those lines. Now.
+
+533
+01:29:22.850 --> 01:29:23.740
+hugo bowne-anderson: there's a
+
+534
+01:29:24.320 --> 01:29:41.370
+hugo bowne-anderson: there's a dark side to this in that. A lot of these tools allow you to use them without a lot of human supervision. And that's this dangerous territory down here where we have cursor in Yolo mode. Right? And funnily. Let me like you know, there's no
+
+535
+01:29:43.940 --> 01:29:46.300
+hugo bowne-anderson: there's no necessary determinism
+
+536
+01:29:46.320 --> 01:30:02.479
+hugo bowne-anderson: to Google searches. But cursor, yellow mode. Yeah. So when I Googled this earlier today, the 1st thing that comes up is yellow mode is amazing. Okay, and yellow mode is one where you literally allow it to cursor and the agent to have
+
+537
+01:30:02.480 --> 01:30:16.529
+hugo bowne-anderson: right access to everything, including whatever file system you're working in and that type of stuff. So I think maybe it is amazing, but not necessarily good. I mean, so I just want to make sure that
+
+538
+01:30:16.780 --> 01:30:42.150
+hugo bowne-anderson: that's apparent. That's that's really how we're thinking about how and when to build and and use agents when you have a serious human in the loop. And you know, on the other side, where software doesn't necessarily have a huge amount of autonomy chat. Gpt will respond when you say something right. It may use a tool. It may search the web right, but it won't do anything else. Similarly.
+
+539
+01:30:42.190 --> 01:30:48.689
+hugo bowne-anderson: with tools like perplexity, the Claude app and then down down here. We have tools that are almost passive.
+
+540
+01:30:49.190 --> 01:30:52.439
+hugo bowne-anderson: Automation, like Gmail Smart. Compose. It will make a suggestion.
+
+541
+01:30:52.790 --> 01:30:56.489
+hugo bowne-anderson: not much agency, and I'll like Tab in order to
+
+542
+01:30:57.060 --> 01:31:01.560
+hugo bowne-anderson: complete it or not. Oh, yeah, Brad
+
+543
+01:31:01.860 --> 01:31:10.440
+hugo bowne-anderson: Carpathis, autonomy, Slider love it. And he talked about this in his software 3.0 talk. Or is this from the software? 3.0 talk? Is it a clip from that.
+
+544
+01:31:11.240 --> 01:31:12.509
+brad morris: Yes, it is.
+
+545
+01:31:12.910 --> 01:31:21.380
+hugo bowne-anderson: Exactly fantastic. Thank you for sharing that. And the reason I wanted to frame it like this is
+
+546
+01:31:23.070 --> 01:31:32.430
+hugo bowne-anderson: that we're seeing so many people in, and when, like a lot of the conversation, I think
+
+547
+01:31:33.800 --> 01:31:43.079
+hugo bowne-anderson: doesn't disambiguate between the AI collaborator space and the the dangerous territory down here. So you'll see here, I mean, I this guy on, Twitter
+
+548
+01:31:43.190 --> 01:31:44.000
+hugo bowne-anderson: wrote.
+
+549
+01:31:44.540 --> 01:31:50.510
+hugo bowne-anderson: and I'm sorry to share a screenshot from Linkedin of something. I screenshot it on Twitter. I mean, that's
+
+550
+01:31:50.640 --> 01:32:00.260
+hugo bowne-anderson: that's the current state of education. People just kidding. But you can see this guy tweeted out vibe coding day 9.
+
+551
+01:32:01.620 --> 01:32:13.800
+hugo bowne-anderson: went well, and then it deleted our production database, and I just asked him, why did it have permission to write prod to Prod without human review? And he said I didn't give it permission, or even know it had permission.
+
+552
+01:32:13.930 --> 01:32:17.990
+hugo bowne-anderson: And then he wrote, there is only one database, it turns out, shared by
+
+553
+01:32:18.130 --> 01:32:23.444
+hugo bowne-anderson: preview and production. So there are so many issues here and like, there are lots of people like this doing
+
+554
+01:32:23.850 --> 01:32:28.299
+hugo bowne-anderson: pretty pretty dangerous stuff. But
+
+555
+01:32:29.360 --> 01:32:37.670
+hugo bowne-anderson: it isn't only people like this. I don't know if you know Steve Jaeger, but just just to give a sense, I mean, he's
+
+556
+01:32:38.140 --> 01:32:43.438
+hugo bowne-anderson: you know. I've been listening to and watching him and reading his stuff for a long time.
+
+557
+01:32:46.000 --> 01:33:02.369
+hugo bowne-anderson: he gave an agent access to his Google cloud production, database instances of systems, and it wiped a production database password and locked his network. And I'm happy to link to this. But it's not just like Random Twitter dude bros like doing this this type of stuff.
+
+558
+01:33:02.520 --> 01:33:03.893
+hugo bowne-anderson: Steve.
+
+559
+01:33:04.760 --> 01:33:26.279
+hugo bowne-anderson: as we have in his Wikipedia here. He was a senior manager of software development at Amazon, and not recent. Like he was there from 98 to 2,005. And then he was a senior staff software engineer at Google for 13 years. Okay, so all I'm saying here is that it's people of all types and ilks that can
+
+560
+01:33:26.280 --> 01:33:35.680
+hugo bowne-anderson: end up in in the danger zone. So with respect to agents, I just want to make that very clear that the danger zone is when you have high agency
+
+561
+01:33:35.680 --> 01:33:43.779
+hugo bowne-anderson: and and not human in the loop. Okay, so. And anyone anyone is prone to these types of dangers.
+
+562
+01:33:45.000 --> 01:33:49.760
+hugo bowne-anderson: So now, in the final 20 min, I've actually
+
+563
+01:33:50.120 --> 01:33:54.615
+hugo bowne-anderson: 15 to 20. Because I do want to have a break. I want to sort of have a break
+
+564
+01:33:55.110 --> 01:34:00.220
+hugo bowne-anderson: before Zack's workshop for those joining. And what I'm going to do is
+
+565
+01:34:01.620 --> 01:34:27.680
+hugo bowne-anderson: Stefan's giving a lot of the workshop on productionization production. Llm. Apps on Thursday. What I will do is I will cover some of the fine tuning image generation at the start of that workshop, so we won't be going through that today, and I apologize if people were super excited about that part. But we will cover it later in the week in in the workshop, and we have Zack's
+
+566
+01:34:28.180 --> 01:34:30.766
+hugo bowne-anderson: workshop coming coming up today. But I think
+
+567
+01:34:31.810 --> 01:34:38.529
+hugo bowne-anderson: particularly because of all the wonderful engagement here. These sections have taken taken a bit a bit longer.
+
+568
+01:34:39.180 --> 01:34:47.200
+hugo bowne-anderson: So, Pastor, would you mind linking to the anthropic blog post how we built our multi-agent research system?
+
+569
+01:34:47.540 --> 01:34:51.940
+hugo bowne-anderson: I I linked to this at the start of this channel, but it's worth linking to again
+
+570
+01:34:52.300 --> 01:34:53.999
+hugo bowne-anderson: several times. Maybe we should just
+
+571
+01:34:54.280 --> 01:34:57.479
+hugo bowne-anderson: set up an agent that will drop the link daily.
+
+572
+01:34:59.070 --> 01:35:04.880
+hugo bowne-anderson: But one of the reasons I find this so interesting is because
+
+573
+01:35:08.030 --> 01:35:18.100
+hugo bowne-anderson: it's it's almost at odds with their blog post. We went through last week on building effective AI agents, where they said, Whoa! Whoa! Whoa! Whoa! Whoa!
+
+574
+01:35:18.200 --> 01:35:43.450
+hugo bowne-anderson: Let's like. Just look at Llms. Augment them a bit. Then look at the most common workflows right? And now what they've done is built. You know, this wild multi-agent system which spawns its own agents as as well. So there's a bit of cognitive dissonance here which I kind of want us to get our heads around a bit. But look at all the developments happening in in this space.
+
+575
+01:35:43.630 --> 01:35:45.960
+hugo bowne-anderson: So firstly, from the blog post
+
+576
+01:35:46.540 --> 01:35:59.819
+hugo bowne-anderson: they wrote, it taught us critical lessons about system, architecture, tool design and prompt engineering. Okay, systems, architecture. Sure, absolutely. I mean it will. These types of things will always
+
+577
+01:36:00.380 --> 01:36:06.029
+hugo bowne-anderson: tell us critical lessons about that. Now, what's interesting for me is
+
+578
+01:36:06.510 --> 01:36:12.469
+hugo bowne-anderson: that it mentions tool design. So to Sid's point. That I mentioned, I'm just going back to it.
+
+579
+01:36:12.980 --> 01:36:37.650
+hugo bowne-anderson: I mean, he put it so well. Tools need a good description and argument description among other things. So making sure we design the tools. So Llms are very good at using them. Okay? And then prompt engineering. So we're still, I mean, we've been told, prompt engineering is dead, and all these types of things, but still prompt engineering, and in fact, telling orchestrator agents or Llms.
+
+580
+01:36:37.750 --> 01:36:38.850
+hugo bowne-anderson: giving them
+
+581
+01:36:38.960 --> 01:36:45.610
+hugo bowne-anderson: very detailed prompts. So they now they know how to prompt the workers. Is becoming increasingly important.
+
+582
+01:36:47.140 --> 01:37:10.840
+hugo bowne-anderson: the other thing that they mentioned at the start is systems with multiple agents introduce new challenges in coordination, great evaluation and reliability. And it's the evaluation and reliability that I just want to mention, briefly, because I think once again, we've talked a lot about how important, having even a basic evaluation system is with a view towards having
+
+583
+01:37:10.840 --> 01:37:19.289
+hugo bowne-anderson: reliable systems. So it's telling that they mentioned this so early in their blog post, and we're going to say a few more words about
+
+584
+01:37:19.290 --> 01:37:21.190
+hugo bowne-anderson: their points about evaluation soon.
+
+585
+01:37:21.740 --> 01:37:29.250
+hugo bowne-anderson: So just to give a sense of the high level architecture of this advanced research system. We have
+
+586
+01:37:29.380 --> 01:37:31.969
+hugo bowne-anderson: a chat here, and we can see
+
+587
+01:37:32.350 --> 01:37:42.070
+hugo bowne-anderson: the question here is, what are all the companies in the Us. Working on agents in 2025. Make a list of at least 100 for each company, include XY, and z, or z.
+
+588
+01:37:43.160 --> 01:38:07.920
+hugo bowne-anderson: and so once again, this is an example of like a multi, an example with several questions that will require several steps, and actually, significantly more steps in this case. So it's an example of the types of queries that that we said earlier, that basic rag can't handle. And so the user request goes into the system. It goes into an orchestrator or lead agent.
+
+589
+01:38:07.920 --> 01:38:16.269
+hugo bowne-anderson: which has a bunch of tools, such as search tools, Mcp, tools, memory run sub agent, complete task.
+
+590
+01:38:16.600 --> 01:38:36.839
+hugo bowne-anderson: It has a memory system, and these are all things we've seen right? It has a memory system, and it has a citation sub agent which will help it with citations, and then it has all of these search sub agents which have their own inner loops, and, in fact, this lead agent spawns agents with particular tools that
+
+591
+01:38:36.950 --> 01:38:42.299
+hugo bowne-anderson: that seem like they could could be useful. And a lot of that is done in the prompt, prompt design. Okay.
+
+592
+01:38:43.273 --> 01:39:02.329
+hugo bowne-anderson: this is a figure of the process. Sorry. The system process diagram, which I'm not going to go into. But well, I mean, we can see that we get the query. It creates the lead researcher. Then we have this iterative research process. And
+
+593
+01:39:02.960 --> 01:39:16.350
+hugo bowne-anderson: the lead does ask questions such as is more research needed. And we saw that with our basic agent earlier, where the orchestrator will figure out if it's done or not, or it needs to get the worker to to do something, do something more.
+
+594
+01:39:17.820 --> 01:39:26.720
+hugo bowne-anderson: So one question is, why even use multi-agents for this
+
+595
+01:39:30.600 --> 01:39:46.000
+hugo bowne-anderson: and one benefit is that we're actually asking for research work. Now, it's not like basic retrieval or extraction. We're asking for research work. And as it turns out, research work often involves open ended problems. And this speaks to
+
+596
+01:39:46.110 --> 01:40:12.390
+hugo bowne-anderson: kind of a point when I said, What's rag? Not good at? Brad mentioned open-ended questions. Right? And so research work often involves these types of open-ended problems where it's really tough to predict the required steps in advance. You can't hard code, fixed parts, and the process is dynamic and and path path dependent. So you will want a lot of different processes happening either in series or in parallel, and likely both.
+
+597
+01:40:12.870 --> 01:40:19.130
+hugo bowne-anderson: So I'd like to know if everyone can take a minute. Just to think about this.
+
+598
+01:40:19.570 --> 01:40:22.759
+hugo bowne-anderson: How would you evaluate a system like this?
+
+599
+01:40:28.590 --> 01:40:33.540
+hugo bowne-anderson: And, Brad? Great question. We'll get to that in a slide.
+
+600
+01:40:34.822 --> 01:40:39.869
+hugo bowne-anderson: In in a minute. I am interested. So you say, any thoughts on the emergent part. But then you don't
+
+601
+01:40:40.340 --> 01:40:45.269
+hugo bowne-anderson: quote anything that uses the word emergent. So I'd be interested. What you're referring to as emergent.
+
+602
+01:40:50.694 --> 01:40:56.520
+brad morris: Yeah, I'm just kind of baiting when I ask this question. So I I agree with
+
+603
+01:40:57.130 --> 01:40:59.680
+brad morris: the whole premise of building modular
+
+604
+01:40:59.980 --> 01:41:05.970
+brad morris: agentic systems. But I think if you compare this anthropic post to the previous one
+
+605
+01:41:06.350 --> 01:41:33.129
+brad morris: in parts, they're implying that the agent is able to understand, like the single orchestrator in some cases is able to understand when it should delegate without specifically being required to do so, and when some of the folks from Openai talk about how they're building their systems. They're taking a similar approach to anthropic. But they're also factoring in that in some cases they don't need to specifically
+
+606
+01:41:33.732 --> 01:41:39.770
+brad morris: build so much modular architecture, because a single model and agent is able to know
+
+607
+01:41:40.060 --> 01:41:43.160
+brad morris: and and to do things itself autonomously.
+
+608
+01:41:46.250 --> 01:41:51.560
+hugo bowne-anderson: Yeah. So I I'm not sure the word emergent. I I still understand how how, how emergent cause.
+
+609
+01:41:52.140 --> 01:41:57.580
+hugo bowne-anderson: I mean an emergent property, I suppose is where the sum of things is far greater.
+
+610
+01:41:57.850 --> 01:42:03.450
+hugo bowne-anderson: then sorry the whole thing is far greater, can do things that the individual parts can't, can't do.
+
+611
+01:42:12.220 --> 01:42:19.609
+hugo bowne-anderson: But maybe we we maybe don't want to go down the philosophical path in the the remainder of this workshop. I will.
+
+612
+01:42:23.770 --> 01:42:28.110
+hugo bowne-anderson: Yeah, I will say, I don't think like in terms of like
+
+613
+01:42:29.360 --> 01:42:35.829
+hugo bowne-anderson: agents or orchestrators quote unquote, deciding what to do. It's not really that different to, you know, an Llm
+
+614
+01:42:37.350 --> 01:42:44.059
+hugo bowne-anderson: output. Triggering search Docs versus summarize. Right? That's something that the Llm does.
+
+615
+01:42:44.480 --> 01:42:47.089
+hugo bowne-anderson: But we can. We can definitely talk about this
+
+616
+01:42:48.870 --> 01:42:54.800
+hugo bowne-anderson: in in more detail later. So it looks like.
+
+617
+01:42:56.720 --> 01:43:03.850
+hugo bowne-anderson: yeah. Several people have said, evaluate each part of the system independently. I think we want to do that in the end to figure out
+
+618
+01:43:05.260 --> 01:43:05.980
+hugo bowne-anderson: cool.
+
+619
+01:43:07.510 --> 01:43:16.110
+hugo bowne-anderson: Okay, great. Sorry. I thought I lost you to figure out the failure modes. But actually to start, we just want to look at the output and say.
+
+620
+01:43:16.220 --> 01:43:29.440
+hugo bowne-anderson: Do I like it or not? It's a binary pass. Fail essentially. Now you want details around that but but once again, in order to improve on a system. We really want to know whether we
+
+621
+01:43:29.640 --> 01:43:38.849
+hugo bowne-anderson: like the response or acceptable, or if it isn't, and we'll get to that in a second, how anthropics really thinking about that?
+
+622
+01:43:40.360 --> 01:43:44.969
+hugo bowne-anderson: The other way to answer the question, why, multi agents
+
+623
+01:43:45.110 --> 01:43:56.900
+hugo bowne-anderson: is because it's better. It does bet like, look at the performance, and they found the multi-agent system with Claude Opus as the lead agent and sonnet sub agents, outperform single agent, Claude Opus, by 90
+
+624
+01:43:57.080 --> 01:44:03.229
+hugo bowne-anderson: over 90% on their internal research. Eval. So, as we say, the proof is in the pudding.
+
+625
+01:44:05.230 --> 01:44:10.579
+hugo bowne-anderson: The other thing that's worth saying, his many hands
+
+626
+01:44:11.200 --> 01:44:14.360
+hugo bowne-anderson: do. So many cooks also do else.
+
+627
+01:44:14.510 --> 01:44:15.610
+hugo bowne-anderson: But this is
+
+628
+01:44:15.910 --> 01:44:34.770
+hugo bowne-anderson: this is actually an old gift of how we like to describe or demonstrate the powers of distributed compute where people are building a house in parallel, and you have different people doing different tasks. And it takes a lot less time once you're able to coordinate things via an orchestrator. Okay.
+
+629
+01:44:35.620 --> 01:44:36.380
+hugo bowne-anderson: both.
+
+630
+01:44:37.318 --> 01:44:41.980
+hugo bowne-anderson: The other thing worth saying is that multi-agent systems
+
+631
+01:44:43.500 --> 01:44:53.410
+hugo bowne-anderson: work because of the amount of tokens they use right in their analysis in anthropics analysis 3 factors explain 95% of the performance variance
+
+632
+01:44:53.650 --> 01:44:59.440
+hugo bowne-anderson: in the Browsecom evaluation. And I wonder if, Pastor you could link to the browse comp evaluation in
+
+633
+01:44:59.570 --> 01:45:09.411
+hugo bowne-anderson: the chat. In discord. But token usage itself explains 80% of of the variance, which is very much
+
+634
+01:45:12.250 --> 01:45:23.160
+hugo bowne-anderson: worth thinking about in in more detail. And I mean, when I actually did a podcast with Greg. Cameron, who is the President of Arc Agi, which is, you know one of the
+
+635
+01:45:24.160 --> 01:45:34.070
+hugo bowne-anderson: one of the best benchmarks for kind of figuring out like how how to measure Agi, and a point he made there, and he's made time and time again is the compute
+
+636
+01:45:34.670 --> 01:45:59.159
+hugo bowne-anderson: required and the amount of energy required for Llm. Based systems to do what a human does like far exceeds the amount of energy it takes us to do, and he likes to think about you know, Agi, maybe as a ratio over the amount of compute involved. So just to be clear, the amount of energy and tokens and cost required here is is explains most of it. So
+
+637
+01:46:00.350 --> 01:46:08.629
+hugo bowne-anderson: I want to wrap up in in 7 min. So we get a 5 5 min break. And, Pastor, if you wouldn't mind sharing the the feedback survey for today's workshop here.
+
+638
+01:46:09.143 --> 01:46:15.639
+hugo bowne-anderson: In in discord that that'd be great. But some points effective. Prompting
+
+639
+01:46:15.740 --> 01:46:44.560
+hugo bowne-anderson: relies on developing an accurate mental model of the agent. Okay. So, watching them step by step, the tool calls and all, so we'll get to this. But after you do your evaluation, then going back and looking at it step by step, and not necessarily performing evaluation all throughout. But looking at what happens and adjusting your prompts due to that detailed task, descriptions for the orchestrator, sub agent objectives output format guidance on tools, scale, effort to
+
+640
+01:46:45.570 --> 01:46:50.770
+hugo bowne-anderson: query complexity. Right? So if you've got a for simple fact, finding, make sure
+
+641
+01:46:51.430 --> 01:46:55.529
+hugo bowne-anderson: you're using one agent with a small amount of tools, direct comparisons.
+
+642
+01:46:55.780 --> 01:47:25.379
+hugo bowne-anderson: maybe 2 to 4 sub agents with 10 to 15 calls. Each tool. Design and selection are critical agent. Yeah, explicit heuristics. I'm sorry that didn't quite make sense. They need explicit heuristics. So examine all available tools, 1st match tool usage to user intent and so on. Now, this is Brad's great great question is, I was surprised by this. Agents can be good, self-healing, prompt engineers. So when given a prompt and a failure mode.
+
+643
+01:47:25.440 --> 01:47:41.149
+hugo bowne-anderson: they're able to diagnose why the agent is failing and suggest improvements once again giving it a failure. Mode is incredibly important. So getting them to help with the failure analysis, but giving them the actual failure mode, and we may need to classify them ourselves beforehand. Now.
+
+644
+01:47:41.260 --> 01:47:45.782
+hugo bowne-anderson: this is the money I'm so happy they wrote this.
+
+645
+01:47:47.350 --> 01:48:02.149
+hugo bowne-anderson: what they did. They start, they say, start evaluating immediately with small samples, start with 20 queries representing real use patterns and iterate asap prompt tweak after this might boost success rates from 30% to 80%.
+
+646
+01:48:03.180 --> 01:48:07.130
+hugo bowne-anderson: Then Llm. As judge, evaluation scales. When done well.
+
+647
+01:48:07.350 --> 01:48:19.900
+hugo bowne-anderson: they found a single Lm. Call with a single prompt outputting scores and a pass fail. Grade right? Was the most consistent and aligned with human judgments. So binary pass fail on outputs.
+
+648
+01:48:20.760 --> 01:48:44.910
+hugo bowne-anderson: then human evaluation catches what automation misses, and they gave a wonderful example that human testers noticed that early agents consistently chose SEO optimized content farms over authoritative but less highly ranked sources, and this was resolvable by including source quality heuristics in the prompts. Okay? So start evaluating early
+
+649
+01:48:45.190 --> 01:49:00.860
+hugo bowne-anderson: Llms. Judge with binary classification and outputting a score format from from 0 to one. Then, including human evaluation, to catch what automation misses. Misses. Okay?
+
+650
+01:49:02.145 --> 01:49:04.624
+hugo bowne-anderson: This is included in the
+
+651
+01:49:05.790 --> 01:49:10.744
+hugo bowne-anderson: in their post. So, Brad, if we if we have time at the end, we'll we'll get to a question. Live?
+
+652
+01:49:11.620 --> 01:49:33.639
+hugo bowne-anderson: so you can just see all the different examples that they've been that they've had people. You use this for from, you know, academic research and educational material development, social media content strategies developing software across specialized domains analyze financial markets, and and so on. Translation, and and so on.
+
+653
+01:49:33.970 --> 01:49:34.810
+hugo bowne-anderson: So
+
+654
+01:49:35.190 --> 01:49:41.969
+hugo bowne-anderson: now, I said, at the end of the last section, you can now begin to build a simple research agent.
+
+655
+01:49:42.479 --> 01:49:49.939
+hugo bowne-anderson: If you want. Now, I don't necessarily suggest it, but you can begin to build a not so simple agent. And
+
+656
+01:49:50.380 --> 01:49:54.582
+hugo bowne-anderson: I showed you the output of a day of some stuff I did with Crew. AI
+
+657
+01:49:55.370 --> 01:50:10.190
+hugo bowne-anderson: last week. I'm happy to share the code. If if people would like. If you do want to build a not so simple research agent, I definitely encourage you to start using a framework such as crew. AI. But know then, that actually
+
+658
+01:50:10.340 --> 01:50:25.710
+hugo bowne-anderson: observability and iter, and seeing the tool calls and then iterating on your system, is incredibly challenging there. But I. If you really want to jump in and do that, I think you'll have a lot of fun, and we're going to save the fine tuning language models
+
+659
+01:50:25.840 --> 01:50:26.750
+hugo bowne-anderson: to
+
+660
+01:50:27.110 --> 01:50:47.189
+hugo bowne-anderson: the next workshop. Just a few ideas. If people want to explore how to build these things, firstly, start to incorporate multimodality in into your projects, using the models. That that we went through at the start of the workshop? And
+
+661
+01:50:48.480 --> 01:51:13.360
+hugo bowne-anderson: and perhaps start with one big model, but then start to break it apart into pipelines and using specialized models. When you start iterating. If you want to start doing more agentic stuff, build more tool calls into your retrieval system on top of that start, using the orchestrator and worker patterns in your retrieval system as well. Now the fine tuning homework idea will leave until until next time.
+
+662
+01:51:13.730 --> 01:51:15.199
+hugo bowne-anderson: We do have
+
+663
+01:51:15.590 --> 01:51:27.490
+hugo bowne-anderson: 2 min before I want to end this call. So I would love as much feedback as possible, my people. But but, Brad, if you would like to ask your question, live we can. We've got 2 min.
+
+664
+01:51:29.390 --> 01:51:36.219
+brad morris: Somebody else can go through. But I just wanted to know what you thought. The search quality heuristics part was when they were trying to improve the SEO.
+
+665
+01:51:39.950 --> 01:51:40.760
+hugo bowne-anderson: Mo.
+
+666
+01:51:50.350 --> 01:51:55.459
+hugo bowne-anderson: so I don't have a strong sense of this.
+
+667
+01:51:57.080 --> 01:51:59.639
+hugo bowne-anderson: but you could imagine a very.
+
+668
+01:52:01.880 --> 01:52:07.514
+hugo bowne-anderson: a very naive example is including in a prompt
+
+669
+01:52:10.810 --> 01:52:22.149
+hugo bowne-anderson: even something along the lines, a lot of the time. You may retrieve an example which is highly ranked in search, but when you read it in detail.
+
+670
+01:52:22.570 --> 01:52:35.439
+hugo bowne-anderson: It actually is obvious that it's minimal. It's it's horrible quality. Here are a few examples of good quality. Here are a few examples of bad quality, if necessary, spawn, a.
+
+671
+01:52:39.890 --> 01:52:54.749
+hugo bowne-anderson: A. Quality, a. A Qa sub agent, or a set of Qa sub agents, in order to assess the quality output. 0 to one giving reasons and return it to me, or something like that.
+
+672
+01:52:55.070 --> 01:52:59.069
+hugo bowne-anderson: so that that I've no idea how how they did it. But that would be
+
+673
+01:52:59.190 --> 01:53:01.029
+hugo bowne-anderson: the the way to think about it.
+
+674
+01:53:02.049 --> 01:53:09.829
+hugo bowne-anderson: Caleb actually has a has has a wonderful idea as well. So known domain domain names which are trustworthy
+
+675
+01:53:09.960 --> 01:53:37.120
+hugo bowne-anderson: funnily. That's how SEO should work as well. For example.edu websites, you know, have high domain authority. But yeah, I think, having a list that we actually know are trustworthy. So I did promise we'd end at 5 to the hour. I'd love to thank you all for like the engagement in this workshop was was wonderful, and we're pushing kind of on pretty pretty modern territory. So it was just so. So great to
+
+676
+01:53:37.610 --> 01:53:45.739
+hugo bowne-anderson: engage with you all and hear all your wonderful questions, and get all your wonderful thoughts, and for those joining I'll see you in 5 min. For the rest, I'll see you on Thursday. Thanks, everyone.
+

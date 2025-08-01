@@ -1,0 +1,2222 @@
+WEBVTT
+
+1
+00:00:09.020 --> 00:00:10.930
+hugo bowne-anderson: Hello, everybody.
+
+2
+00:00:11.780 --> 00:00:15.649
+hugo bowne-anderson: Happy. Thursday. Happy Thursday. Stefan.
+
+3
+00:00:15.840 --> 00:00:16.590
+Stefan Krawczyk: Hello!
+
+4
+00:00:16.790 --> 00:00:17.520
+Stefan Krawczyk: Hi! Everyone!
+
+5
+00:00:29.870 --> 00:00:36.939
+hugo bowne-anderson: So pastor's just created a workshop 4 channel for all Q&A. Here. And.
+
+6
+00:00:37.850 --> 00:00:50.130
+hugo bowne-anderson: as as I've told you all today's a workshop that I love a lot, because I always learn so much from Stefan. With respect to, you know, infrastructure and production, grade, observability and and debugging.
+
+7
+00:00:50.500 --> 00:00:52.580
+hugo bowne-anderson: Do you want to share your screen, Stefan? And.
+
+8
+00:00:52.580 --> 00:00:53.290
+Stefan Krawczyk: Yeah.
+
+9
+00:00:53.290 --> 00:00:57.789
+hugo bowne-anderson: Co-host, and then we can just the 1st 2 slides, and then we'll just.
+
+10
+00:00:57.990 --> 00:00:58.720
+Stefan Krawczyk: Yep.
+
+11
+00:00:58.720 --> 00:00:59.730
+hugo bowne-anderson: Take it away.
+
+12
+00:01:00.210 --> 00:01:06.549
+Stefan Krawczyk: And I want this one
+
+13
+00:01:10.510 --> 00:01:14.990
+Stefan Krawczyk: cool. Yeah. You see my slide screen.
+
+14
+00:01:15.330 --> 00:01:16.070
+hugo bowne-anderson: Yeah.
+
+15
+00:01:17.880 --> 00:01:21.149
+Stefan Krawczyk: Let's see, I'm just making sure I can see everyone.
+
+16
+00:01:21.150 --> 00:01:29.749
+hugo bowne-anderson: Seeing as well. I mean the slides are great. But then, seeing Assistant Bird Py and Pytest docs open telemetry, I mean, this is the greatest hits of what we're.
+
+17
+00:01:29.750 --> 00:01:31.890
+Stefan Krawczyk: Mia, yeah.
+
+18
+00:01:32.779 --> 00:01:52.879
+Stefan Krawczyk: Well, cool. So, yeah. So workshop 4 welcome. So we're gonna dive into a little more of, I think, what you touched on in in the prior workshop. But before you know, we dive into that, I guess. Yeah, Hugo, do you want to say a few words, or is.
+
+19
+00:01:53.080 --> 00:02:22.150
+hugo bowne-anderson: Yeah. Yeah. So if you just go to the next slide and the next one, just 1 min of housekeeping just wanted to say, course, Wiki workshop 3. All the details are in there so big shout out to Pastor for his incredible work in, you know, keeping all the information rolling in digestible forms as well, pastor, could you put the link to that just in the workshop? 4 channel, I just want to say, for remember, this, Wiki is for all of you we appreciate. There's
+
+20
+00:02:22.170 --> 00:02:29.590
+hugo bowne-anderson: a a significant amount of breadth intentionally in this course. And the intention of the wiki is to have
+
+21
+00:02:30.030 --> 00:02:46.659
+hugo bowne-anderson: as many things as possible in one place for you to have as a continuing living resource. So anything you want added there, or anything that would help you in the wiki. Please do reach out to myself and Pastor Post in a public in a discord channel, and we can all chat about it. But I just wanted to
+
+22
+00:02:46.900 --> 00:02:50.420
+hugo bowne-anderson: to say that. But thank you so much, pastor, for all your work here. So next slide.
+
+23
+00:02:53.445 --> 00:03:19.969
+hugo bowne-anderson: Okay, great. So those who have been attending the builders, clubs, big ups to Caleb, Mike and pastor for all the wonderful work they're doing there started to mention that on the final day. This is optional, but we're going to have a demo day right? And the intention of the demo day is we share things. We're building right. It isn't necessarily sharing, you know, apps that are in production and that 100 complete. Of course, as we're finding out.
+
+24
+00:03:20.180 --> 00:03:50.179
+hugo bowne-anderson: data, powered software is rarely 100% complete or never finished. But the intention of this session is to have, you know, an hour or 2 to share things that we've been working on during the course, and so have a think about whether you'd like to share something, and the way we usually do it is, each person shares for 5 or 10 min depending on how many people there are. I'll circulate a form next week where people can put their hands up to demo stuff, but just know that
+
+25
+00:03:50.180 --> 00:03:52.800
+hugo bowne-anderson: it's it should be very low lift.
+
+26
+00:03:52.820 --> 00:04:16.340
+hugo bowne-anderson: And even if there's something you're working on and just want to share it. And it isn't necessarily huge or anything. Please do come and share it. Last time, for example, I did a brief demo of a gradio app that I vibe coded where I had I think, 4 or 8 Llms running in parallel, and I gave it was just a basic gradio app where I had one prompt and you could see the output from 4 to 8 different Llms.
+
+27
+00:04:16.339 --> 00:04:25.970
+hugo bowne-anderson: That was a very silly small example that I spun up in 15 min. But I was like, hey? I've just done this on a new laptop, so I'll share it. So that's just to give a sense of what what the demo day will be next slide, please, Stefan.
+
+28
+00:04:27.190 --> 00:04:51.390
+hugo bowne-anderson: So today, of course, we're having Stefan's workshop for unobservability and debugging. Then we're having a guest talk by Nathan Danielson and the links in your calendar for how to build and make human centered AI products, and then we'll be having a Q. And a. With John Berryman, who he was worked on the precursor to
+
+29
+00:04:51.390 --> 00:05:14.930
+hugo bowne-anderson: copilot, and he has a wonderful book on prompt engineering and builds a lot of different AI systems. We'll be having a Q&A on patterns and anti patterns for building AI systems. In fact, the way we've framed it now is he'll be telling us about the 7 deadly sins of AI app development from the front line. So join those, if you'd like. Recordings will be available afterwards. Enough out of me.
+
+30
+00:05:15.188 --> 00:05:19.070
+hugo bowne-anderson: I'm I'm excited to, you know. Hear what Stefan has to share with us today.
+
+31
+00:05:20.180 --> 00:05:28.849
+Stefan Krawczyk: Cool. Well, with that get started. So yeah, so just a kind of brief recap of, you know, last session, you guys were going over, you know, evaluation driven development.
+
+32
+00:05:28.950 --> 00:05:36.590
+Stefan Krawczyk: And so some, what I will do today will overlap and build off of it right? And so there is some commonality here that's on purpose.
+
+33
+00:05:36.590 --> 00:06:00.430
+Stefan Krawczyk: but specifically like my lens that we're going to like. Go through and look at. This is going to be a bit more around, sort of, you know. Okay, how do you? What is the software development lifecycle? Because, like, you kind of Lent, the how a bit of like what you know, Edd looks like. But then, you know, if we're on potentially on software teams, and you know, have to actually ship stuff and get to production. So providing a little bit more of a lens as to the process right? And then also
+
+34
+00:06:00.470 --> 00:06:07.700
+Stefan Krawczyk: some deeper details on the observability and debugging that was, you know, just touched on last session
+
+35
+00:06:08.500 --> 00:06:26.429
+Stefan Krawczyk: again. Feel free to put things in the chat. If there's anything there, pastor or someone stop me. But before I get to an agenda slide. I just wanted to kind of make sure that everyone's not asleep. So in the and also get the chat going
+
+36
+00:06:26.430 --> 00:06:42.189
+Stefan Krawczyk: in discord. Answer A, BC, or D into like, okay, so you're building this app right? Say your current workplace right? How many Llm calls? Do you think your application is going to have.
+
+37
+00:06:42.350 --> 00:06:50.340
+Stefan Krawczyk: So answer A, for if you think 0 to 10 B 10 to 20 c. 20 to 50 or D 50 plus
+
+38
+00:06:57.210 --> 00:06:59.790
+Stefan Krawczyk: cool, so we have a at
+
+39
+00:07:00.364 --> 00:07:12.249
+Stefan Krawczyk: it looks like there is A, you know, one B, but the majority is is D's, which is yeah. So I want to say, like the
+
+40
+00:07:12.280 --> 00:07:37.739
+Stefan Krawczyk: one Lm call right can do a lot. But what we're seeing in some of these kind of applications, right? Is that actually, to, you know, getting the output of the Lm that you want, you actually got to reduce the variance. What does that mean? It probably means actually doing more simpler. Llm. Calls right. And so, if you start to think right, hey? My Lm, app is actually going to be pretty simple. Well, depending on it, and the the rigor that you need. So enterprise apps more so than like you know.
+
+41
+00:07:37.740 --> 00:07:46.869
+Stefan Krawczyk: Toy ones. Right is you're going to be probably going to have a lot of that on calls. Right?
+
+42
+00:07:47.220 --> 00:07:52.399
+Stefan Krawczyk: And so mental note, right apps are going to have a lot of Lm calls.
+
+43
+00:07:54.050 --> 00:08:03.160
+Stefan Krawczyk: And so, okay, so now, you have a lot of Lm calls right? So how do you think so? How long do you think it would take you to optimize a prompt for a single Llm. Call
+
+44
+00:08:03.400 --> 00:08:05.440
+Stefan Krawczyk: to be in a shippable state.
+
+45
+00:08:05.440 --> 00:08:15.050
+hugo bowne-anderson: Yeah. And let's just so for this question, let's do this like we did last time, where, pastor, if you can write the question, and then put the options as emojis for a.
+
+46
+00:08:15.050 --> 00:08:15.430
+Stefan Krawczyk: No.
+
+47
+00:08:15.430 --> 00:08:19.660
+hugo bowne-anderson: C and D, so people can select them. So we just don't get a stream of nonsense essentially.
+
+48
+00:08:21.860 --> 00:08:24.820
+hugo bowne-anderson: and Carol has made made a similar point.
+
+49
+00:08:25.210 --> 00:08:25.700
+Stefan Krawczyk: Yeah.
+
+50
+00:08:25.700 --> 00:08:30.209
+hugo bowne-anderson: Could use a slash bubble. So let's think about this and not put anything. Yeah. So ask the question.
+
+51
+00:08:30.210 --> 00:08:37.500
+Stefan Krawczyk: Yeah. So so how long do you think it will take you to optimize the prompt? So like, I guess
+
+52
+00:08:37.770 --> 00:08:43.200
+Stefan Krawczyk: I should put emojis here and said, Abcd, but.
+
+53
+00:08:43.200 --> 00:08:44.500
+hugo bowne-anderson: Abcd emojis in discord.
+
+54
+00:08:44.500 --> 00:08:52.399
+Stefan Krawczyk: Oh, you can. Okay. Awesome. Okay, cool. So a a couple hours. Right. b, 1 day, C, 2 days d. 3 to 5 days.
+
+55
+00:08:52.680 --> 00:08:57.009
+hugo bowne-anderson: And I'm just putting the emoji potentials in. But yes, slash polls would be great next time.
+
+56
+00:08:58.570 --> 00:09:02.229
+hugo bowne-anderson: There's 1 emoji, which is a actually a, BC, and d,
+
+57
+00:09:08.960 --> 00:09:10.335
+Stefan Krawczyk: Cool. So we have.
+
+58
+00:09:10.850 --> 00:09:23.530
+Stefan Krawczyk: yeah, a strong, a strong, I guess. Looks like majority consensus on d with a few on B right? So this is this is, I mean, So
+
+59
+00:09:23.530 --> 00:09:47.360
+Stefan Krawczyk: the thing to kind of think about is like to get stuff to production right? If you think about like, hey, how do I actually plan my software development lifecycle? Most people have sprints and other things and like, how do you plan for it? Right? So this is just, you know, I'm trying to, you know. Get you to think about. Okay? Well, if you're going to tell your boss how long it's going to take right. There's some things. And so from at least industry server that I did like. Briefly, like, you know, it's as our
+
+60
+00:09:47.480 --> 00:10:09.180
+Stefan Krawczyk: you could say, tooling gets better, like, I think this will shrink a bit. But I think the majority of people yeah, that takes them, you know, potentially 3 to 5 days, and so I think this will get better over time, and it will shrink. But if you think about, if you have over 50 lm. Calls right. And if it takes you a day to optimize each prompt potentially right? I mean, like, that's a lot of time.
+
+61
+00:10:09.502 --> 00:10:20.160
+Stefan Krawczyk: But obviously there's there's you can't let perfect be the enemy of good right? And so, which case, obviously, you know, this is where there is, you know, different levels of of shippable
+
+62
+00:10:20.170 --> 00:10:25.960
+Stefan Krawczyk: that you can kind of help potentially, you know, reduce the the amount of time you spend here
+
+63
+00:10:26.850 --> 00:10:47.519
+Stefan Krawczyk: and then. Okay, so now you have, you know, optimized your prompt. Can you forget about it? Meaning you don't have to touch it ever again? So yes, you can forget about it, and never have to touch it, or and for no, no, you don't have to worry about it. You can move on to the next thing and forget about it
+
+64
+00:11:02.080 --> 00:11:07.950
+Stefan Krawczyk: all right. So the questions in discord. And yeah, just react with the emojis, please. Sorry. Yeah.
+
+65
+00:11:12.870 --> 00:11:41.899
+Stefan Krawczyk: Okay. Again, I guess pretty strong. For instance, this will know. Right? I mean, this is where part of it's like, I mean, this is a little dependent on what models you're using. Right. If you're using one of the foundational providers. They're going to be continually changing and updating right things. And so which case, you know, they say things are stable, but you know, in practice they might not. And then this is where your data moves. Right? So what you optimize like your things, if your product changes
+
+66
+00:11:41.900 --> 00:11:49.780
+Stefan Krawczyk: right and you're getting different data like you're going to have to come in. And then, you know, potentially, you know, change and fix it right. And so
+
+67
+00:11:50.360 --> 00:12:06.879
+Stefan Krawczyk: and so with that kind of conceptual kind of, you know, things we kind of talked about or things to think about right? So basically, the assumption is to make our that for all this right to make our genetics better, we need to curate data and make use of it right? So
+
+68
+00:12:06.880 --> 00:12:22.320
+Stefan Krawczyk: to be able to make changes and have confidence. We need to curate that data because there's going to be a lot of Lm calls. We can't forget about prompts. And so we need to have processes such that we can actually change, make updates and be comfortable with it.
+
+69
+00:12:22.320 --> 00:12:28.269
+Stefan Krawczyk: Today, we're going to do, I guess. Have an overview of, you know, just a 1st principles type
+
+70
+00:12:28.380 --> 00:12:49.140
+Stefan Krawczyk: approach right to development production software development lifecycles. That's what Sdlc stands for. Right? And so specifically, I'm going to give you just one idea, right. This isn't prescriptive, right? I'm just going to give you just one idea potentially of how you could implement this and to think about it. And I'm going to show a sketch of that with pytest
+
+71
+00:12:49.140 --> 00:13:05.120
+Stefan Krawczyk: so that you can kind of use it as part of your software development lifecycle. I'm going to talk about traces, so dive a bit more deeper and like, tell you more structurally what they are right. So if you're not familiar with logging and tracing hopefully, this is
+
+72
+00:13:05.330 --> 00:13:16.830
+Stefan Krawczyk: how they fit in. And then this is where part of the take home is that like, you know, we can't fix things that we don't observe
+
+73
+00:13:17.120 --> 00:13:42.600
+Stefan Krawczyk: next. And so we have. Yeah, I guess an hour and 45 min. So this is where we should have plenty of time to kind of cover at this point, and then also talk about framework. So I know there's lama Index, Langchain. There's 2 open source frameworks, Hamilton Burr, that I drive like this is where I'll provide some opinions and thoughts as to when to use a framework, and where not to.
+
+74
+00:13:42.600 --> 00:13:50.470
+Stefan Krawczyk: And then the last part of this this class will be talking about Gabriel's. So where do they fit in? In terms of, you know, a production kind of app?
+
+75
+00:13:53.540 --> 00:14:18.159
+Stefan Krawczyk: So with that, going back to what you did. What we did in workshop 3. Right? Is this this kind of evaluation development driven loop? And so just to like reinforce the points of talking before is that for every there's going to be a lot of Lm. Api calls. And basically for each Lm. Api call potentially.
+
+76
+00:14:18.160 --> 00:14:28.640
+Stefan Krawczyk: you should, you know, probably need to curate some sort of data set so that we can have confidence in in actually being able to change, update and and make changes.
+
+77
+00:14:29.640 --> 00:14:55.239
+Stefan Krawczyk: So in terms of, you know, going back to our 1st principles thing. Where does this fits in? This is going to be covering more depth on logging, monitoring. And you know, how do we iterate? And so you know, the reason why these things are needed right is that we want to help reduce hallucinations, and we also then want to be able to ship code quickly. Right? And so that's kind of you know, the
+
+78
+00:14:55.660 --> 00:15:03.960
+Stefan Krawczyk: what what today is about is to primarily, you know, help you. You apply and tackle, you know, hallucinations. And you know, how do you drink?
+
+79
+00:15:07.140 --> 00:15:32.270
+Stefan Krawczyk: And so we've been showing this diagram a lot. But really, this is a slightly oversimplification. Right? We've actually put 2 different. There's actually 2 different loops here represented specifically right. There is a dev loop, right? So things you're doing locally right? You can. You can build.
+
+80
+00:15:32.270 --> 00:15:57.659
+Stefan Krawczyk: build your application. You can potentially, you know, run some tests right? Build your run it locally right, you could add tracing, logging, monitoring. You could then evaluate stuff you could also, you know, be be more test driven. So just focusing, say, on a single Llm call and prompt. And you know you could do this kind of cycle right? And so this is your usual, hey? I'm starting something and trying to build an app.
+
+81
+00:15:57.750 --> 00:16:08.380
+Stefan Krawczyk: But then, you know, now you have something, and then well, actually, you need to ship it to production right? And so there is actually the second. This outer loop right of
+
+82
+00:16:08.590 --> 00:16:33.089
+Stefan Krawczyk: you've built it. You've shipped the app right. And now this app is running in production. And now you're collecting, you should be observing, collecting traces and logging, right? Monitoring what's happening. And then this is where you need to then evaluate its performance. To then know, okay, do I need to change the prompt? Do I need to change my app? Do I need to change how data and context is kind of built right. And so this loop, then kind of repeats
+
+83
+00:16:33.090 --> 00:16:49.149
+Stefan Krawczyk: right? And so so the main point here is that there's 2 loops to think about when we're actually productionizing things, what we're doing locally. But then, also, okay, once it's in production, how do we, you know, continue to make sure that it's performing, and we can improve it
+
+84
+00:16:52.710 --> 00:17:17.339
+Stefan Krawczyk: so and so specifically in terms of the techniques or things. Right? So usually, when you before pushing to production, there is a continuous integration or continuous deployment. That's what Ci CD stands for path that you know. Potentially, we can actually utilize here to have confidence in when we're making development changes and crossing the bridge to deploying it, and then
+
+85
+00:17:17.400 --> 00:17:33.649
+Stefan Krawczyk: and then in development and production. We can also then utilize logging and tracing to actually be a way to, you know, collect data and make use of that data, then, for evaluation and app monitoring purposes.
+
+86
+00:17:36.620 --> 00:17:37.550
+Stefan Krawczyk: So
+
+87
+00:17:38.670 --> 00:17:58.650
+Stefan Krawczyk: so stepping back like out of these 2 loops like in terms of, you know, a process like you're a manager on a team like what are the outcomes you should be thinking about or want. Right? Well, you know, a fast iteration loop generally means you can iterate more, and so generally means you can build a better product sooner, which means you can generate more business value right?
+
+88
+00:17:58.780 --> 00:18:25.730
+Stefan Krawczyk: And so this is where you know this loop should work for like I have nothing to something, and then also it should then enable you to work on easily and quickly, the one to n iterations. Right? Because, remember, there is there is this cold start problem of okay, how do I get something working? But then it's living. It needs to continue to improve. It needs to continue to evolve. And this is where, like, in my opinion, you want the one to n iteration, to be
+
+89
+00:18:25.730 --> 00:18:37.929
+Stefan Krawczyk: just as fast, if not faster, than 0 to one iterations. But as we'll this is, you know, get into potentially in the frameworks debate. This is something to kind of, think about.
+
+90
+00:18:38.160 --> 00:18:48.569
+Stefan Krawczyk: And then, because, you know, change happens and applications. And you know the world evolves right? We we want out of this loop the confidence that we're actually building something reliable.
+
+91
+00:18:48.960 --> 00:19:04.619
+Stefan Krawczyk: And so if something. So, therefore, if something fails and breaks like. What's important in this loop is that we? There should be some clear action that we can take right? Nothing worse than like saying, Hey, something's broken, but then, like not knowing which way what to do or what to fix it
+
+92
+00:19:06.070 --> 00:19:17.300
+Stefan Krawczyk: and so and so part of so the mental note to kind of attach here is that you know, we need to curate data.
+
+93
+00:19:17.440 --> 00:19:32.470
+Stefan Krawczyk: And what's interesting with, you know where the collision of Gen. AI meets kind of software development is that in usual software development testing, you like unit tests and integration tests like they're testing application behavior.
+
+94
+00:19:32.840 --> 00:19:52.149
+Stefan Krawczyk: But and so part of actually, the data set that you're curating here is actually helping define what are the bounds of behavior you expect for your application. So that is a kind of a soft line parallel to unit testing in terms of behavior. But then this same data
+
+95
+00:19:52.270 --> 00:20:21.410
+Stefan Krawczyk: also, powers like your evaluation, driven loop in terms of what can I do to iterate? What can I do to change and improve the product? So it's okay. If you don't get this just yet, but in terms of just trying to relate it back to software engineering like the data sets you're actually curating here. Serve 2 purposes. One is to help, you know. Tell you what you expect the behavior to be, but then also give you a means to, then iterate and improve it.
+
+96
+00:20:24.050 --> 00:20:52.229
+Stefan Krawczyk: So what is continuous integration? So yeah, integration means integrating it into software systems and kind of production. And so it's basically a developer operations kind of process that meant to facilitate faster feedback and trying to automate as much as possible. Testing of code changes so that teams can move faster.
+
+97
+00:20:52.230 --> 00:21:05.090
+Stefan Krawczyk: The idea is, if you can test small changes, it's much easier than to figure out if something breaks, what change it wants. And so, general, the goal of Ci should be enable teams to move faster and catch bugs
+
+98
+00:21:05.100 --> 00:21:08.480
+Stefan Krawczyk: or bad changes sooner before they reach production.
+
+99
+00:21:08.680 --> 00:21:30.230
+Stefan Krawczyk: So a common pattern here, yeah, for those who don't know is like you write code, you open up a pull request. And then, as part of the pull request, say, a github workflow, you can actually automate and run tests. You can. You can basically make things. Things run. And then, you know, if it fails, you can expect the areas of past. Then you'd be like, Hey, we've we've done some basic kind of tests.
+
+100
+00:21:31.880 --> 00:21:59.130
+Stefan Krawczyk: if you're using python. And so what is this test suite? Well, this can actually be any script right? It could be whatever code you want. But say, if you're in python, and you're a python developer, it could be a python script, or pretty commonly it could be something like pytest, which is a very flexible and extensible tool to kind of enable running various sorts of tests.
+
+101
+00:21:59.920 --> 00:22:11.470
+Stefan Krawczyk: And that's what we're going to. I'm going to show you and dive into today. And so just to mention pytest is, there's a lot of different options. This is just one of them to explain conceptually
+
+102
+00:22:11.470 --> 00:22:32.179
+Stefan Krawczyk: how pytest works right. The idea is, you write some logic in some module logicpy, and then it has a bit of convention to it. Right? So if you have a module called logic, then all the tests for that module would be in test underscore logic.
+
+103
+00:22:32.200 --> 00:22:54.809
+Stefan Krawczyk: right? And then for any tests like you generally. So if I'm going to test some logic, you have to prefix it with test underscore. And then it's convention to make potentially these 2 names match. But effectively, anything in this test. Logic pi anything that starts with test underscore is determined to be a test that the framework will try to execute and run.
+
+104
+00:22:55.360 --> 00:23:12.140
+Stefan Krawczyk: And you know there's various ways to execute it. But this is where in Ci, like it is, you could run a, you know, a Bash command that basically is telling, hey? It's saying, with pytest installed like, Hey, test this, this logic and this this particular logic function which will then exercise and and
+
+105
+00:23:12.360 --> 00:23:15.789
+Stefan Krawczyk: run the code and and and check the evaluation.
+
+106
+00:23:17.960 --> 00:23:36.249
+Stefan Krawczyk: So so I'm going to, I guess as part of, I guess workshop 4, I'll dive into more details and show code and actually kind of run some things, but in terms of what I'm going to show is one idea of how you could actually use pytest to do some prompt engineering
+
+107
+00:23:36.250 --> 00:23:57.319
+Stefan Krawczyk: or facilitate the loop that feeds into your Edd cycle. So basically, what I'm going to show next is one cycle of this with pytest or doing a prompt, potentially running some tests, showing you how you could potentially use Pytest to collect results. And so
+
+108
+00:23:57.320 --> 00:24:19.169
+Stefan Krawczyk: this is where I'm actually using a plugin to pytest. Pytest has a lot of plugins. This is obviously one choice. There are potentially better options now than when I kind of wrote this content, but otherwise going to simulate this kind of loop? Right?
+
+109
+00:24:19.220 --> 00:24:33.829
+Stefan Krawczyk: And so there's a question for anyone. Actually, that would be great if you if you do have familiarity with pytest. Do do answer, else I can. If there's enough nose in there, I can also make sure I'm I'm covering more of the basics.
+
+110
+00:24:33.870 --> 00:24:38.950
+hugo bowne-anderson: And maybe you've mentioned this in in boxing. But why pie test.
+
+111
+00:24:40.448 --> 00:24:42.399
+Stefan Krawczyk: Good question. So why pipe test? So
+
+112
+00:24:42.430 --> 00:25:00.619
+Stefan Krawczyk: in terms of operations for running something obviously like the least amount of tools you have, you know, it's, I think, easier on the team. And so the reason why I'm showing pytest here is that, like it is in general, if you are developing python software. You probably are already using pytest and so
+
+113
+00:25:00.620 --> 00:25:23.889
+Stefan Krawczyk: don't have to add another new tool to your tool chain, potentially right? And so that has it's just, you know, it makes operations simpler onboarding new people simpler, right? If there's just a common, you know, if you can share and reuse tooling rather than trying to, you know, use pytest, just the software development, and then have to use something completely different for running your kind of evals and other things right? And so.
+
+114
+00:25:24.070 --> 00:25:40.510
+Stefan Krawczyk: thanks for that question, Hugo. But that is at least my thinking here, or thinking that you guys should have is also, yeah, how can I could, I potentially reuse the current tooling to help with this Edd kind of loop.
+
+115
+00:25:40.670 --> 00:25:55.510
+hugo bowne-anderson: I love it. And so current tooling people use it on top of that. Why do people use it? It's there's some sort of Lindy. It's been around for a certain amount of time and demonstrated as value across a variety of different use cases right? Which? So
+
+116
+00:25:55.910 --> 00:25:58.680
+hugo bowne-anderson: that means it will likely be around and be supported
+
+117
+00:25:58.870 --> 00:26:08.089
+hugo bowne-anderson: for a significant amount of time in future. So it's actually, it's a good bet to make. And and you know, I'm skeptical about making bets on tools. It's a great bet to make in terms of tool use.
+
+118
+00:26:08.090 --> 00:26:28.939
+Stefan Krawczyk: Yes, yeah. So you're going to get a podcast.org. And as very extensive documentation, you know, even has like trainings and other things if you really want like. It is very extensible and flexible, right? And so this is where to Hugo's point. It's not going to go away anytime soon. Right? And so this is where, yeah, like, if it's, you know, I think
+
+119
+00:26:29.260 --> 00:26:32.179
+Stefan Krawczyk: if I was to choose, this would be my recommendation.
+
+120
+00:26:32.180 --> 00:26:55.010
+hugo bowne-anderson: Yeah. And, by the way, I'm not paid by pi test or anything like that. But I I do want to say also, it's relatively easy to use the abstraction layers nice. And on top of that it's a good 1st approximation for the kind of tests we need to write and and and need to use. So it's actually yeah, it it works well, relatively out of the box.
+
+121
+00:26:55.010 --> 00:27:09.599
+Stefan Krawczyk: Yep, yeah. And it's also open source, right? It has an mit license. Right? So this is where, like, it's fully open source no one. It's like, I don't think there's any Vc money sponsoring or running behind it. Right? It is actually a very, very community driven project.
+
+122
+00:27:12.360 --> 00:27:38.299
+Stefan Krawczyk: well, cool. And so just to like, connect this with workshop. 3. Right part of workshop 3 is, you assume you're getting things into a spreadsheet that then you have to review right? That then give you actionable fixes right? And so I will connect what I'm doing, what we'll do with Pytest here, and so just to give you a bit of a sense of a potential end-to-end flow.
+
+123
+00:27:38.910 --> 00:27:39.865
+Stefan Krawczyk: So
+
+124
+00:27:41.220 --> 00:27:56.280
+Stefan Krawczyk: So if you want to follow along, you can go to, you know, Github, and go to workshop 4, and so all the material is is under here. If you have your container up.
+
+125
+00:27:56.620 --> 00:28:03.230
+Stefan Krawczyk: you can also follow along. Oh, no, Boo, I didn't
+
+126
+00:28:03.740 --> 00:28:05.940
+Stefan Krawczyk: get this running enough. Okay,
+
+127
+00:28:08.130 --> 00:28:26.379
+Stefan Krawczyk: is it going? Okay? So there is. There is in the readme for workshop 4. There is actually, you don't need a git pool because everything has been in there. So if you want to follow along, you just need to source your python virtual environment
+
+128
+00:28:26.440 --> 00:28:41.920
+Stefan Krawczyk: source, your actually one more instruction source your environmental keys. So make sure Openai keys are in your environment, and then all you need to do is then install the dependencies for this lesson.
+
+129
+00:28:43.030 --> 00:28:47.790
+Stefan Krawczyk: Oh, cool. Here we go. Let's see. So I can.
+
+130
+00:28:48.070 --> 00:28:52.540
+Stefan Krawczyk: Just yeah. So so you know, do this.
+
+131
+00:28:53.768 --> 00:29:03.990
+Stefan Krawczyk: Then you need a source workshops, workshop, one app dot and and then you go to workshop
+
+132
+00:29:04.220 --> 00:29:05.080
+Stefan Krawczyk: workshop.
+
+133
+00:29:06.570 --> 00:29:17.740
+Stefan Krawczyk: There is a requirements of text. So you just do pip, install dash requirements, and you should be good to follow. Follow along with what I'm doing.
+
+134
+00:29:18.030 --> 00:29:21.340
+hugo bowne-anderson: And, Stefan, if you want to close your file system at any point for screen, really.
+
+135
+00:29:21.340 --> 00:29:27.799
+Stefan Krawczyk: Yeah, yeah, yeah. So so what I'm gonna do is, actually, I'm gonna stop sharing and share my entire
+
+136
+00:29:27.910 --> 00:29:29.300
+Stefan Krawczyk: desktop.
+
+137
+00:29:29.900 --> 00:29:35.490
+Stefan Krawczyk: And I'll move you guys over to my other screen.
+
+138
+00:29:37.660 --> 00:29:39.450
+Stefan Krawczyk: Alright, so
+
+139
+00:29:41.080 --> 00:29:43.630
+Stefan Krawczyk: So I'm just gonna look at the question, how many people know about.
+
+140
+00:29:45.440 --> 00:30:12.706
+Stefan Krawczyk: Okay? So I mean, some people are familiar. Other people aren't okay. So just to kind of reiterate the pytest slide, right? So we have some logic here in in test logic. Right? So in in test logic under. Oh, yeah. So the other thing is. If you just need to go to the Pytest overview Directory. And this is. This is. This contains all the stuff for the Pyth exercise I'm showing
+
+141
+00:30:13.790 --> 00:30:31.320
+Stefan Krawczyk: So we have some logic here. If I want to test it right, all I'm doing is importing the module here and then writing some tests. So if I want to test that one plus 2 is actually 3, which is what this function is doing.
+
+142
+00:30:31.320 --> 00:30:51.080
+Stefan Krawczyk: You know I can write a pytest for it. Pytest has a lot of different ways that you can kind of run it. And so in the read me here I put more instructions. So if you want more details, I would say you can take some time to look at that.
+
+143
+00:30:51.080 --> 00:31:03.130
+Stefan Krawczyk: But yeah, if I want to exercise this function, I can actually specify just running one thing. And that's what I did here. And we can see. Boom. Our logic ran, and it passed.
+
+144
+00:31:03.210 --> 00:31:03.995
+Stefan Krawczyk: Now
+
+145
+00:31:04.850 --> 00:31:30.099
+Stefan Krawczyk: with with testing. And this is with where I get to like, you can actually parameterize tests. So you can actually, you know, keep your code test code relatively dry. So if I'm testing different inputs, right? You can actually, you know, write a single function. And then pytest has this functionality within a decorator that you can actually provide some values that then this will actually run
+
+146
+00:31:30.100 --> 00:31:36.249
+Stefan Krawczyk: become 2 tests that py tests. You can kind of see here, pytest will kind of run
+
+147
+00:31:38.060 --> 00:31:43.089
+Stefan Krawczyk: So in terms of the yeah, what's in the Directory? Right? So pytest
+
+148
+00:31:43.240 --> 00:31:49.280
+Stefan Krawczyk: any is just configuration. So if I go any.
+
+149
+00:31:51.660 --> 00:32:18.630
+Stefan Krawczyk: it allows you to kind of customize pytest stuff. And so yeah, I think that answers your question. There are some so py project, Toml, for those who don't know is a way that you can specify various things for a python project, and so I do believe there's you could probably stick some pytest stuff under there, but it's really kind of up to the project as to where do you potentially put some pytest configuration. So
+
+150
+00:32:18.640 --> 00:32:24.210
+Stefan Krawczyk: so, hand waving that there's a few options. But the one that I'm showing here is just using pytestinny.
+
+151
+00:32:27.050 --> 00:32:31.510
+Stefan Krawczyk: Yeah, somewhere else. So test logic. Okay?
+
+152
+00:32:32.090 --> 00:32:39.739
+Stefan Krawczyk: So so you can see with parameterized when I run it, we we got 2 tests kind of created right?
+
+153
+00:32:39.790 --> 00:33:06.030
+Stefan Krawczyk: And so, okay, so that's that's regular kind of how test works. Okay, so how? So? Bringing this back into like, okay, the evaluation loop say, for prompt engineering. So say, I have a function where I want to extract profile data from some text. So say upstream somehow, either it's Pdf is read, some website escaped. But this is, you know, I'm getting some string.
+
+154
+00:33:06.460 --> 00:33:30.510
+Stefan Krawczyk: I then am creating some, you know, instructions for the Llm. Right? And so to you know, you're an expert and extracting stuff. And then here's what I want extracted. And can you output this stuff into a Json object? And so this is where you can, depending on the Apis you use. There's obviously
+
+155
+00:33:30.510 --> 00:33:39.509
+Stefan Krawczyk: structured output. You can do so. I'm not going to dive into that. And I acknowledge that there's there's other ways that for this to work. But
+
+156
+00:33:40.115 --> 00:33:54.359
+Stefan Krawczyk: say, I'm just iterating on this and seeing you know how how how good it is. Right and so I have written here. Then you know a very naive type of test that if I
+
+157
+00:33:54.680 --> 00:34:11.779
+Stefan Krawczyk: that is, you know, pulling, loading, some data, setting some expectation, because in pytest it's in general like you do the thing, or you, you pull whatever data you need. You set some expectations. You run the function, then you assert on those expectations. And so
+
+158
+00:34:12.460 --> 00:34:14.070
+Stefan Krawczyk: if I just
+
+159
+00:34:14.290 --> 00:34:24.119
+Stefan Krawczyk: where that tab, yeah, so we can kind of see here. So under the hood like. So this test. So this is this test, right is doing a, you know, technically
+
+160
+00:34:24.130 --> 00:34:44.369
+Stefan Krawczyk: with unit testing, right? You're not supposed to do any Lm calls. But in the case here, like, yeah, we are if we want to prompt tune and prompt test like we actually have to do actual Llm calls in our system. And so you can kind of see here that hey? Look! My expectation was that you know that there was an at but this this actually put in an at symbol.
+
+161
+00:34:44.620 --> 00:34:59.640
+Stefan Krawczyk: But one thing to notice that you can't just use vanilla pytest. I think here, because by default, Pytest actually stops evaluating this function at the 1st assertion failure.
+
+162
+00:34:59.830 --> 00:35:14.490
+Stefan Krawczyk: This makes sense, I think, for regular software. But in the case of what we're doing like this, we actually want it to, you know, to evaluate all those things. So just to mention that out of the box. Pytest like, yeah, this is, this is, this is one limitation that you you have to kind of think about.
+
+163
+00:35:15.870 --> 00:35:28.719
+Stefan Krawczyk: And so so suggestions for tracking partest core costs. This is where, depending on the provider you do, I would say, assign specific keys
+
+164
+00:35:28.800 --> 00:35:50.880
+Stefan Krawczyk: to testing. And then in that dashboard you'll be able to see, you know, attribute things, or in the in the request, depending on the client. There's also potential, I think, in some of them you can tag things for cost purposes. So that's kind of how I would track and monitor costs associated with running. Lm calls in a test situation.
+
+165
+00:35:52.830 --> 00:35:53.620
+Stefan Krawczyk: So
+
+166
+00:35:53.700 --> 00:36:16.239
+Stefan Krawczyk: before I go into like, okay, showing how we can potentially how we can get around this kind of a set issue, I, I. You know, one of the the things of like thinking about in functions. And you know, writing code is that I think you know, we can actually run that function many times. And so as as just like, you know, tool in the toolbox. Because, say.
+
+167
+00:36:16.260 --> 00:36:43.539
+Stefan Krawczyk: because Lms are generative, right? And so it's going to be stochastic. We don't necessarily the same inputs might lead to different outputs. What's 1 thing that could potentially help us in figuring things out is that we could actually, you know, run this function multiple times and just aggregate all the different kind of Api calls and and see what is the variance? Right? And so
+
+168
+00:36:45.040 --> 00:37:08.069
+Stefan Krawczyk: here like in this, in this, in this test, here is just you know, it's running 10 calls in parallel. I get some outputs, and all I'm doing is some simple kind of sets for each of the the keys just to see, you know, where is the largest variance? Right? And so this this potentially can give, then me some clues or hints right in terms of okay, what? What are the
+
+169
+00:37:08.420 --> 00:37:12.869
+Stefan Krawczyk: what do I need to change to my prompt to to fix these things
+
+170
+00:37:13.330 --> 00:37:35.539
+Stefan Krawczyk: right. And so if I now go back to Logicpi right? This is where you know. Give. Given the the you know, the outputs or the things that we've seen. Right? I can potentially try to do some changes here. So current role use.
+
+171
+00:37:37.333 --> 00:37:45.806
+Stefan Krawczyk: app for I mean this, I could do something basic like this, right? And since this is Json's like use you know,
+
+172
+00:37:46.380 --> 00:37:54.319
+Stefan Krawczyk: as a default value, if you not sure.
+
+173
+00:37:55.342 --> 00:38:00.297
+Stefan Krawczyk: So I could do my my prompt change right? I can then
+
+174
+00:38:00.960 --> 00:38:11.380
+Stefan Krawczyk: just get back to. Since I've already written that test right? I can, you know. Say, rerun the stability to say, to see you know whether it has improved anything? Right? Okay? So I fixed
+
+175
+00:38:11.500 --> 00:38:28.600
+Stefan Krawczyk: it seems to have fixed a little bit of the current role stuff. I mean, I didn't actually, you know, address kind of this portion. But you know this. This is one way that you can start to, like, you know, make prompt tweaks, run a test and see kind of, you know that that particular result?
+
+176
+00:38:31.770 --> 00:38:32.770
+Stefan Krawczyk: So
+
+177
+00:38:33.760 --> 00:38:53.730
+Stefan Krawczyk: so so that yeah, so so hopefully, that made sense of like, yeah, you can, you can use a test framework to exercise, you know, function to to prompt. And then, you know, play around with different things. To give you a sense of, you know. Do your changes? How are they impacting and is is improving or getting to the place you want to.
+
+178
+00:38:58.660 --> 00:39:14.459
+Stefan Krawczyk: I might get to longer questions a little later. So so the say, you've done some prompt iteration right? But you know, one of the things of prompt iteration is very easy to to do. You know, optimize it for a single use case
+
+179
+00:39:14.580 --> 00:39:32.850
+Stefan Krawczyk: right? But we don't want to do that. If we want this to generalize, we need to test in more inputs. And so this is where we can actually utilize the parameterized functionality to, you know, as a way, as a means to reuse a test function and provide it different inputs. And then, you know, aggregate kind of results.
+
+180
+00:39:33.300 --> 00:40:01.939
+Stefan Krawczyk: So I have. Some setup is for each file. I've set up some expectations. Right? So this is this is something that you know, this could be curated in a different place. But this could be loaded from a database like this. Data could be loaded dynamically or from various places. But just to illustrate here. It could be as simple as just some fixed values and and things that you are tweaking and updating.
+
+181
+00:40:01.970 --> 00:40:03.930
+Stefan Krawczyk: depending on what your application is.
+
+182
+00:40:05.630 --> 00:40:26.350
+Stefan Krawczyk: Now, this is now to get around. You know, we actually want to evaluate. You know, each of these different fields like, did it extract the things we expected? Right. And so what to to get around that this is where I'm going to introduce or use pytest harvest. So, as I say, pytest is very extensible.
+
+183
+00:40:26.590 --> 00:40:30.490
+Stefan Krawczyk: Pytest harvest is is one means to.
+
+184
+00:40:30.990 --> 00:40:56.529
+Stefan Krawczyk: It's just one plugin of the many, many plugins that Pytest has. And so one of the things that it does is that we can actually stick results into what's called a results bag. And so to get around the assert stuff is that we're actually not going to assert in this function, we're just going to collect the observations and then later, do something. Now.
+
+185
+00:40:56.780 --> 00:41:21.869
+Stefan Krawczyk: we can actually mix and match here. So we can always ensure, like, actually like, Hey, it's a hard failure, and we never want to ship it to production. If we, you know, don't get the name right, because we always want this to be 100%. So this is where you can use pytest asserts in the cases where you're like, definitely, Hey, if this isn't correct. This is, this is bad. We need to fix it.
+
+186
+00:41:21.970 --> 00:41:32.999
+Stefan Krawczyk: And my general kind of rule here is like, put these asserts at the end of your your pytest function right? Because, as I mentioned, the 1st failure will mean that nothing below it is evaluated.
+
+187
+00:41:33.900 --> 00:41:43.109
+Stefan Krawczyk: So there, there's obviously various ways to kind of run this function. I'm
+
+188
+00:41:43.470 --> 00:41:51.899
+Stefan Krawczyk: I'm going to show here that you can actually, you know, give. You can mark different functions with different kind of tags. Right?
+
+189
+00:41:52.660 --> 00:41:57.970
+Stefan Krawczyk: And so this is where? yeah. So
+
+190
+00:41:58.650 --> 00:42:21.899
+Stefan Krawczyk: it is sure handful running groups of functions. So this is where I'll get into a little later. But this is functionality that you can actually start to in your Ci system or different stages. Mark categories of, you know, tests or things you want to run. So smoke tests, or like, Hey, only run this once before we get before deploying to production, because it's expensive.
+
+191
+00:42:21.900 --> 00:42:36.769
+Stefan Krawczyk: and we only want to run these things once, but we might have some evaluations and things that we want to run. Very often. You can use kind of pytest mark or the functionality there to classify tests by that. So
+
+192
+00:42:37.170 --> 00:42:42.199
+Stefan Krawczyk: just to explain what what this extra decorator is.
+
+193
+00:42:43.621 --> 00:42:56.607
+Stefan Krawczyk: So so what? So what do we do here like you can kind of see that it actually you know it. It ran everything that I had marked with this eval test. So
+
+194
+00:42:58.000 --> 00:43:17.380
+Stefan Krawczyk: tag. You can see, then, in this mark, parameterize, it expanded for each input ran, you know these types of tests. Right? Interestingly, I think you know, the the Lms have gotten better, and so I was expecting these not to pass. So if I run them again and see if that works definitely.
+
+195
+00:43:17.380 --> 00:43:20.429
+hugo bowne-anderson: Also, just when you have a moment. There are a few questions in discord. You might want to answer.
+
+196
+00:43:20.430 --> 00:43:20.745
+Stefan Krawczyk: Sure.
+
+197
+00:43:22.540 --> 00:43:40.759
+Stefan Krawczyk: cool, so can someone clarify how to think about overlap when you would use pytest to monitor log prompts versus a simple, separate custom. Eval dashboard setup. I you know, pytest during dev testing I does prompt work, then migrate to add more custom evals and moving towards production. So
+
+198
+00:43:40.760 --> 00:43:55.340
+Stefan Krawczyk: the way I kind of think about it is that you can use pytest to help generate data and then connect it with dashboards and things. And so this is, you know, I will show the most simple version of this of connecting this with a spreadsheet.
+
+199
+00:43:56.272 --> 00:44:01.750
+Stefan Krawczyk: But I so one of the so.
+
+200
+00:44:01.750 --> 00:44:03.229
+hugo bowne-anderson: Not just quickly, I think
+
+201
+00:44:03.540 --> 00:44:08.420
+hugo bowne-anderson: in that answer is, it's not either, or it isn't. You use by test, or you use
+
+202
+00:44:08.690 --> 00:44:11.899
+hugo bowne-anderson: custom, Eva dashboards and that type of stuff they actually integrate.
+
+203
+00:44:12.320 --> 00:44:34.159
+Stefan Krawczyk: Yep, yeah. So this is where for those custom dashboards to work, you need to get data somehow. Right? You need to have run something that produces that data. Then you can kind of see. And so this is where, as you'll see in those 2 dev loops that I was talking about like if you're in development right? Maybe pytest is one way to do it. And then when you're in production, this is, we'll get to like the logging and tracing is in what feeds into those dashboards.
+
+204
+00:44:36.383 --> 00:44:40.650
+Stefan Krawczyk: So to
+
+205
+00:44:40.780 --> 00:45:09.389
+Stefan Krawczyk: to mention right? The so how does pytest harvest work? Well, you you define another test function. This could be, you know, I call it test print results. That's kind of what it's supposed to be doing is that it takes in a there's if you look at the documentation, this actually out of the results bag for each test. Actually, you can tell it to return you a pandas data frame.
+
+206
+00:45:09.970 --> 00:45:29.379
+Stefan Krawczyk: And then in this pandas data frame, we have basically all these kind of evaluations or like observations in it. And this is where, then, we can actually encode some of our logic. For, like, Hey, how do we want to evaluate or test things, or like
+
+207
+00:45:29.861 --> 00:45:40.929
+Stefan Krawczyk: and so like, in terms of explaining this, this function. What it's doing is just, you know, manipulating the data frame a bit.
+
+208
+00:45:41.320 --> 00:45:48.779
+Stefan Krawczyk: We're just pulling out. Say, the the columns of interest. And then, you know, we're computing accuracy for each of the fields.
+
+209
+00:45:48.850 --> 00:46:17.580
+Stefan Krawczyk: and then for each of these fields right within, we can do some things with it. But the the main thing to kind of think about and related to the question on dashboards is that we can actually, you know, manipulate this data into some sort of format that we want here. I'm actually just manipulating it or adding some fields to a data frame or columns to a data frame. And you know, saving it to Csv.
+
+210
+00:46:17.900 --> 00:46:39.089
+Stefan Krawczyk: Like this. Csv. Then, could be imported, exported to wherever I mean. If it was some sort of Eval dashboard or other thing like you could use the Apis to push push these results to it right? And then again, as I mentioned before, we can also use a search in here to, you know, hard fail. If you know some particular
+
+211
+00:46:39.090 --> 00:46:50.579
+Stefan Krawczyk: thing that we have metric, we have computed over the observations file. So this, this gives us a means to run to have more evaluations that are over an aggregate.
+
+212
+00:46:50.630 --> 00:47:12.220
+Stefan Krawczyk: Right? So we want to make sure that we always sustain 80%. 90% accuracy on some sort of fields, right? Or the fields, we have less variance, like we can maybe be more flexible. And so this is at least, you know if you're using pytest and you want to use pytest harvest. This is one way that you could build something such that like when someone has a pull, request something. It's run
+
+213
+00:47:12.480 --> 00:47:30.499
+Stefan Krawczyk: all right. you can then push those, you know, capture those results and push it somewhere, and then, depending on what it is, you know, actually mark in the in the pull request like, Hey, actually, you didn't pass things because, you know, some, some specific thresholds weren't weren't passed
+
+214
+00:47:32.524 --> 00:47:33.240
+Stefan Krawczyk: so
+
+215
+00:47:33.480 --> 00:47:45.000
+Stefan Krawczyk: just to show you so a a Csv is is created, and so to connect this with right? So I've already
+
+216
+00:47:45.000 --> 00:48:08.840
+Stefan Krawczyk: done this. But we could take the output of the Csv, so in Ci, this could obviously you could write automated scripts to kind of do this. But you know I can. I can import a particular Csv here for it. So skipping that we can. Then you can also like with, you know, spreadsheets are like the most basic thing of dashboards, you could, you know.
+
+217
+00:48:08.860 --> 00:48:28.359
+Stefan Krawczyk: build an output format, have conditional formatting such that you can then, you know, look at these results right? And go like, Hey, is this? Is this change good enough? Are we confident here? So we can kind of see here that between these 2 profiles, like actually, you know, the common thing was that, like.
+
+218
+00:48:28.610 --> 00:48:50.129
+Stefan Krawczyk: you know, the current role, previous roles in educations were kind of the culprits. And so maybe we need to, you know, do some more work here, and, you know, make things work. If if you know, this is where, as we get more data, right, you can actually have the statistical, you know. Think more in aggregate of like, yeah, it's okay. If 8 out of 10 of these fail, right? So
+
+219
+00:48:52.120 --> 00:49:19.669
+Stefan Krawczyk: yeah. So that's that's kind of what I wanted. And so in case oh, yeah. So the one thing I forgot to note is that I do have. If you if you do want to see. Maybe a what a an improved, prompt version might look like. I think the the point here, and hopefully you've been living. This in your own prompt iteration is that generally, you need to, you know, add more specificity to prompts
+
+220
+00:49:19.720 --> 00:49:35.780
+Stefan Krawczyk: right. And so this is where this version should hopefully hopefully be stable enough that it actually fixes most, if not all, of the issues
+
+221
+00:49:36.780 --> 00:49:37.520
+Stefan Krawczyk: cool.
+
+222
+00:49:37.600 --> 00:50:03.400
+Stefan Krawczyk: Now, side note, I mean, this is where I want to say, Hamill Hussein, I don't know if you've talked about this. Yes, but he has thoughts on like, Hey, things should never be 100%. But I want to say there's a bit of nuance there in that in what you're testing in your Ci system. I want to say you have to have some bar for quality. So there has to be something that you always want to have at 100%.
+
+223
+00:50:03.430 --> 00:50:15.080
+Stefan Krawczyk: But you get to then decide as to what are the things that are okay to fail here? And so just to note here that it's, I mean, this is where, if you talk to most software engineers. They're used to like everything has to pass 100%.
+
+224
+00:50:15.080 --> 00:50:35.459
+Stefan Krawczyk: And I would say, Yes, but just make sure you take into account the stochasticity of the Lm. And writing things in a way where the 100% that you want is gives you confidence on some lower bound. But then I think you should always have some things that are, you know.
+
+225
+00:50:35.460 --> 00:50:45.400
+Stefan Krawczyk: potentially not passing, if you you, it's okay. So so
+
+226
+00:50:47.096 --> 00:50:58.693
+Stefan Krawczyk: jumping back to here. Right. So I just wanted to kind of remind everyone that like with with pi test, we ran things right with
+
+227
+00:50:59.220 --> 00:51:26.199
+Stefan Krawczyk: with pytest harvest. We were actually able to, you know, aggregate results over. It was only 2 data points, but various observations of them into a single Csv, that then we push that then we could. You know manually this could be a dashboard, or it could be a spreadsheet that then you could evaluate, give thumbs up thumbs down, and then use that as part of your software development process to see if it's okay to ship something or ship changes.
+
+228
+00:51:30.370 --> 00:51:36.770
+Stefan Krawczyk: I cool. So any questions or clarifications that people want.
+
+229
+00:51:42.910 --> 00:51:44.330
+Stefan Krawczyk: Okay, I see some typing.
+
+230
+00:51:48.290 --> 00:51:49.180
+Stefan Krawczyk: to
+
+231
+00:51:49.330 --> 00:52:18.680
+Stefan Krawczyk: to see it. I kind of. I talked about this a little bit with a hundred percent reference, right? But it's part of, you know, if you're building a software development lifecycle like actually, traditionally in, you know, with testing right? There are cheap tests around, and there's more expensive tests around. So if you think about like, if you're doing uis, this is where you know, there generally used to be a Qa. Person. Now, there's things like selenium that can automate it. But, like part of the thing you have to be thinking about is, what test do you want to run? At which stage and when?
+
+232
+00:52:19.240 --> 00:52:44.179
+Stefan Krawczyk: And by? Yeah. So the question from Curtis is by allowing tests that are not passing. Do you mean writing tests that you know may fail. Or do you mean more that your tests will cover 100% of your possible steps? So I think covering 100% of possible states of the Lm is tricky and hard without a lot of data. And so this is where I mean, I want to say
+
+233
+00:52:46.420 --> 00:52:56.009
+Stefan Krawczyk: with pytest at least projecting my comments onto pytest. When you use an assert. Right? You're you're saying, Hey, I want this to be 100% of the time correct.
+
+234
+00:52:56.030 --> 00:53:21.230
+Stefan Krawczyk: And you get to make that choice. But for the case of where just going back to the data, right? Like, you might, you might be okay with some flexibility in how previous roles. So in this example kind of defined right? And so this is where you like. Because of the variance of Llms like it, might, you might not have
+
+235
+00:53:21.230 --> 00:53:47.820
+Stefan Krawczyk: the ability to to say what all the possible outputs are here, and so you might so like like these 2 might might actually be kind of okay, right? And so this is where. But you want to check about it. So you might check, for you know, half of them half of those variances to kind of occur. And so which case there might be cases where it's, you know, not 100% what you expect. But in general you expect some variance here. And so
+
+236
+00:53:47.820 --> 00:53:57.609
+Stefan Krawczyk: this is where I wouldn't use an assert statement here. This is where I would capture those observations. And then in this kind of
+
+237
+00:53:58.020 --> 00:54:11.039
+Stefan Krawczyk: the function here, where I'm kind of evaluating results in aggregate. This would be a metric or a value for that field saying, like, Hey, we're like 80%. We're getting 80% or 90% of what I expect to be in there.
+
+238
+00:54:11.160 --> 00:54:34.380
+Stefan Krawczyk: And so, and I want to say that question in general is a little bit of the the challenge that people in enterprise are having right is to shipping these things right? And so. And I think it's very use case and dependent, and a little bit of you know experience here that we're all kind of figuring out like what is the best way to frame and articulate when to do what?
+
+239
+00:54:37.890 --> 00:54:39.960
+Stefan Krawczyk: Hopefully that answers your question. Curtis. Yep,
+
+240
+00:54:42.640 --> 00:54:43.700
+Curtis Mitchell: Yeah, thank, you.
+
+241
+00:54:43.700 --> 00:54:44.475
+Stefan Krawczyk: Yep,
+
+242
+00:54:45.410 --> 00:55:14.910
+Stefan Krawczyk: And so I think, yeah, so this is, where should you? I guess that question. Should you aim to never have failures? And I want to say, Yeah, depends on what you want to do and what the process is. So if we're extracting Linkedin profiles like, we always want to get name right. But maybe the other stuff can be more flexible. And so which case there's various ways to kind of use pytest here. So this is where you can actually, in pytest mark tests that, you know, potentially will fail. But I would say there's probably not
+
+243
+00:55:14.960 --> 00:55:16.139
+Stefan Krawczyk: the way to model it.
+
+244
+00:55:17.470 --> 00:55:40.730
+Stefan Krawczyk: we already had this question. So how do you keep track of Lm. Costs associated with testing? I think it's important here to, you know, not run up a $10,000 bill on testing. And so this is where make sure you're using, say, a separate key that has, you know, if you're really worried about cost has some, you know, Cap, on the amount that can be run on a month or a given week. Right? And so
+
+245
+00:55:40.730 --> 00:55:50.179
+Stefan Krawczyk: this is, you can actually budget, you know. Make sure you can provide a budget, and, you know, use the the appropriate, you know foundational model means for it
+
+246
+00:55:50.180 --> 00:55:53.400
+Stefan Krawczyk: to kind of make sure you're not, you know, running over cost?
+
+247
+00:55:57.140 --> 00:55:59.120
+Stefan Krawczyk: Any other? Any other questions.
+
+248
+00:56:01.220 --> 00:56:04.060
+brad morris: Can I ask? Just a quick, hypothetical Stefan.
+
+249
+00:56:04.060 --> 00:56:04.470
+Stefan Krawczyk: Yep.
+
+250
+00:56:04.470 --> 00:56:12.999
+brad morris: It's okay. I just I had. I put the question in discord. I just want to know, like, let's just say that you were advising a company or a startup.
+
+251
+00:56:13.200 --> 00:56:25.210
+brad morris: and they have a product that's very early in the development cycle. And they want to get to Prod as quickly as possible. I just want, like a hypothetical of what you would advise like. Are you saying to set up pytest
+
+252
+00:56:25.790 --> 00:56:31.460
+brad morris: for the obviously for the mechanics of the app and then pushing
+
+253
+00:56:31.690 --> 00:56:40.040
+brad morris: like I just can't wrap my head around, if that would be a good idea to then also do the quality control of prompting as well, using.
+
+254
+00:56:40.040 --> 00:56:58.949
+Stefan Krawczyk: Yeah, I mean, yeah. So I want to say, depending on how big the team is, and other stuff like, do things that are, you know, the least amount of operational burden is kind of what I would optimize for in terms of getting to production quickly. I mean, this is where it depends. If you're a company and you're doing flashy Demos, then, like you don't really
+
+255
+00:56:58.950 --> 00:57:20.090
+Stefan Krawczyk: care about it. You're creating a demo for a specific use case and like you can kind of hand tune it. But you need to. The main Meta point is you need to start building a muscle where you know, you can systematically run these kind of evaluations and things. And so what we've been suggesting with Pytest is that if you're already using pytest for software development, this is, you know.
+
+256
+00:57:20.110 --> 00:57:48.260
+Stefan Krawczyk: likely not extra lift from the team that runs or knows pytest to also have some of the stuff run from it, but like, whether you use pytest or not. Basically in Ci, I would say, or at least in the development process, like building a more automated way that you're keeping track of data sets and things to compare to. So in the case of actually one of the like.
+
+257
+00:57:48.430 --> 00:57:50.569
+Stefan Krawczyk: like these values here.
+
+258
+00:57:50.690 --> 00:58:04.630
+Stefan Krawczyk: I mean, these could come from your golden data set that you curate. And this could be dynamic. This could be changing right? So this is where it's just trying to build a software development process muscle, where you can connect.
+
+259
+00:58:04.630 --> 00:58:32.890
+Stefan Krawczyk: like the key is to try to build a flywheel where people actually feel like this, development is fast enough so that they, as they run and do things, this data set grows bigger. You can add more data points, and then you can choose. As to, you know, you could randomly sample the data you have in this process just to see like, Hey, what is the general behavior of this change, or like, yeah, has anything wildly changed. And so this is where, like, you'll likely.
+
+260
+00:58:32.890 --> 00:58:43.059
+Stefan Krawczyk: unlike regular testing, you know. Be be keeping track of measures that are, you know, somewhat fuzzy right? Because if field accuracy on current role goes up
+
+261
+00:58:43.150 --> 00:58:49.400
+Stefan Krawczyk: 2% or down 3%, it's not really clear, necessarily like what action to take.
+
+262
+00:58:49.400 --> 00:59:14.260
+Stefan Krawczyk: But if it drops 20% right then that's a little clear as to what to do. So if I was advising, it's just like, yeah, you need to build a muscle where, like, it's like depending on your app that you're building, that it helps you maintain quality. And by adding more data, you can actually, you know, improve that, and, you know, get better confidence in terms of the changes that you're making and shipping.
+
+263
+00:59:16.780 --> 00:59:20.440
+Stefan Krawczyk: Does that? Okay, cool. So
+
+264
+00:59:22.330 --> 00:59:48.500
+Stefan Krawczyk: so yeah, so hopefully, this has given you at least, you know, a mental picture of like, okay, what are the things that I need? Because, remember, this course is about 1st principles, right? And so, whether it's if you if you start to, if you're using typescript right like, then there's no pytest for typescript. So you know. But the I think the point still stands of like you're trying to build this muscle where you can potentially, you know, reuse software development testing frameworks and extend them to. Then
+
+265
+00:59:48.500 --> 01:00:02.939
+Stefan Krawczyk: curate generate data, then connects with, you know, either a spreadsheet or a dashboard, so that you can kind of, you know, understand? Have a better sense for the health of the change that you're going to make to the application that you're building.
+
+266
+01:00:05.960 --> 01:00:12.839
+Stefan Krawczyk: So so on to this next section. I'm going to talk about tracing so.
+
+267
+01:00:12.950 --> 01:00:26.790
+Stefan Krawczyk: But before that I'm going to ask. But first, st what is a log does anyone have, I guess, a question to put into discord. Do people know what a log is?
+
+268
+01:00:27.020 --> 01:00:30.690
+Stefan Krawczyk: Do you know what our log is? Here we go.
+
+269
+01:00:31.720 --> 01:00:35.749
+Stefan Krawczyk: So answer just yes or no, just to get a get a sense.
+
+270
+01:00:36.220 --> 01:00:38.609
+Stefan Krawczyk: The things or thumbs up thumbs down right?
+
+271
+01:00:40.080 --> 01:00:45.260
+Stefan Krawczyk: And so I guess it's most people right. So when
+
+272
+01:00:45.600 --> 01:01:02.839
+Stefan Krawczyk: to disambiguate what I mean by log is like, you know you in in your application. You can put print statement. You could do logger.info right? But basically it is, you know, as your application is running, you're emitting something that you can kind of, you know, with some information to help you observe and understand what's going on.
+
+273
+01:01:03.420 --> 01:01:31.830
+Stefan Krawczyk: So how does this relate to tracing? Well, a trace is so most logs right? Like traditionally, they come up their strings. I mean, they potentially. You know, people standardize a little bit on structure of like, well, there's the timestamp first, st maybe something around the program, you know, like the machine. And then, like this kind of message, which is application specific, you can think of a trace, as you know, they've they've it is a log that is more structured that has a very specific structure, that
+
+274
+01:01:32.603 --> 01:01:46.789
+Stefan Krawczyk: right? And so for with open telemetry, which is a standard right? There's it has, you know, the log potentially has a name you can give to it. It has some context. So a bunch of ids. So
+
+275
+01:01:46.840 --> 01:02:04.560
+Stefan Krawczyk: as we'll get to. So a trace, Id is what I'm going to refer to as something as identification for a particular request. So if I am going to an Llm and also a vector database and doing other things. I can connect, like the activity with a single Id.
+
+276
+01:02:04.610 --> 01:02:29.360
+Stefan Krawczyk: and then for any activity that's spanning some length of time, there is an individual id given. And then, obviously, we can actually start to nest things. And so a structured log or a trace basically encodes this kind of hierarchical linking relationship between different log lines. And so that is the main difference between what a log and a trace is is a trace actually gives you forces you to add in more information, such that you can actually connect.
+
+277
+01:02:29.430 --> 01:02:36.880
+Stefan Krawczyk: like what happened before and in what order more easily, then, simple kind of logging enables you to do
+
+278
+01:02:37.660 --> 01:02:51.390
+Stefan Krawczyk: it also allows you to, you know, add various things in it, various payloads that are application specific, but the main, the main. I want to say, value of the of a trace is that you can actually more easily connect what's happening with what? So
+
+279
+01:02:53.130 --> 01:03:10.850
+Stefan Krawczyk: so in the case of Gen. AI app development. This is where a trace just basically allows us to see what's happening more easily. And so this is where, if I have some chats coming in right. Each each turn
+
+280
+01:03:11.030 --> 01:03:28.330
+Stefan Krawczyk: to our system will result in in one trace, and so the next turn will result in another trace, and so in, say, in this 1st trace, like, I need a recipe for a large dinner party right? This is where we can actually, then, in that request.
+
+281
+01:03:28.650 --> 01:03:49.759
+Stefan Krawczyk: break down the different components. We can kind of see. You know how long things took by. In general. The visualization for traces and spans is, you know, the width is how long things took. This kind of this kind of relationship shows. You know, parents spans. So which one, you know call different things in the path. And so
+
+282
+01:03:52.110 --> 01:03:59.620
+Stefan Krawczyk: yeah, I think that's kind of the high level of what it traces. Right? And so.
+
+283
+01:04:00.490 --> 01:04:07.820
+Stefan Krawczyk: yeah, so so just to just to dig in and just make sure that people conceptually do. It is that
+
+284
+01:04:08.070 --> 01:04:23.119
+Stefan Krawczyk: spans. When people talk about spans with tracing, they will relate to a particular, you know function. Call in your code that, you know is doing something or an external Llm call to an external call to provider could be revisit as a span.
+
+285
+01:04:23.740 --> 01:04:49.199
+Stefan Krawczyk: And so this. Basically, how does this help? Right? It, you know, helps us potentially identify or or log like, hey, I actually got something from a my vector database. I can actually log. You know what it was right. And then I can then see. Oh, okay. The next thing where this data was used, right was actually went to Lm, call to kind of classify something. Right? So.
+
+286
+01:04:51.050 --> 01:04:52.320
+Stefan Krawczyk: I
+
+287
+01:04:53.570 --> 01:05:21.549
+Stefan Krawczyk: an example. There's this. So this is where observability providers, you have your pick. There's open source one, there's closed source ones. There's like, you know, there's there's a lot to choose from, right. But basically, you know, the main things that they are trying to show right is like a visualization for this kind of you know visual representation of what a trace is. And then the right hand side is actually, you know, these are the specific things that are logged. And so this is where
+
+288
+01:05:21.580 --> 01:05:46.530
+Stefan Krawczyk: depending on. If you're using a framework or building custom stuff, you know, to utilize it. This right, those there has to be engineering work done to actually, you know, attach things or emit the right information at the right point. And so this is why you see, in different providers they have different various integrations or sdks for for different frameworks and things, just to make try to make that onboarding and use, and
+
+289
+01:05:46.570 --> 01:05:51.059
+Stefan Krawczyk: of of, you know, on capturing of data easier and simpler.
+
+290
+01:05:54.700 --> 01:06:20.950
+Stefan Krawczyk: see? So so how do traces fit in right? So this is where, when the application is running, I mean, actually, you could. You could technically also use it in tests. But that's probably is being pretty advanced if you're running some parts of your application in this in here, but in general like this is, where's different with regular tracing. Say something.
+
+291
+01:06:20.950 --> 01:06:26.450
+Stefan Krawczyk: It was usually something that you only tacked on when you went to production with traditional software systems.
+
+292
+01:06:26.450 --> 01:06:31.710
+Stefan Krawczyk: But you can actually, you know, as you're building and running. This app in development.
+
+293
+01:06:31.830 --> 01:06:35.854
+Stefan Krawczyk: like tracing and logging is actually very important. Right? This is
+
+294
+01:06:36.800 --> 01:06:56.050
+Stefan Krawczyk: this helps you potentially, you know, as you're running app and developing it, capturing data that then you can kind of feed into something like pytest or other kind of dashboards and monitoring, or your evaluation driven loop to evaluate whether you know changes and things you're making are doing the things that you expect them to.
+
+295
+01:06:59.131 --> 01:07:06.359
+Stefan Krawczyk: And so you you can, because, tracing the concept, right? You could implement it yourself.
+
+296
+01:07:06.570 --> 01:07:10.780
+Stefan Krawczyk: But I want to say, from a production standpoint.
+
+297
+01:07:10.930 --> 01:07:32.569
+Stefan Krawczyk: there is a very well industry standard emerging called opentelemetry. This actually has roots from like distributed tracing, and like open telemetry, which is. And so they converged it all into open telemetry. But what this means is, that is, if you are going to instrument your application
+
+298
+01:07:32.880 --> 01:07:36.990
+Stefan Krawczyk: to emit tracing, I'd say, find something that uses opentelemetry.
+
+299
+01:07:37.470 --> 01:07:46.160
+Stefan Krawczyk: What this means is. So if you get open telemetry and you want to show your boss, or something like this, is this is the website.
+
+300
+01:07:46.560 --> 01:07:57.629
+Stefan Krawczyk: But what it? What it means is that vendors. So the different kind of uis here. What it means is that you're not locked into their particular way.
+
+301
+01:07:58.220 --> 01:07:59.260
+Stefan Krawczyk: doing, tracing.
+
+302
+01:07:59.590 --> 01:08:00.420
+Stefan Krawczyk: And so
+
+303
+01:08:00.610 --> 01:08:28.389
+Stefan Krawczyk: and so this means that, like you can instrument. Your application once, if it's, you know, with open telemetry, kind of standards, and then choose different vendors or dashboards. Your uis as you see fit, and the swapping costs should be very minimal, because you don't have to reimplement or instrument anything, because everybody can ingest this particular standard way of emitting things. And so this is where like this is still evolving. But
+
+304
+01:08:28.540 --> 01:08:52.749
+Stefan Krawczyk: one of the things that you know Openai does is like has these working groups. And so I know a couple of people on them, but this is where like, it's a very example, very standard way of like, hey for each Llm call, what do we want to track such that we can? You know, everyone in industry can kind of, you know, if you if you log things in this format, we can actually, you know, ingest it and make use of it. And, you know, provide some ui on top.
+
+305
+01:08:55.810 --> 01:09:03.429
+Stefan Krawczyk: Yeah, so cool any any questions on, I guess, tracing or telemetry.
+
+306
+01:09:15.330 --> 01:09:16.480
+Stefan Krawczyk: Yeah. So this is.
+
+307
+01:09:16.660 --> 01:09:21.610
+Stefan Krawczyk: yeah. Feel free to shout out, I'll I'll you know, type it in the in the chat. But I see someone typing.
+
+308
+01:09:27.859 --> 01:09:53.860
+Stefan Krawczyk: Yeah. So how do I classify these things? So log is, yeah, non-structured text representation data from a single point in time. A span is, yes, a span like it, like the you know, like the name suggests, it's something that has a start, duration and a start point and an endpoint. So, for example, how long did a function take to run right can be represented as a span?
+
+309
+01:09:54.140 --> 01:09:57.599
+Stefan Krawczyk: And then a trace is, yeah, a collection of spans.
+
+310
+01:09:58.050 --> 01:10:22.799
+Stefan Krawczyk: And so yeah, spans and tracing like, aren't anything Llm specific? Because if you had distributed systems and you had a lot of micro services, this is what people were using, tracing to. You know, the beginnings of tracing was to really understand. You know how what related to what, and being able to emit and understand, you know, latency and a few other things. But as things have evolved, this is where the standard has, you know.
+
+311
+01:10:23.070 --> 01:10:31.980
+Stefan Krawczyk: build in specifications or ways to emit, you know, cost inputs and outputs for, say, Lm, calls, and you know they're working on others. And so this is, this is getting richer.
+
+312
+01:10:35.480 --> 01:10:38.200
+Stefan Krawczyk: cool and so
+
+313
+01:10:38.560 --> 01:10:51.059
+Stefan Krawczyk: like, so throwing, yeah, another diagram at you. Like, in terms of a flow charty type thing. Right? So I I see, like as you're productionizing software.
+
+314
+01:10:51.438 --> 01:10:54.469
+hugo bowne-anderson: Can I just add, sorry sorry for this.
+
+315
+01:10:54.760 --> 01:11:21.610
+hugo bowne-anderson: I always get confused between spans and traces. A lot of people do. It is confusing. I even made a mistake. Then I just shared a span graph from Langfuse in discord of a multi agent system I built with crew AI that we might go through. I mean, we're going to do multi agent. So I'm just figuring out whether this is the one I want to do. But even this. It's a span graph, but the span graph is essentially a trace. Each line is a span, and the whole thing is a trace.
+
+316
+01:11:22.350 --> 01:11:22.990
+Stefan Krawczyk: Correct.
+
+317
+01:11:22.990 --> 01:11:23.460
+hugo bowne-anderson: Yep.
+
+318
+01:11:23.530 --> 01:11:39.760
+Stefan Krawczyk: So, yeah, remember, yeah, a trace should be effectively like one request. So if you think of the H like someone types in hits enter the there is, you know, some. The network request goes over and goes into your system. A trace should represent everything that happens on the back and forth, to then return a response.
+
+319
+01:11:39.760 --> 01:11:40.090
+hugo bowne-anderson: Tyler.
+
+320
+01:11:40.090 --> 01:11:40.580
+Stefan Krawczyk: Was in.
+
+321
+01:11:40.580 --> 01:11:43.249
+hugo bowne-anderson: Question. Oh, sorry. I thought you'd finished. Yep.
+
+322
+01:11:43.250 --> 01:11:43.959
+Stefan Krawczyk: No, no.
+
+323
+01:11:44.323 --> 01:12:01.786
+hugo bowne-anderson: Caleb has a great question. Would you separate the platform? Observing your other open telemetry metrics from your Lm. Application metrics? We tried out log fire. We're drowning and spans from http requests also using Otp, and this is something I've found with nearly all vendors currently
+
+324
+01:12:02.470 --> 01:12:07.250
+hugo bowne-anderson: like drilling down to what you actually want to find can be really nasty right.
+
+325
+01:12:07.540 --> 01:12:27.320
+Stefan Krawczyk: Yeah, I mean, yeah, really nasty. I think I mean, so. Would you separate platform observing your other open telemetry metrics? Because, yeah, you could you could say, say, you already have datadog right, datadog, I think you know, accepts open telemetry. I guess the question is, would you would you switch to something that's more specific.
+
+326
+01:12:27.320 --> 01:12:46.879
+Stefan Krawczyk: And so this is where I guess my cynicism on on these observability products is that they're not actually anything new. The only thing that's new is a little bit of the treatment of what you what you do with the data, right? And so I don't think this is where I think you know, data dog is going to eat their lunch
+
+327
+01:12:46.890 --> 01:13:08.309
+Stefan Krawczyk: or acquire some of them eventually is kind of my thesis here. But from an operations perspective. Like, I want to say, like, you know, it's easier you're going to get whoever the Cfo is of your company going. Why are we paying for this when we're paying for datadog. Right? So I want to say, you have to have good rationale and reasons to do so
+
+328
+01:13:08.310 --> 01:13:21.970
+Stefan Krawczyk: with open term. You can potentially log to both places. There are ways that you can do it. But this is where I think to me I would expect Datadog to build more functionality here over the long term.
+
+329
+01:13:21.970 --> 01:13:41.210
+Stefan Krawczyk: And so, if anything, though datadog is not meant to be run in development, though you can do it and stuff. And so there are potentially things that, like in development, you might use a different endpoint, you know, like, say, Arise, Phoenix, or something locally right. But if your company using datadog. You then switch to using datadog in production. So
+
+330
+01:13:42.430 --> 01:13:53.010
+Stefan Krawczyk: good question. And I mean these vendors, you know the the way that they charge is by more data. So it's always in their interest to make it as easy as possible to log everything.
+
+331
+01:13:53.050 --> 01:14:12.589
+Stefan Krawczyk: And so hopefully, the feedback that you can give is, help them build better uis to help you find the things that you need. But yeah, or otherwise build more functionality into your app, to to know what spans or things you want to actually emit. But that requires a little bit more work.
+
+332
+01:14:17.450 --> 01:14:40.510
+Stefan Krawczyk: But yeah, this is like, if because if you think about observability, though these vendors right? The only way, I mean for the open source side, like they don't make no money. If you're using the open source thing locally what they want to do and build is speaking. Someone who was trying to build in the space right is like some cloud offering where you send their data or an enterprise, offering that they host on premise that has all these bells and whistles. But this is where I think
+
+333
+01:14:40.510 --> 01:14:49.289
+Stefan Krawczyk: over time. We should see consolidation of the stuff because production budgets are worth more than development ones.
+
+334
+01:14:49.290 --> 01:14:57.410
+Stefan Krawczyk: And so unless these companies like, you know, opic and arise, start to do more data, doggy stuff like, I'm kind of
+
+335
+01:14:57.560 --> 01:15:06.959
+Stefan Krawczyk: cynical because you will get this pressure within larger enterprises to consolidate, because no Cfo wants to pay for 2 things
+
+336
+01:15:09.230 --> 01:15:14.940
+Stefan Krawczyk: so and so that's that's my conjecture. So obviously, take it with a grain of salt. But yeah, Christopher.
+
+337
+01:15:16.100 --> 01:15:32.020
+Christopher Samiullah: Can I? Can I do a quick, shameless plug for for logfire, then that one of the things that sets pydantic logfire apart from the likes of bang views or arise is that it's general purpose, observability, first, st with 1st class support for AI support, meaning that
+
+338
+01:15:32.230 --> 01:15:36.340
+Christopher Samiullah: it can do everything for significantly. Less money than datadog.
+
+339
+01:15:36.640 --> 01:15:36.915
+Stefan Krawczyk: Yep.
+
+340
+01:15:37.440 --> 01:15:52.279
+Stefan Krawczyk: that is, that is, that is the the main criticism of datadog is too expensive. And that's why people, I think these observatory vendors are taking their shot. And I think to your point is that I think, yeah, for them to survive, they're going to have to become general purpose. And so, yeah, logfire is a good example.
+
+341
+01:15:52.280 --> 01:16:06.340
+Christopher Samiullah: You also can't use data dog as a local development tool like you can log fire and their Llm cost analysis stuff is nowhere near as good as houses. So yeah, bit of bit of a counter view there. But I thought worth.
+
+342
+01:16:06.340 --> 01:16:11.760
+Stefan Krawczyk: Yeah. Well, I'm saying over time, not saying immediately right now, but like, if you think about
+
+343
+01:16:12.100 --> 01:16:37.680
+Stefan Krawczyk: moats and functionality like a product, moat is just is copyable, right? And so really, the only way that you can get someone is on cost in this space, I think in functionality. And so that is, that is, yeah. So like log fires mode is that it's heavily attached to pydantic. But then that doesn't mean someone else wouldn't be able to necessarily replicate the same things. But you know.
+
+344
+01:16:37.900 --> 01:17:01.740
+Stefan Krawczyk: But yeah, so there's there's to the earlier point on, why should you use pytest? Is it going to be around a long time. My cynicism here is, you know, these observability vendors. Sure they'll be around today. But when they really, because they're all venture capital funded at some point they'll reach a you know, a target growth, and if they can't match it, they all then just get acquired, and so you
+
+345
+01:17:02.150 --> 01:17:07.740
+Stefan Krawczyk: we'll lose them, but if they can, then great, you made a big, good choice, and you don't have to switch.
+
+346
+01:17:08.040 --> 01:17:11.159
+Christopher Samiullah: I do think that you're right, that in the future people won't talk about
+
+347
+01:17:11.560 --> 01:17:21.339
+Christopher Samiullah: a AI observability. They'll just talk about observability. So I definitely see the the consolidation that you're referring to happening. The timeframe will be an interesting one to to see play out.
+
+348
+01:17:21.500 --> 01:17:30.737
+Stefan Krawczyk: Yep, yes, and that's yeah. I rather I don't. I've gotten estimates on that wrong so it could be really fast, or it could take years.
+
+349
+01:17:32.550 --> 01:17:33.260
+hugo bowne-anderson: I think
+
+350
+01:17:33.260 --> 01:17:39.150
+hugo bowne-anderson: over a decade we can chat about why at some other point, but I actually think it'll take it a long time, and we'll have a lot of chaos. In the meantime.
+
+351
+01:17:39.560 --> 01:17:40.340
+Stefan Krawczyk: Yep,
+
+352
+01:17:42.430 --> 01:17:43.350
+Stefan Krawczyk: So
+
+353
+01:17:43.530 --> 01:18:01.400
+Stefan Krawczyk: so mechanically. The flow chart that I think about right is that you know you could build test driven loops where like, you're just doing like focusing on a single function call. And Lm, call right. But then you could build loops that we're focusing more on the whole app right? And so, in terms of
+
+354
+01:18:01.400 --> 01:18:25.110
+Stefan Krawczyk: how I see things like you have some loop. You're changing code. You're running. Say, Pytest, or your own script or system. This is creating a data set that. Then you're either shipping to a spreadsheet or to some tool. You're then analyzing things. And then you're going. Okay. Can I ship this? Or do I need to make adjustments? Right? But then this all feeds into a larger app loop. Where, then, like.
+
+355
+01:18:25.150 --> 01:18:44.649
+Stefan Krawczyk: I'm now seeing how everything is connected, right? And so or maybe I'm running real use cases. And hey, it's actually, I'm now rather than my test. I'm actually getting real data. And so I need to start to kind of curate and annotate. And then, you know, export. And like, you know, this, all kind of feeds into itself.
+
+356
+01:18:45.710 --> 01:18:47.220
+Stefan Krawczyk: And so
+
+357
+01:18:47.765 --> 01:19:08.184
+Stefan Krawczyk: the the thing that I think a lot of software engineers and people from my experience who get into this don't realize is that like observability, tooling is required from like the get go, and it's not something you you tack on after and so
+
+358
+01:19:08.680 --> 01:19:20.969
+Stefan Krawczyk: And then, just to reiterate kind of the main, I think running throughout of this course is that you really need to know your data and say, if you have something running in production if you don't have the observability on it like
+
+359
+01:19:20.970 --> 01:19:26.990
+Stefan Krawczyk: like, if someone says, why did the agent or the the you know the bot do XY. And Z.
+
+360
+01:19:26.990 --> 01:19:51.470
+Stefan Krawczyk: If you haven't captured that trace of that log, you can't answer your boss as to what actually happened. You're like, well, I think it did this, or at least I have the input and I don't know why. But this is where the need for observability. As I was saying, I think in thinking about it and debugging, and make sure you can see the things you need to see starts in development. And it's not something you can just tack on when you get to production.
+
+361
+01:19:56.690 --> 01:19:57.770
+Stefan Krawczyk: So
+
+362
+01:19:58.490 --> 01:20:04.070
+Stefan Krawczyk: with that, I was going to move on to the next section to talk a little bit about frameworks
+
+363
+01:20:04.780 --> 01:20:07.340
+Stefan Krawczyk: unless there's a question in the chat.
+
+364
+01:20:08.080 --> 01:20:12.550
+Stefan Krawczyk: I think I think it's it's been answered cool. So
+
+365
+01:20:14.440 --> 01:20:30.760
+Stefan Krawczyk: What's a framework? I mean, this is the nice thing about Lms and stuff is, I can ask it, and it can give me a reasonable definition of things like the way that I think about it. You know, a framework is is an opinionated kind of way of guiding you to do something
+
+366
+01:20:30.780 --> 01:20:45.129
+Stefan Krawczyk: right. So providing some structure having some syntactic sugar. So making some things easier to do then it would be making it easier to do than it would be for you to, you know, build things from scratch.
+
+367
+01:20:45.670 --> 01:21:01.369
+Stefan Krawczyk: And so the main idea of using a framework is that you know it should speed up the development process right and ensure kind of consistency. Right? And so that's kind of, I think the the how I think about kind of a framework is that like
+
+368
+01:21:01.400 --> 01:21:19.440
+Stefan Krawczyk: the only the reason to use the framework is that it should speed up something and make something easier. That is common and that you do, you know? Yeah, like, yeah, it should make the easy thing like the common things easier to do right and therefore speed up things. And so, therefore the value is you can ship faster.
+
+369
+01:21:21.705 --> 01:21:22.460
+Stefan Krawczyk: So
+
+370
+01:21:22.620 --> 01:21:27.860
+Stefan Krawczyk: question for your does anyone have any strong opinions or thoughts on when you should use one or not
+
+371
+01:21:28.190 --> 01:21:34.969
+Stefan Krawczyk: feel free to unmute, or, if you're shy, put something in the chat, but I'll give you guys 30 seconds or so to
+
+372
+01:21:35.200 --> 01:21:38.370
+Stefan Krawczyk: of silence to to think about it.
+
+373
+01:22:03.190 --> 01:22:04.679
+Stefan Krawczyk: I'm just gonna make sure this.
+
+374
+01:22:09.230 --> 01:22:11.304
+Siddarth: And maybe I'll give one
+
+375
+01:22:12.000 --> 01:22:30.679
+Siddarth: I might rely on a framework if maybe I'm not an expert in in certain type of functionality. And I know a framework exists that solves that problem really well. And they they focus on that. And I'm just just a customer that really wants to get a specific job done. I don't care about the detail of how that's done.
+
+376
+01:22:30.900 --> 01:22:31.430
+Stefan Krawczyk: Yep.
+
+377
+01:22:31.590 --> 01:22:38.030
+Stefan Krawczyk: I think the key point is, I want to use something quick, and I don't care about the detail. That's that's 1. Yeah. That's a good reason.
+
+378
+01:22:38.290 --> 01:22:42.239
+hugo bowne-anderson: Related to that. I always like if I'm just writing a lot of boilerplate
+
+379
+01:22:42.380 --> 01:22:47.059
+hugo bowne-anderson: code, and I want something which abstracts over having to do all that stuff. So
+
+380
+01:22:47.170 --> 01:23:04.910
+hugo bowne-anderson: it's not quite well. It is a framework in this sense, but pytorch lightning is a really nice example. There was a whole bunch of stuff we were always writing in pytorch, right? Which was annoying, and we didn't need to do, and we shouldn't have to do. And lightning really helped as an abstraction layer over that keras for deep learning frameworks as well.
+
+381
+01:23:05.070 --> 01:23:11.599
+Stefan Krawczyk: Yep, yeah. So like trying to speed up stuff or like, reduce boilerplate. Yeah.
+
+382
+01:23:15.760 --> 01:23:17.789
+Stefan Krawczyk: any other questions or not. Okay.
+
+383
+01:23:19.270 --> 01:23:21.570
+Stefan Krawczyk: So like
+
+384
+01:23:21.830 --> 01:23:35.749
+Stefan Krawczyk: for me, like to the the answer I mean, like, so reading the Meta behind, like, I guess the 2 answer got is like one you're optimizing a little bit for speed, right? Or both. You're optimizing for speed.
+
+385
+01:23:35.750 --> 01:23:56.900
+Stefan Krawczyk: One is it's kind of it could be that like, yeah, you don't have the expertise. And you want this framework to do it so that you don't have to hire. Someone like, you know, build that knowledge right? The other is, you know, like code aesthetics, or just being able to iterate faster. And so for me.
+
+386
+01:23:57.010 --> 01:24:01.320
+Stefan Krawczyk: Pytorch lightning, as the name suggests, right.
+
+387
+01:24:01.510 --> 01:24:24.310
+Stefan Krawczyk: the lightning means quick. So what is it optimizing for. So when choosing a framework, you should understand what it's optimizing for. So pytorch lightning is specifically around trying to make, I guess, reducing the most of the boilerplate that pytorch forces you to do so. You can do stuff faster now for the case where you are picking something as a knowledge gap, because you don't want to know the details, for, like
+
+388
+01:24:24.500 --> 01:24:33.200
+Stefan Krawczyk: like I would say, you would have to make sure that the assumption of that framework is, that's what it is optimizing for to help you with right so
+
+389
+01:24:33.510 --> 01:24:47.359
+Stefan Krawczyk: and so in general, this is where I want to say you should always understand when, if you're going to use a framework. Okay, in this, in this cycle of like speeding up the development process ensuring consistency type thing.
+
+390
+01:24:47.660 --> 01:24:50.930
+Stefan Krawczyk: What exactly is this trying to optimize for.
+
+391
+01:24:51.300 --> 01:25:12.719
+Stefan Krawczyk: And so just some examples. Right? So, Langchain, I mean, this is alarm predicts as well. You saw this in kind of workshop one, and I'll kind of talk. A little bit more is like, you know, 3 lines of code can do a lot right. Pydantic AI is very much focused on, hey? If you use pydantic, we really want to make it a very great experience for you to like. Just do some AI stuff with it
+
+392
+01:25:12.830 --> 01:25:41.869
+Stefan Krawczyk: right? And so, and then Fastapi, which is like a web service. Very standard, is like taking care of the details of how do you get Http requests in transforming them, giving you access to it. So you can do your business logic and then writing things back out. But then also making documentation of those endpoints really easy, right. And so this is where
+
+393
+01:25:41.960 --> 01:25:53.020
+Stefan Krawczyk: with within these frameworks, like, they have different use cases so specifically like, when would you use link changes with pydantic like, I mean, that's, you know, a bit of a question of well, what are you optimizing for? And what are they optimizing for?
+
+394
+01:25:54.500 --> 01:26:07.980
+Stefan Krawczyk: and how I find the you know the the way to best understand what a framework is optimizing for, and especially this goes for open source ones. More so is like is to understand how it was created, or who who created it. Right
+
+395
+01:26:08.330 --> 01:26:35.460
+Stefan Krawczyk: like, you know, Langchain was created, you know Harrison Chase and a few other people, but like they were trying to optimize, to get the the latest, fastest things out in the simplest, most possible interface possible. Right? What that means is, there's, you know, like to me. It's like, you know, like there weren't operational, or, you know, enterprise concerns in the thought of design of the initial langchain. Right?
+
+396
+01:26:35.600 --> 01:26:57.469
+Stefan Krawczyk: Pydantic was created by, you know Samuel Coleman, right? And so this is where it's like, okay, how he thinks about things. Okay. Pydantic, you know. I guess he started logfire as well like. So this is where it's like you can start to understand that, like who these people are and how they started, things really relate to some of the you know, things that it optimizes for. So
+
+397
+01:26:58.080 --> 01:27:13.979
+Stefan Krawczyk: that's why like, say so, Linkedin, I used to work there like, you know, created a feature engineering library for machine learning. Right? You can kind of know that all the people who created it right? They created it in a setting that was very enterprise
+
+398
+01:27:14.040 --> 01:27:32.089
+Stefan Krawczyk: right? And so that means it comes with a lot of enterprise baggage potentially so. It might not be as easy to set up as a counter example. But it's very specific. And if you have enterprise needs, then that's what it was designed for. It wasn't designed to make a single developer faster. And so that's kind of what I'm trying to get at here is that like you have
+
+399
+01:27:32.370 --> 01:27:41.000
+Stefan Krawczyk: do a little bit of research to understand. You know, who it was created for, and what environment? Because that will help tell you a little bit of like, what? What are they actually optimizing for?
+
+400
+01:27:42.680 --> 01:27:47.959
+Stefan Krawczyk: The other right is, as we kind of mentioned is that they should make
+
+401
+01:27:48.410 --> 01:27:59.240
+Stefan Krawczyk: you move faster right? And so asterisk here, because, as I mentioned earlier, that there is actually, you know, 0 to one is a little bit of a different challenge than one to N,
+
+402
+01:27:59.470 --> 01:28:07.190
+Stefan Krawczyk: right? And so this is where I was kind of alluding to with lang chain is that actually like its focus, right is a lot on 0 to one
+
+403
+01:28:07.780 --> 01:28:09.479
+Stefan Krawczyk: I want to say 1 10,
+
+404
+01:28:09.700 --> 01:28:24.399
+Stefan Krawczyk: you know, it's lacking. And actually, this is where I think the challenge of building something good in a framework is actually being able to. You know, this is a bit of a trade-off. Right? And I'll kind of show a more concrete example in a bit.
+
+405
+01:28:26.914 --> 01:28:36.950
+Stefan Krawczyk: so I guess there's a question if the framework is stable for the use case depending on the domain. Is it necessary? Not using own written code from scratch? So
+
+406
+01:28:37.370 --> 01:28:38.270
+Stefan Krawczyk: in an
+
+407
+01:28:38.300 --> 01:29:04.109
+Stefan Krawczyk: so it depends how much code you're using out of that project, and how much it would take to kind of use it. So this is where I've seen people pull in library. This is the main thing. The main danger with frameworks is like, Hey, it does this one thing. I pull it in, but it's a framework that does 20 other different things right? It has all these dependencies. This is where it potentially adds blow or dependency troubles into your application.
+
+408
+01:29:04.110 --> 01:29:16.890
+Stefan Krawczyk: And so the answer is depends what value you're getting out of it. And so sometimes it's just easier. Actually, you know, just writing some of that code yourself, because you don't have any baggage.
+
+409
+01:29:16.890 --> 01:29:35.139
+Stefan Krawczyk: you control it. And it's very specific to your use case. It does mean you have to understand a little bit more about what's going on. And so so yeah, using a framework or not is a bit of a trade-off. And I want to say, this is where you know the usual devil's in the details is in the one to n iteration and not the 0 to one.
+
+410
+01:29:36.520 --> 01:29:54.489
+Stefan Krawczyk: And getting to the point, I guess on this stuff is like this should replace code you don't care about. So I want to say fast. Api is a great example of this, like I care about the business logic of what happens in a request.
+
+411
+01:29:54.650 --> 01:30:04.309
+Stefan Krawczyk: I do. You know that is what I change is my business logic and fast. Api does not get in my way to make it easy for me to change what happens in a request.
+
+412
+01:30:04.800 --> 01:30:33.120
+Stefan Krawczyk: but it does replace having me having to care about how a request gets into my app, how it's served like, it's easy for me potentially to add in like, Hey, I need authentication on this thing like it helps me reduce boilerplate code, that is, you know, like stuff you kind of do once right? And so this is where you know, as using a framework, you know, you should ideally replace code you don't care about or don't want to change, or you won't have to change much.
+
+413
+01:30:34.950 --> 01:30:42.750
+Stefan Krawczyk: So to help ground this a little I'm gonna just show, I guess, some design.
+
+414
+01:30:43.020 --> 01:30:50.510
+Stefan Krawczyk: the kind of differences or choice of philosophy, right? And this is largely because of the different things to optimize. For so
+
+415
+01:30:51.230 --> 01:30:54.190
+Stefan Krawczyk: like we also listen workshop one like
+
+416
+01:30:54.900 --> 01:30:57.949
+Stefan Krawczyk: this, you know, you know, 4 lines of code
+
+417
+01:30:58.500 --> 01:31:13.720
+Stefan Krawczyk: hides a lot. It does a lot. It's magical, right? So if I have some directory of data, I can put in some documents, and then I can kind of talk, talk to it right? And like this took me. You know this would take you, you know, 10 min, 5 min, whatever like to set up and do. And you have a working poc app
+
+418
+01:31:14.100 --> 01:31:14.785
+Stefan Krawczyk: right?
+
+419
+01:31:15.580 --> 01:31:29.730
+Stefan Krawczyk: But this is where like and so in terms of optimization, right? This is where again, I think it optimizes for poc, like it optimizes for the 0 to one right. It's very easy to go from nothing to something.
+
+420
+01:31:31.490 --> 01:31:41.752
+Stefan Krawczyk: but in just to kind of juxtaposition with burr, which is like the open source framework kind of created and and you know, Apache Bur. Sorry I need a remember to kind of use it.
+
+421
+01:31:42.440 --> 01:31:53.679
+Stefan Krawczyk: part of the the sorry assistant Burr. Part part of the thinking with Burr is that we actually don't want to hide details because
+
+422
+01:31:53.870 --> 01:32:05.999
+Stefan Krawczyk: some of the details around how the logic works. So, for example, what actually is sent to the Llm. Because that is a key crucial thing you need to know, to be able to, you know, modify your application so
+
+423
+01:32:06.040 --> 01:32:06.860
+Stefan Krawczyk: like
+
+424
+01:32:06.890 --> 01:32:32.659
+Stefan Krawczyk: from the beginning, like there is, a lot of things are exposed, so you can see to, you know, to build a app. It requires a bit more code, so the 0 to one might be a little more costly. But then, say, I like, I really need to dig into a particular Llm. Call. Well, you you have. It's very easy for you to go in right. It's very easy for you to have different, you know, Lm clients for different
+
+425
+01:32:32.660 --> 01:32:55.009
+Stefan Krawczyk: parts, right? Whereas is with llama index like you would have to like if for different queries, different use cases like really dig in and dive into that framework and really start to really understand it, or, like you, change different parts of it, to be able to like, customize and do things, whereas you know the the philosophy of Burr right? Is that it? Is that it?
+
+426
+01:32:55.820 --> 01:33:01.680
+Stefan Krawczyk: Yeah, it is unopinionated, and it's on you to do it right? So
+
+427
+01:33:01.750 --> 01:33:26.260
+Stefan Krawczyk: right? And so then how do you test code? Etc. Right? This is where, like, you know, burst. You know, ideas that if you can push things to be more functions like, it's easy, then, to do functional testing of just this one thing. So if I want to connect this with pytest. This is really easy, but if I'm relying on an app like Llama Index, well, you know, I've less options and less optionality to do that.
+
+428
+01:33:28.890 --> 01:33:31.812
+Stefan Krawczyk: Is that grounding enough for folks or
+
+429
+01:33:36.340 --> 01:33:38.750
+Stefan Krawczyk: thumbs up thumbs down reactions.
+
+430
+01:33:43.400 --> 01:33:44.140
+Stefan Krawczyk: Got it?
+
+431
+01:33:45.390 --> 01:33:49.368
+Stefan Krawczyk: I I take it, cool thumbs up awesome. So
+
+432
+01:33:50.770 --> 01:33:59.809
+Stefan Krawczyk: So so so therefore, okay? So I put this in the chat. Is every framework
+
+433
+01:33:59.980 --> 01:34:03.949
+Stefan Krawczyk: right for every situation? Yes.
+
+434
+01:34:06.870 --> 01:34:10.150
+Stefan Krawczyk: So yeah. So what? I guess? What? What do people think? What's the answer here?
+
+435
+01:34:19.720 --> 01:34:36.780
+Stefan Krawczyk: Right? So I mean, great. I've done a good job. So like, this is where it's like. The answer is, it depends right? So the answer is no. So, depending on what you're doing right. There are different things, different frameworks for different situations, right? And so this is where I think the main Meta point here is that
+
+436
+01:34:36.780 --> 01:34:50.920
+Stefan Krawczyk: if you're going to use something like llama index to do your Poc, you should be prepared to potentially. You know, either really understand that framework and dig in to change it, or like compartmentalize it into certain sections, such that it's very easy for you to swap out and change things
+
+437
+01:34:50.920 --> 01:35:16.400
+Stefan Krawczyk: right? And so this is where I guess the my point in terms of choosing a framework right? This is where know what it's optimizing, for you can do software engineering things that make it easier to change or swap out after by, you know, limiting its scope. So to the question on, you could start with a framework, but then, if you need to customize it, it's very easy for you to like, you know. Rip out that and replace it with your own custom code or some other framework right? And so
+
+438
+01:35:16.470 --> 01:35:44.249
+Stefan Krawczyk: this is something obviously is a little bit more experiential. And I think you have a bit more of a gut for it. The more software engineering experience you have here. And so sometimes this is a bit of a hard lesson that I think you have to go through to learn of like, hey? We picked this framework and then, hey, now, we're all slowing down, because, like we all have to build a lot of knowledge. Or we've customized this framework so much that, like, what's the value in us using this framework anymore? With all these customizations.
+
+439
+01:35:44.250 --> 01:35:48.770
+Stefan Krawczyk: Right? We would have been better off with the, you know, writing our own thing. So
+
+440
+01:35:49.640 --> 01:35:56.090
+Stefan Krawczyk: yeah, no, no hard answers here. But or like, rather, it's all situational. So
+
+441
+01:35:56.698 --> 01:36:06.390
+Stefan Krawczyk: for the last kind of 20. So ish minutes or 15, right? Gonna talk about guardrails. But does anyone have anything to add here on
+
+442
+01:36:06.580 --> 01:36:07.520
+Stefan Krawczyk: frameworks.
+
+443
+01:36:14.970 --> 01:36:19.240
+Stefan Krawczyk: That kid is a no, all right. So guardrails
+
+444
+01:36:22.590 --> 01:36:36.810
+Stefan Krawczyk: When do you use them? So hopefully? I guess this is yeah. So I have an input. I have an Lm call, and I have an output. Right? And so what is the point of a guardrail? Well, I want to make sure that this Lm.
+
+445
+01:36:36.910 --> 01:37:02.480
+Stefan Krawczyk: Or the output will behave. How I expected. But you know we can have people who, you know, might be more nefarious and like, have input that tries to, you know, circumvent the instructions that we're providing to Lm to produce, you know, say, a bad output, or or to do something right. And so or we want to ensure that an Lm. Hasn't hallucinated an output. We want to make sure that you know things are working as kind of expected. And so
+
+446
+01:37:03.190 --> 01:37:12.909
+Stefan Krawczyk: guardrails, you can kind of divide them into things that happen, you know, checking input before you call the Lm. And then checking output after an Lm
+
+447
+01:37:14.745 --> 01:37:21.000
+Stefan Krawczyk: in terms of right? So this is where, like
+
+448
+01:37:21.750 --> 01:37:43.099
+Stefan Krawczyk: one of the implications of guardrails you have to think about is, and specifically like, I want to say, you could do these guardrails off of log data. But that's not really a guardrail anymore. You're just doing kind of, you know, judge judgy type evaluations. But one of the key things to figure out with guardrails is that if you need them.
+
+449
+01:37:43.100 --> 01:37:52.180
+Stefan Krawczyk: what impact does it have on your application with respect to latency, right is the main thing to think about with guardrails?
+
+450
+01:37:52.260 --> 01:38:12.349
+Stefan Krawczyk: Because if I want to check various things about the input. I could have some sort of code here that does it before we send it to Lm, I could potentially have it run in parallel right that then we can have pass things through. Lm, but I can have this check run. And then here I have a decision point as to, you know
+
+451
+01:38:12.350 --> 01:38:37.270
+Stefan Krawczyk: to accept things. But so there's more flexibility as to how to run and impacts on kind of input checks. But output checks. You're a bit stuck right. If you want to have a check on consistency or groundedness or other things, right? This potentially impacts the user experience the most because you can't depending on your application. You might not want to send any tokens
+
+452
+01:38:37.510 --> 01:38:43.750
+Stefan Krawczyk: to the user before one of these checks occurs. Right? And so
+
+453
+01:38:44.594 --> 01:39:01.365
+Stefan Krawczyk: so that from, you know a systems modeling perspective. You know, guardrails right? They're split into 2 things that check inputs things that check outputs. And the main thing to think about is, you know, latency packs. But what are these guardrails? Right? And so
+
+454
+01:39:01.830 --> 01:39:14.319
+Stefan Krawczyk: they can be as simple as if else statements right? So you could do static checking of things right? You could do regular expressions or make sure that the Llm. Isn't making up social security numbers or make sure that.
+
+455
+01:39:14.350 --> 01:39:40.049
+Stefan Krawczyk: hey? We're actually not sending in some Pii data, or, like, you know, social security numbers. We need to mask them or like, make sure they're not getting through right? So this is where guardrails can be any any bit of code, right? They could even be machine learning models where people are using. This is just like you can think of it as very fine tuned, potential large language models or traditional Ml models where they're doing classification checks on certain things right? And so.
+
+456
+01:39:40.440 --> 01:39:57.219
+Stefan Krawczyk: or the more advanced stuff is Lm calls. And this this potentially is what introduces the most latency. This is another name, for this is Lm, as judge, right? So you could have lm, as judge here. But yeah.
+
+457
+01:39:57.480 --> 01:40:01.420
+Stefan Krawczyk: I mean, this is where gad, rails isn't
+
+458
+01:40:01.640 --> 01:40:09.000
+Stefan Krawczyk: all that complex. I don't think but it has does have, you know, a lot of kind of runtime implications
+
+459
+01:40:09.120 --> 01:40:19.399
+Stefan Krawczyk: in terms of for those who are curious. This other Lm call like machine, like models. Actually, a great use case for fine tuning.
+
+460
+01:40:19.660 --> 01:40:49.309
+Stefan Krawczyk: because you want a very specific, you know. Boolean. Yes, no type, general output kind of response. And so this is where synthetic data, or as data is running means that you can actually potentially shift from a foundational model to something smaller, cheaper, faster. To make this kind of experience run run easier or run faster than it would be with just calling out to a foundational model.
+
+461
+01:40:54.260 --> 01:41:00.684
+Stefan Krawczyk: all right, any questions here, or any any concerns? Or Hey.
+
+462
+01:41:06.450 --> 01:41:13.249
+Stefan Krawczyk: does this ground what guardrail is enough for folks? Or do people want to see some pseudocode.
+
+463
+01:41:17.510 --> 01:41:20.540
+hugo bowne-anderson: I'd love to see some pseudocode myself. Time permitting.
+
+464
+01:41:21.360 --> 01:41:26.366
+Stefan Krawczyk: Right. So where do I have it? So in workshop 4. So this is where?
+
+465
+01:41:27.386 --> 01:41:31.970
+Stefan Krawczyk: let's see, what do I have here? The pychet stuff. So
+
+466
+01:41:32.710 --> 01:41:34.979
+Stefan Krawczyk: there's a little bit of a notebook on
+
+467
+01:41:35.080 --> 01:41:51.960
+Stefan Krawczyk: the different types of, you know, injection attacks and other things that you might want to use kind of guardrails, for now there are frameworks. Right? So this is when you know framework and foundational providers are also providing their own kind of moderation. Things that can provide, you know, flags back on inputs and stuff.
+
+468
+01:41:51.960 --> 01:42:11.280
+Stefan Krawczyk: So your mileage may vary here. But in terms of you know, if, as a bit of an exercise potentially for homework is like, you know, at a guardrail. But this is where it's like, if I wanted to check, for you know, like no social security numbers. Right? I have some, you know. Texts.
+
+469
+01:42:11.810 --> 01:42:21.960
+Stefan Krawczyk: Boolean, like a guardrail is could be simply like, you know, and like, check. So yeah, check that text
+
+470
+01:42:22.130 --> 01:42:29.100
+Stefan Krawczyk: does not contain anything that looks like a social security number.
+
+471
+01:42:29.558 --> 01:42:37.090
+Stefan Krawczyk: Right? So then, so this would be like, you know, some Reg Regs dot check text.
+
+472
+01:42:37.820 --> 01:42:40.489
+Stefan Krawczyk: You know, social security rejects.
+
+473
+01:42:40.990 --> 01:42:49.799
+Stefan Krawczyk: I mean, I'm making up the the class here, but like it could be as simple as something like this right
+
+474
+01:42:49.950 --> 01:43:03.710
+Stefan Krawczyk: in the case of groundedness checks. Right? This is where you you'd need, you know, it'd be some similar function that's taking text. But you'd also then be providing, say, input in so like groundedness.
+
+475
+01:43:04.600 --> 01:43:16.049
+Stefan Krawczyk: And this could be something like, you know, input, query, yeah, string. That's not enough.
+
+476
+01:43:17.400 --> 01:43:19.530
+Stefan Krawczyk: Sorry wrong wrong.
+
+477
+01:43:19.690 --> 01:43:20.630
+Stefan Krawczyk: I'm hockey.
+
+478
+01:43:23.910 --> 01:43:31.439
+Stefan Krawczyk: You might have the input query. You might have the context that was surfaced from, say, some
+
+479
+01:43:32.895 --> 01:43:41.760
+Stefan Krawczyk: vector database. And then you have kind of output string right? And then this is where you know, Boolean, you could. Then
+
+480
+01:43:42.310 --> 01:43:47.360
+Stefan Krawczyk: this is where you could do some sort of, you know
+
+481
+01:43:48.466 --> 01:43:54.270
+Stefan Krawczyk: if you want to do. Lm is just Llm, you know. you know.
+
+482
+01:43:55.290 --> 01:44:00.857
+Stefan Krawczyk: chat you create in the the does.
+
+483
+01:44:04.040 --> 01:44:28.150
+Stefan Krawczyk: I'm obviously butchering this a little bit that you know is you. The instructions would go in here. So this would this would be your your Lms judge, or grandma's instructions for does the output only, you know, contain information in the context from from the context, right? From the context that
+
+484
+01:44:28.850 --> 01:44:32.800
+Stefan Krawczyk: uses input that
+
+485
+01:44:33.220 --> 01:44:47.089
+Stefan Krawczyk: input query, I mean, you don't have to use the input, I think it's like groundedness just only needs to know the kind of input, context. But like this is where result is something like this, and you know.
+
+486
+01:44:48.240 --> 01:44:51.025
+Stefan Krawczyk: So I'll go pass right now.
+
+487
+01:44:52.550 --> 01:45:01.209
+Stefan Krawczyk: I mean, this is obviously pseudo, but guardrails don't have to be too complex. Think it as a function that you just stick in your request. Call. So.
+
+488
+01:45:01.500 --> 01:45:04.610
+Stefan Krawczyk: Hugo. Does that help at all? I mean, this is where I'm like, I think
+
+489
+01:45:04.860 --> 01:45:10.189
+Stefan Krawczyk: people have a tendency to to make. I think guardrails sound more complex than they are. But really it's just.
+
+490
+01:45:10.190 --> 01:45:33.389
+hugo bowne-anderson: Well, yeah, it helps me. I'd be more interested in if it helps people other people in the course, because I find it useful, but I'm not here for different reasons. But I do, and what I find useful I find several. Firstly, I find how you think about it. Useful and also just level setting again guardrails. Llm. As Judge Eval harness. These are all jargon right? Which actually have
+
+491
+01:45:33.390 --> 01:45:40.500
+hugo bowne-anderson: very simple underlying principles. That doesn't mean, you know, in the end, building these systems can't be
+
+492
+01:45:40.710 --> 01:45:51.170
+hugo bowne-anderson: wonderfully complex. But the underlying principle is incredibly straightforward. And so that you've you've communicated that and shown us how to think about it with some base cases is incredibly useful.
+
+493
+01:45:52.190 --> 01:45:54.839
+Stefan Krawczyk: So I mean.
+
+494
+01:45:54.840 --> 01:45:58.639
+hugo bowne-anderson: Is that a lot of people I work with don't even really use guardrails yet to to.
+
+495
+01:45:58.640 --> 01:45:59.180
+Stefan Krawczyk: Yeah.
+
+496
+01:45:59.360 --> 01:46:07.630
+hugo bowne-anderson: Be honest, it's a pretty immature state of affairs, or red teaming, or, you know, there's a lot of like solo stuff to be to be fair.
+
+497
+01:46:07.630 --> 01:46:12.389
+Stefan Krawczyk: I mean. So this is where I think the danger of using a guardrails package is that
+
+498
+01:46:13.050 --> 01:46:30.650
+Stefan Krawczyk: part of it is you have to understand what it's actually, you know, checking for right? And so I think just a bit like, I guess with evals people can have different sets of evaluations. But are they actually useful? Right? Like, you know? And so that that is, that is probably the 1 1 danger of potentially just going for a framework because you're like.
+
+499
+01:46:30.790 --> 01:46:39.006
+Stefan Krawczyk: Hey, it says this thing, maybe it's useful or not. And so I want to say, just just be, you know, cognizant of of kind of what you're doing right?
+
+500
+01:46:39.280 --> 01:47:04.949
+Stefan Krawczyk: I haven't used Nemo, but this is only say, like, this is, this is, I think, part of what Nvidia wants is actually you to use open source models right? And so that helps them sell more hardware. But this is as I was saying, it's a good, actually guardrails, though if you do get and need them for enterprise, it is actually one of the better use cases for fine tuning and actually making distilling things into smaller models that run cheaper, better, faster.
+
+501
+01:47:10.500 --> 01:47:26.929
+Stefan Krawczyk: Yeah. And so, yeah, I guess there's yeah. Agent Sdks also have specific guardrail functions. Again, framework. Know what you're optimizing for is that useful? What are you going to have to customize it? Going to get in the way? Right? So in terms of any tips for prompt hijacking. So like.
+
+502
+01:47:26.950 --> 01:47:47.660
+Stefan Krawczyk: this is where I mean, there's various techniques here and depending on what you think on prompt hijacking right? But, like, you know, you could put into the system prompt of this right? There's better system, prompt adherence, I mean, this is where you could have a check, you know, on the output like did did. This is the output.
+
+503
+01:47:47.670 --> 01:48:16.319
+Stefan Krawczyk: you know, similar to output we generally expect for this, you know, system for this particular Lm call right? So there's depending on the level of granularity you need. There's there's various things. But this is where part of it's like, you know, generate data. And for me, from A, you know, Ml, background is like, if you get real data, then that helps you, you know. Sure maybe the 1st time they get through. But then the second time, you should hopefully, you know, seen seen it, or found it, and then figured out ways to kind of mitigate it or catch it before it happens.
+
+504
+01:48:19.500 --> 01:48:46.069
+Stefan Krawczyk: All right. Yeah. So that's kind of basically what I had for this session. So thanks for everyone who stuck around the main take home is, I think, is as we kind of go through the course. It's all around data and how to make use of it. And so today, hopefully, I have left you with an idea of what a development production software development lifecycle might look like, or at least some of the components and things you would need
+
+505
+01:48:46.160 --> 01:48:47.130
+Stefan Krawczyk: right?
+
+506
+01:48:48.100 --> 01:49:04.720
+Stefan Krawczyk: talked about frameworks, I think so. This is where you know when to use when we're not to, since that is a choice we can make and get to make, as we're developing apps right? And so hopefully, there's left you with some guidance as to if you were to go back to your team. And someone was to say.
+
+507
+01:49:04.720 --> 01:49:27.579
+Stefan Krawczyk: Hey, should we use this framework? Right? You can have a better sense of how to evaluate it. And actually, actually, I realized. One thing I forgot to mention is that bake offs are actually the best way to figure out whether to use a framework because they force you to spend some time and actually try it out. And that's where I actually think the proof in the pudding is, because then you can better
+
+508
+01:49:27.580 --> 01:49:40.469
+Stefan Krawczyk: assess and evaluate some of the characteristics. And so if someone does come to you with a single hey, we should use this framework. You should always pitch it against and compete it with, you know, maybe not using it or some other framework.
+
+509
+01:49:41.690 --> 01:49:56.550
+Stefan Krawczyk: and then, lastly, hopefully demystified a little bit of what guardrails are and where they fit in, and then some of the things you have to think about, if you are implementing. And the main thing is latency, right with guardrails is, how do you handle the latency aspects of whatever you want to check?
+
+510
+01:50:00.220 --> 01:50:03.660
+Stefan Krawczyk: With that any any questions.
+
+511
+01:50:03.660 --> 01:50:29.259
+hugo bowne-anderson: So as we're getting in questions, I will just remind everyone who may be dropping off now or soon. Please just take a few minutes to complete the survey pastor already posted it. I've just posted it again. Take 3 to 5 min, just to give us feedback, because we want to make this course as wonderful as possible for you. So your feedback is is super valuable. So yeah, any question. I'm wondering if there are any in discord that we haven't got. It looks like you've got to. Most of them.
+
+512
+01:50:29.260 --> 01:50:30.730
+Stefan Krawczyk: Yeah, I'm trying to look at it.
+
+513
+01:50:33.130 --> 01:50:42.620
+Stefan Krawczyk: I guess there's a recommendation for some particular python tool python risk identification tool, I guess, for prompt stuff.
+
+514
+01:50:47.260 --> 01:50:47.780
+Stefan Krawczyk: right.
+
+515
+01:50:49.552 --> 01:50:53.729
+hugo bowne-anderson: Well, yeah, maybe we'll have a if if anyone has any question, or Curtis has a question. Great.
+
+516
+01:50:56.970 --> 01:51:04.062
+Curtis Mitchell: Oh, sorry! Oh, turn my camera on this may be more like a philosophical question, but
+
+517
+01:51:05.800 --> 01:51:26.200
+Curtis Mitchell: I mean some of these testings and and guardrails seem like you're taking patterns from traditional software engineering where things are more deterministic and trying to apply them to Llms, where things are largely probabilistic. Is that the main difference, you see? And like taking these testing
+
+518
+01:51:26.390 --> 01:51:35.110
+Curtis Mitchell: patterns from traditional software to Llms. Or are there other things to consider besides that like, shift? Yeah.
+
+519
+01:51:35.610 --> 01:51:56.879
+Stefan Krawczyk: Yeah, I mean, good question. I mean, like, this is where depending on where you come from. Right? So if your background is data, science. Ml, like the new part, is more of the software engineering kind of rigor. And right, because before it was data, Ml, like, you had one model that was like one service, right?
+
+520
+01:51:56.880 --> 01:52:23.930
+Stefan Krawczyk: But with Lms you have many Api calls, and it's integrated within your application. Right? And so if you come from the Ml, like the software, engineering rigor parts are probably the more new to you. But if you're a software engineer, then like, Yeah, you're like, Wait, these things aren't probabilistic, and you're trying to wrap your head around it. And so this is when I say, like an industry, I mean, I get asked like, How do you build a team? What skill sets do you need right? And the tricky answer is, Well, it kind of depends what you have. And like.
+
+521
+01:52:23.930 --> 01:52:51.259
+Stefan Krawczyk: you know some like prompt like, who does? Who does prompt engineering right is a good question. Should it be the product manager, or is it to the engineer? And so then the answer to those 2 questions kind of impacts the tooling and the Ci that you potentially or the software development processes you set up. And so from the philosophical thing, it's like, I think the key is just to think from the 1st principles, things of what makes sense. Where
+
+522
+01:52:51.260 --> 01:53:13.629
+Stefan Krawczyk: in terms of yeah, marrying software engineering with this probabilistic case. Like, yeah, that is, I want to say, the challenge. And I think what I kind of more advocate for is that like, I think you can fit it into software engineering practices. But the main thing is in your Ci suite or evaluation, right? It's like, you know, things aren't necessarily going to be 100%,
+
+523
+01:53:13.630 --> 01:53:33.799
+Stefan Krawczyk: and that breaks some people's blow. Some people's minds of okay, this wait. What do you mean? It's not a hundred percent. And so then, depending on whether it's a manager or or anyone, there's a little bit of education to like, yeah, these things aren't deterministic, right? And but and then, knowing how to
+
+524
+01:53:33.800 --> 01:53:43.829
+Stefan Krawczyk: what to capture right? It means you got to capture data. You've got to have an Eval set. You've got to start to think more of the data. Ml, side of things of iteration, right? And incorporate it. So
+
+525
+01:53:44.214 --> 01:53:58.439
+Stefan Krawczyk: yeah, I want to say, yeah, at a high level. That is the the challenge industry is facing. And then this is why I think if you go to different companies and you'll see different processes here
+
+526
+01:53:58.480 --> 01:54:15.779
+Stefan Krawczyk: based on because of of either existing tool sets and skill sets that exist. Do they have a lot of baggage of things? I mean, this is where you see a lot of. I see a lot of the research people like frameworks, and some of the you know the observability stuff because
+
+527
+01:54:15.880 --> 01:54:25.420
+Stefan Krawczyk: they're generally the ones who are starting and developing these apps before it goes handing, handing off to production. But you see, the the production folks wanting to say, like.
+
+528
+01:54:25.590 --> 01:54:29.059
+Stefan Krawczyk: can't we just use like the existing systems? And so
+
+529
+01:54:31.038 --> 01:54:33.689
+Stefan Krawczyk: no. So rather, I don't have a
+
+530
+01:54:34.040 --> 01:54:41.560
+Stefan Krawczyk: yeah. It's specific on your company and circumstance, but figuring out how to resolve that is, is, is the challenge. Yeah.
+
+531
+01:54:41.820 --> 01:54:48.520
+hugo bowne-anderson: Yeah. And I think at a very high level, you're you're pointing to kind of the foundation of what we're here for, Curtis, right, that
+
+532
+01:54:49.210 --> 01:54:50.480
+hugo bowne-anderson: all of these things.
+
+533
+01:54:50.740 --> 01:54:59.899
+hugo bowne-anderson: a lot of the tools and a lot of software that's been built is deterministic. And we're figuring out as as an industry how to build
+
+534
+01:55:01.490 --> 01:55:07.240
+hugo bowne-anderson: consistent, reliable software, not necessarily deterministic, but how to like slot these
+
+535
+01:55:07.360 --> 01:55:17.719
+hugo bowne-anderson: flip-floppy, stochastic machines into hopefully somewhat reliable and consistent software, not deterministic, but something that.
+
+536
+01:55:18.370 --> 01:55:23.950
+hugo bowne-anderson: for example, with a customer service spot when it comes in with a particular request, we can somehow.
+
+537
+01:55:24.380 --> 01:55:28.510
+hugo bowne-anderson: as much as possible guarantee that that will be solved by this
+
+538
+01:55:28.710 --> 01:55:31.129
+hugo bowne-anderson: this quote, unquote agent or Llm. Right.
+
+539
+01:55:33.090 --> 01:55:43.359
+Curtis Mitchell: Yeah, makes sense. That's represented in terms like guardrails where you're literally trying to like narrow the possibilities. Yeah, got it. Thank you.
+
+540
+01:55:46.720 --> 01:56:02.140
+hugo bowne-anderson: Cool. Well, we're nearly done. Maybe we can just go to the next slide next up. Next week's a lot of fun. We get into rag information, retrieval, embeddings and function calling and agentic workflows so super excited for all of that, to just dive in a bit deeper. Next slide.
+
+541
+01:56:03.509 --> 01:56:12.510
+hugo bowne-anderson: Workshop. 5 is all about information, information, retrieval moving in the direction of agents. We've got several guest talks which I'm
+
+542
+01:56:13.080 --> 01:56:29.510
+hugo bowne-anderson: just incredibly excited about Ivan Leo and Jason Liu from 5, 6, 7 labs who, you know, they're the information. Retrieval people, as far as I'm concerned, are gonna talk about a lot of the work they're doing, building tools and systems to help us
+
+543
+01:56:29.540 --> 01:56:41.069
+hugo bowne-anderson: do information, retrieval correctly. And once again, why, I keep saying information, retrieval and not rag got to remember. Rag has a generative, component and a retrieval component, and we can do a lot of
+
+544
+01:56:41.070 --> 01:56:58.929
+hugo bowne-anderson: interesting good stuff with without thinking about anything generative per se, right? And finally, that's something John Berryman and I will be talking about in our Q&A. About the 7 deadly sins of AI app development today. Then we have Ines Montani from from Spacey talking about applied Nlp and document processing. So really thinking about, you know.
+
+545
+01:56:58.930 --> 01:57:18.379
+hugo bowne-anderson: retrieval from documents in that sense. And then we have one of my hands down. Favorite people in the space who Stefan Stefan knows? Well, she's just wonderful Shreya Shankar to talk about. All the wonderful shit stuff she's doing on accurate Lm powered, unstructured data analysis. So that's next Tuesday. Then, on Thursday, Stefan.
+
+546
+01:57:18.480 --> 01:57:41.319
+hugo bowne-anderson: we've got our structure outputs function calling energenic workflows. We're going to have a guest chat. I'm deciding with Eric at the moment what we're going to talk about, but he may, and I've shared. You know his conversations on rag and agentic stuff. We may talk. Do some vibe coding stuff with him. And then Skylar Skyler Payne is going to come and and tell us all about you know, and
+
+547
+01:57:41.320 --> 01:57:57.789
+hugo bowne-anderson: an introductory yet hands-on guide to Mcp and model context protocol, and that how that can help you in your energetic workflows as well. And then Alan Nicol from Raza. So it's going to be a fun week next week. I don't know if we have another slide. I think maybe that's that's it. Yes, give feedback already chatted about that
+
+548
+01:57:58.360 --> 01:58:02.120
+hugo bowne-anderson: and is that the final slide? Homework.
+
+549
+01:58:02.910 --> 01:58:07.560
+hugo bowne-anderson: Stefan, so we can jump to the other call now. So if you want to just summarize this in 20.
+
+550
+01:58:07.560 --> 01:58:35.240
+Stefan Krawczyk: Yeah, I mean, I was going to say, yeah, think about what you put in your continuous integration loop, you know, if you use pitest. You could use a custom script. I do have a pull request to show like a github workflow for those who haven't seen that you guys need to approve and merge it. But basically, if you were to create a pull request, have something trigger and run like there's an example there. Otherwise, you know. Look at tracing like pick a SDK. This is where actually, you know, comes with something out of the box, for example, others you have to add.
+
+551
+01:58:35.240 --> 01:58:47.510
+Stefan Krawczyk: and then. Otherwise, if you want to bake off things that you did with the framework, maybe this is a good time to rewrite your app, using a framework just to see, to get a feel for the vibes of what that framework provides.
+
+552
+01:58:48.380 --> 01:58:52.010
+hugo bowne-anderson: Suitable, and I think our pastor actually Mo. Merged that Pr. Already. But I'll I'll check.
+
+553
+01:58:52.010 --> 01:58:53.070
+Stefan Krawczyk: Okay. Awesome. Too.
+
+554
+01:58:53.070 --> 01:59:08.419
+hugo bowne-anderson: Great. Thank you so much, Stefan. Everyone give it up for Stefan. Thank you for your attention, and being so engaging in yet another workshop and see you in 30 seconds or so, if you're joining Nathan's guest. Talk all right. Thanks. Everyone.
+
+555
+01:59:08.420 --> 01:59:09.360
+Stefan Krawczyk: Thanks everyone, bye.
+

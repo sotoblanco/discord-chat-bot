@@ -11,8 +11,10 @@ from typing import List, Dict, Any
 import numpy as np
 import re
 import uuid
-
-from process_transcript import chunk_transcript
+import sys	
+import os
+from src.process_transcript import chunk_transcript
+#from process_transcript import chunk_transcript
 
 
 def count_tokens(text: str) -> int:

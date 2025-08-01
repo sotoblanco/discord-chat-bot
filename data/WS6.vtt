@@ -1,0 +1,2642 @@
+WEBVTT
+
+1
+00:00:02.830 --> 00:00:03.570
+hugo bowne-anderson: Post.
+
+2
+00:00:05.330 --> 00:00:08.355
+hugo bowne-anderson: Okay, we're recording. So I'm just gonna recap what I said.
+
+3
+00:00:09.030 --> 00:00:34.949
+hugo bowne-anderson: let's jump into the workshop. 6 channel. I posted a blog post that I wrote called Stop Building AI Agents. The intention there, of course, wasn't to tell. Everyone do not build with agents at all. It was really trying to level. Set where we are in the the hype cycle and say, Be mindful about when you use agents and maybe start with smaller approaches, which which you understand when trying to build ill empowered software. It's I mean, it's analogous to
+
+4
+00:00:35.280 --> 00:00:59.570
+hugo bowne-anderson: what we saw in the 1st workshop. If you adopt tools like llama index. You end up writing blog posts called Fu. Show me the prompt because you can't introspect into into what happens. Similarly with agents a lot of the time. If you start off with something something bigger, you then start reverting to something smaller in order to build up something foundational and principled. And that's really forms those ideas form the backbones of
+
+5
+00:01:00.240 --> 00:01:08.760
+hugo bowne-anderson: today's workshop. So once again, all questions in the chat, and I will share my
+
+6
+00:01:09.760 --> 00:01:12.810
+hugo bowne-anderson: my screen. I just want to make sure I'm going to share the correct desktop.
+
+7
+00:01:13.598 --> 00:01:18.670
+hugo bowne-anderson: Could someone just give me a thumb up if they can see the slides awesome.
+
+8
+00:01:19.784 --> 00:01:25.870
+hugo bowne-anderson: So tool use and agentic workflows. All tool uses is. And you know, Llms.
+
+9
+00:01:26.000 --> 00:01:34.659
+hugo bowne-anderson: like text in text out tool use is like doing something like sending an email or querying a database or pinging an Api, right?
+
+10
+00:01:34.880 --> 00:01:36.709
+hugo bowne-anderson: So it's taking some sort of action.
+
+11
+00:01:37.227 --> 00:01:47.559
+hugo bowne-anderson: Bit of housekeeping. We just had our guest. Q. And a. From Eric at Moderna, on Vibe coding and context engineering, which I I always learn so much from Eric is why I mean he.
+
+12
+00:01:47.610 --> 00:02:10.610
+hugo bowne-anderson: I wonder he might be the only person who's I've invited every time to this this course to speak, but always learn a lot from him, and I'll link to his previous talks as well. One was on Rag, the other one was on agents. Now we're having our workshop. Then I'm really excited. We'll talk a bit about Mcp model context protocol
+
+13
+00:02:10.610 --> 00:02:35.580
+hugo bowne-anderson: in this workshop. But we're actually having a guest workshop from Skylar Payne, who is pain by name, but solving pain by nature to tell us all about everything you always wanted to know about Mcp. But we're too afraid to ask. And actually, for those who want to code along and actually build an Mcp server. We'll be doing that, and client will be doing that live. And then we've got a guest talk from Alan Nickel, who's been working on
+
+14
+00:02:35.580 --> 00:02:44.619
+hugo bowne-anderson: conversational AI for the best part of a decade talking about why tool calling breaks and what to do instead. And the basic idea is an emerging paradigm around what we call
+
+15
+00:02:44.620 --> 00:02:51.420
+hugo bowne-anderson: process calling well, what Alan has called process calling, where, for example, if
+
+16
+00:02:54.020 --> 00:03:00.989
+hugo bowne-anderson: for for a bank's AI assistant, if a user comes in and says, I've lost my credit card.
+
+17
+00:03:02.160 --> 00:03:11.659
+hugo bowne-anderson: Now, the user doesn't want a function call right? The user essentially wants a process to be delivered. They want their. They want a new credit card, and they don't. They don't give
+
+18
+00:03:11.990 --> 00:03:28.539
+hugo bowne-anderson: in Australia, as we'd say. They don't give a rat's ass about what functions are called. They just want the process of getting their credit card. And so the tool calls. The particular tool calls aren't the most important thing, the process. So we want a process. Call essentially now
+
+19
+00:03:29.510 --> 00:03:40.619
+hugo bowne-anderson: a bit more on housekeeping. We'll socialize the feedback form at the end would love if you if you do that, pastor, if you wouldn't mind, and we'll put them in at the end as well. These 2.
+
+20
+00:03:40.910 --> 00:04:09.480
+hugo bowne-anderson: So William has just said, we say, don't give a rat's ass in America, too. Don't give a rat's ass, of course, is. I'd spell it differently, pastor, if you wouldn't mind putting in the 2 docs for the demo day submission and what we want to cover next week. So we've got a lot of ideas about what we'd like to cover next week, but in the 4th week we really like to get your feedback as well, whether you want to hear more about like multi-agent architectures, or evaluating rag or
+
+21
+00:04:09.480 --> 00:04:25.000
+hugo bowne-anderson: fine tuning. There are lots of different things we can dive deeper into, so no need to fill these out like during the workshop. But if, after the fact that will really help us. And with the demo day once again we want it to be as little lift as possible.
+
+22
+00:04:25.317 --> 00:04:42.120
+hugo bowne-anderson: So anything you're working on, even if it's just like a small thing like feel free to just scope it very, very briefly, and come and talk about that. I was actually chatting with the builders in residence before this call about Demo Day. And I'm wondering, is Mike Powers on the call?
+
+23
+00:04:48.570 --> 00:04:52.750
+hugo bowne-anderson: Okay? It looks like Mike Mike isn't oh, no, he is just sick.
+
+24
+00:04:55.700 --> 00:05:02.149
+hugo bowne-anderson: Mike, if you're there you had just some really nice thoughts on how to think about Demo Day that I thought maybe you'd want to share.
+
+25
+00:05:09.140 --> 00:05:38.390
+hugo bowne-anderson: Okay? Well, perhaps Mike is not at liberty to speak right now. But what Mike said to me essentially was that he came in like in both previous cohorts, showed a small thing that he was working on, and it was relatively, relatively low lift. So I think Mike just wanted wanted to share. That don't necessarily think it has to be something something massive and like anything you're working on anything you want to talk about. Please do come and come and show as well.
+
+26
+00:05:38.966 --> 00:05:40.669
+hugo bowne-anderson: Final bit of housekeeping
+
+27
+00:05:40.970 --> 00:06:03.400
+hugo bowne-anderson: next week. Laura Summers, who's in the course and in the chat, and on this call right now, who works on pydantic, pydantic AI. And logfire at logfire, who, you all know, is sponsoring this course, is going to give a hands-on with pydantic logfire session, where the 1st half will be demoing a lot of stuff you can do in order to instrument
+
+28
+00:06:03.828 --> 00:06:11.119
+hugo bowne-anderson: and monitor your your applications, and then the second half will be. If you bring your own
+
+29
+00:06:11.120 --> 00:06:24.979
+hugo bowne-anderson: project or something you're working on, in order to figure out how to incorporate logfire with all the credits that they've kindly sponsored as well. So do feel free to do that. Be great, to have as many people there as possible, and we'll record it in case you can't make it.
+
+30
+00:06:25.140 --> 00:06:49.420
+hugo bowne-anderson: So today I'd love to jump in and we're going to start talking about what is an agent, then dive into augmented Llms and typical workflows, then get into multi-agent architectures, and then think more about when to use an agent and when when to. Not. So, I'm just wondering if anyone on the call would like to turn their microphone on and tell me how they think about an agent. What is an agent
+
+31
+00:06:50.910 --> 00:06:53.570
+hugo bowne-anderson: also feel free to write on discord.
+
+32
+00:07:27.410 --> 00:07:31.630
+hugo bowne-anderson: So Laura has has written something which I which I really like.
+
+33
+00:07:35.410 --> 00:07:42.519
+hugo bowne-anderson: Yeah, Carol as well. So Laura says, and Laura and Carol have given 2 answers which together give
+
+34
+00:07:42.710 --> 00:07:46.099
+hugo bowne-anderson: 2 different perspectives, and both of which are correct. Okay.
+
+35
+00:07:46.430 --> 00:07:47.440
+hugo bowne-anderson: So
+
+36
+00:07:47.660 --> 00:07:57.159
+hugo bowne-anderson: Laura has said, an agent is anything that has an action with the outside world. So it's not just like text in text out Llm space. Right
+
+37
+00:07:57.600 --> 00:08:01.770
+hugo bowne-anderson: now. I love that because and it's
+
+38
+00:08:01.890 --> 00:08:31.729
+hugo bowne-anderson: it's clear. This is the type of answer Laura would give as well, because Laura's so product focused in a wonderful way, this is a product answer in the sense that it really speaks to what a user would would want to use an agent for right? Something that does something. It doesn't just return. Text. Okay? So I love that answer. Now, Carol has given an engineer's answer, which I also love. It's how we think about it from a builder's perspective. Okay, agents have tool calling, right? So they're able. You're able to tool call tools
+
+39
+00:08:31.730 --> 00:08:42.040
+hugo bowne-anderson: or functions. Okay? And that's how we think about it from an engineering perspective. And I think both are incredibly important to keep in mind.
+
+40
+00:08:42.260 --> 00:08:52.149
+hugo bowne-anderson: So when we're talking about these things, let's actually, you know, think about the space we're operating in, and why this is why we're having this conversation now so
+
+41
+00:08:53.430 --> 00:09:18.529
+hugo bowne-anderson: earlier this year, we saw, you know, deep seek come out right. And then, a few weeks later we saw Openai with deep, deep research. Then we saw perplexity, deep research, and several other fast follows, and I was amazed that this is the type of thing that became commoditized in a matter of weeks, which you know you would expect these types of things to, you know, perhaps previously have taken years to be commoditized.
+
+42
+00:09:18.750 --> 00:09:33.850
+hugo bowne-anderson: At the same time we had replet agents come out, and I I actually love playing around with replet and vibe coding with their agents, and people may have heard me tell this story before, but when replict agents came out on their
+
+43
+00:09:33.850 --> 00:10:00.030
+hugo bowne-anderson: on their mobile, their cell app, I was getting the bus to the beach, and it took me around. It was a slow bus, took around 40 min, the 1st half of the bus trip. I like build a space invaders game on replet, and the second half I played it, and then I trashed it. I never, never used it again, but that was. That was super fun, and I think it speaks to other forms of uses of agents not necessarily building reliable software. And actually William William Horton, who's
+
+44
+00:10:00.210 --> 00:10:28.339
+hugo bowne-anderson: he gave a wonderful example last cohort, where he built a chess tutor for for friends, and you know he at that point, I think, William, and correct me if I'm wrong in the discord. But he had 2030 friends using it something, something along those lines, and it wasn't necessary. You didn't necessarily solve all the edge cases, but it was something in in production, and in fact, it wasn't. In this course you mentioned. It was when I was doing a live stream with Joe Rice arguing with him about Vibe code to Vibe code or not not to Vibe code.
+
+45
+00:10:28.340 --> 00:10:31.189
+hugo bowne-anderson: Similarly, we see clause 3.7.
+
+46
+00:10:31.610 --> 00:10:33.568
+hugo bowne-anderson: The thinking's on it right?
+
+47
+00:10:36.150 --> 00:11:04.389
+hugo bowne-anderson: Come out with things that are relatively agentic, and we may not think of it as as agents, but you'd be hard pressed to say, when Ethan Molich can, you know, give Claude 3.7 a challenge, create something I can paste into p. 5 js, that will, etc, and he says, paste in here. But the truth is, Claude creates artifacts right, and it will write code and render it in the browser. For you. Interactive Javascript artifacts
+
+48
+00:11:04.390 --> 00:11:08.429
+hugo bowne-anderson: right? And similarly, here we have someone who
+
+49
+00:11:08.440 --> 00:11:20.850
+hugo bowne-anderson: converted a song to a roller coaster with a continuous trap representing the song's energy. Right using claw, Claude, 3.7. So we see a lot of different things happening in the space we've seen Openai operator.
+
+50
+00:11:20.970 --> 00:11:29.040
+hugo bowne-anderson: We've seen cursor. We've seen Devon. We've seen lovable, right? So it's a it's a huge emergent space. So
+
+51
+00:11:29.160 --> 00:11:41.650
+hugo bowne-anderson: this brings me to kind of what we've already hinted at. That Llms generate text, but can they take action? And this, this is part of the conversation you know we had with Jason Liu the other day about how the amount of value.
+
+52
+00:11:41.910 --> 00:12:00.749
+hugo bowne-anderson: having conversations can generate for individuals, and society is limited by human time. So the ability to automate workflows, to interact with external systems, to perform calculations is incredibly important, and I am interested.
+
+53
+00:12:01.155 --> 00:12:16.579
+hugo bowne-anderson: I wonder once again feel free to type in discord. I'd love if someone wanted to turn their microphone on and tell me how you would get an Llm. To actually perform a calculation. So perhaps oh, how would
+
+54
+00:12:16.840 --> 00:12:23.089
+hugo bowne-anderson: you get an Llm. Let's just say to do arithmetic?
+
+55
+00:12:26.040 --> 00:12:30.960
+hugo bowne-anderson: Could someone feel free to answer in discord? But if someone would be up for turning their microphone on.
+
+56
+00:12:31.270 --> 00:12:32.700
+hugo bowne-anderson: I would appreciate it.
+
+57
+00:12:36.220 --> 00:12:40.020
+Julian Cardonnet: Yeah, I would have them admit.
+
+58
+00:12:40.680 --> 00:12:43.590
+hugo bowne-anderson: Sorry. Who do we have here, Julian done.
+
+59
+00:12:44.490 --> 00:12:53.536
+Julian Cardonnet: I will have the the eliminate especially formatted output that they're not
+
+60
+00:12:54.630 --> 00:12:59.450
+Julian Cardonnet: I can like parts I used to call, and still a function.
+
+61
+00:13:01.962 --> 00:13:09.389
+hugo bowne-anderson: So, yeah, what? Sorry? So, what type of output? And what? What tool are you using? What function are you? Are you using.
+
+62
+00:13:12.820 --> 00:13:17.530
+Julian Cardonnet: Yeah, I I see what you mean. Well.
+
+63
+00:13:17.870 --> 00:13:33.448
+Julian Cardonnet: I guess there are basically 2 scenarios, one for your tool use that you specify the tool and the the input parameters and the other one can sell can say, Okay, use the calculator tool. And
+
+64
+00:13:35.570 --> 00:13:37.970
+Julian Cardonnet: to sum these 2 numbers.
+
+65
+00:13:38.220 --> 00:13:44.320
+Julian Cardonnet: and another way would be to generate a program that could be executed then
+
+66
+00:13:44.720 --> 00:13:49.400
+Julian Cardonnet: and generate the answer. For example, when you want to generate a plot.
+
+67
+00:13:51.040 --> 00:13:52.300
+hugo bowne-anderson: Great, so.
+
+68
+00:13:52.790 --> 00:13:55.069
+Julian Cardonnet: The element itself cannot do anything.
+
+69
+00:13:55.600 --> 00:13:59.230
+hugo bowne-anderson: Well, it can, but it will get it wrong as well. A lot of the time. Oh, yeah.
+
+70
+00:13:59.230 --> 00:14:01.270
+Julian Cardonnet: Yeah, also, it can go, yeah.
+
+71
+00:14:01.270 --> 00:14:16.590
+hugo bowne-anderson: Yeah. So I love this response. So to drill down a bit more, Brad has said, Give it a calculator. Renat has replied, or, better a python interpreter. So I love the I love the way the direction we're heading now, because
+
+72
+00:14:16.840 --> 00:14:33.910
+hugo bowne-anderson: this speaks to, as you said, give it a tool use which would be a calculator that could be a python interpreter, or whatever it is, right. And similarly, to write code or execute code. It's a it's a similar thing. So let's say we do give it access to
+
+73
+00:14:34.010 --> 00:14:36.739
+hugo bowne-anderson: write python code and execute python code.
+
+74
+00:14:36.920 --> 00:14:48.059
+hugo bowne-anderson: Are we just gonna let it execute arbitrary python code on our computer, no way, right?
+
+75
+00:14:48.360 --> 00:14:49.330
+hugo bowne-anderson: So
+
+76
+00:14:49.520 --> 00:14:59.970
+hugo bowne-anderson: we kind of need to sandbox it then. And this is doable. Don't get me wrong. Or actually, another approach I really like is having a human in the loop. So when I use cursor agent for the most part.
+
+77
+00:15:00.130 --> 00:15:10.580
+hugo bowne-anderson: I make sure before it writes to a database. I give it free reign to read databases, but when I have it, write to a database I make sure that I have to.
+
+78
+00:15:12.110 --> 00:15:37.740
+hugo bowne-anderson: It shows me the code, and I have to say, yes. You're allowed to do this and do this now right like, I don't go in yellow Mode, which is, that's its technical name. So we've already said, what we're seeing now is even to to get an Ln to perform calculations actually involves a lot of interesting challenges in software and containerization or human in the loop. Right?
+
+79
+00:15:38.330 --> 00:15:43.630
+hugo bowne-anderson: So what type of things do we want Llms to do at?
+
+80
+00:15:44.030 --> 00:15:44.720
+hugo bowne-anderson: Oh.
+
+81
+00:15:44.810 --> 00:16:00.869
+hugo bowne-anderson: a 1st approximation, retrieve information? We want them to run code. We want them to use tools. We want them to be able to handle multi-step tasks, and we want them to trigger actions. And I've crossed out, make decisions. Of course, I'm okay with certain amounts of anthropomorphization. I mean, machine learning
+
+82
+00:16:00.870 --> 00:16:17.040
+hugo bowne-anderson: itself is anthropomorphic anthropomorphization in a variety of ways. But I'm not comfortable saying they make decisions, I think triggering actions via their output is a wonderful way to to put this so to activate appropriate strategies.
+
+83
+00:16:17.070 --> 00:16:23.650
+hugo bowne-anderson: tools, or next step next steps based on their output, which is based on context and inputs. Right? So
+
+84
+00:16:23.760 --> 00:16:27.230
+hugo bowne-anderson: I just want to
+
+85
+00:16:27.780 --> 00:16:33.530
+hugo bowne-anderson: show even Chat Gpt. Which we don't think of as an agent per se is
+
+86
+00:16:35.090 --> 00:16:41.159
+hugo bowne-anderson: agentic so can you just can some. Can you see Chat Gbt, or can you see my slides. Still.
+
+87
+00:16:46.600 --> 00:16:49.020
+hugo bowne-anderson: someone give me a thumb up. If you can see chat, gpt.
+
+88
+00:16:50.550 --> 00:16:56.860
+hugo bowne-anderson: great, hey, chatgpt, tell me about the podcast. Vanishing gradients.
+
+89
+00:16:57.280 --> 00:17:01.410
+hugo bowne-anderson: So this is my podcast or one of my podcasts. And we'll see.
+
+90
+00:17:05.900 --> 00:17:06.680
+hugo bowne-anderson: Huh.
+
+91
+00:17:07.630 --> 00:17:09.590
+hugo bowne-anderson: Firstly, this is totally wrong.
+
+92
+00:17:10.041 --> 00:17:15.309
+hugo bowne-anderson: And secondly, it didn't do what I wanted to it to do. Let me
+
+93
+00:17:15.930 --> 00:17:20.030
+hugo bowne-anderson: chat. Gbt, tell me about the online learning platform. Maven.
+
+94
+00:17:23.520 --> 00:17:44.359
+hugo bowne-anderson: Okay. So finally, what I wanted to do was Demo, how Chatgbt will search the Internet if something isn't stored in its weights or memory without me asking it to. Okay. So that's already agentic. Right? Of course, it didn't do it and got it wrong for my, podcast but whatever I just wanted to demonstrate that, like
+
+95
+00:17:46.010 --> 00:18:06.309
+hugo bowne-anderson: AI, vendors and people who build these tools, introduce all types of new functionality constantly. And this is this is one where we see something agentic at Chatgbt. I'm on a call with Maven's marketing team, and they they want to reinvent their platform and copy completely. Can you give me new copy and a new image for their landing page?
+
+96
+00:18:08.600 --> 00:18:11.705
+hugo bowne-anderson: So you may be aware of this, everyone but
+
+97
+00:18:12.850 --> 00:18:25.959
+hugo bowne-anderson: chatgpt also will natively create images now. And it's multimodal. So that's what I'm demonstrating. Here is not only is it a genic? But it has all types of different output that it can can do as well. Now this May. This may take a bit of time, so we can
+
+98
+00:18:26.270 --> 00:18:49.290
+hugo bowne-anderson: come back. It says, may take a moment. Of course it often takes more than a moment. But okay, we'll come back to that in a second. But and you've probably seen this type of multimodal stuff on Chatgvt before. But the the real intention there was to show that these types of systems are inherently agentic themselves as well. Yeah, it's going to take too long.
+
+99
+00:18:50.560 --> 00:18:51.409
+hugo bowne-anderson: So
+
+100
+00:18:54.510 --> 00:18:56.530
+hugo bowne-anderson: let's say, I wanted to build something which
+
+101
+00:18:56.630 --> 00:19:05.360
+hugo bowne-anderson: software that was consistent and reliable for users. I don't think the type of agent we just saw in Chat Gbt actually is not what we want, right? Because
+
+102
+00:19:05.920 --> 00:19:15.480
+hugo bowne-anderson: it did. It didn't look this up and hallucinated from its weights, and perhaps its memory in conversations I've had with it. And then suddenly it
+
+103
+00:19:15.760 --> 00:19:29.710
+hugo bowne-anderson: for Maven. It did look it up. So it is not consistent, and it's not reliable. And so we can see this image image being generated now. So the real question is, how do we start building reliable software?
+
+104
+00:19:30.313 --> 00:19:36.060
+hugo bowne-anderson: With these with tool calls, with Llms that actually do things. Okay?
+
+105
+00:19:36.100 --> 00:20:01.550
+hugo bowne-anderson: So as we've seen. And once again, pastor, perhaps you can put the anthropic Blog Post building effective AI agents in in the chat, and we've chatted about this a couple of times. But Llms classically have text in text out, okay? And they don't even have memory. And we've seen how to build basic memory systems. But what anthropic did was last December they wrote a post talking about
+
+106
+00:20:02.110 --> 00:20:08.270
+hugo bowne-anderson: the most common patterns they see people building with with their their Apis right
+
+107
+00:20:09.004 --> 00:20:20.385
+hugo bowne-anderson: and they did this in order to suggest a path along which we can consider the agentic spectrum. And 1st they said, Let's actually
+
+108
+00:20:21.060 --> 00:20:22.790
+hugo bowne-anderson: think about
+
+109
+00:20:26.060 --> 00:20:27.160
+hugo bowne-anderson: memory.
+
+110
+00:20:27.410 --> 00:20:38.199
+hugo bowne-anderson: So how to augment lns with memory how to think about augmenting Lns with retrieval, which we've focused a lot on this week. And then with tool calls call and response
+
+111
+00:20:38.540 --> 00:21:08.189
+hugo bowne-anderson: which allows Llms to quote unquote, take action. And I'm sorry. The reason I slowed down there because I saw Mike's wonderful comment in discord, which we'll actually get to is that the Llm. Doesn't really quote unquote use the tool it identifies to its calling scope some process it would like to happen, and then waits for that to happen externally, possibly with results being passed to a new invocation of the Llm. And at the risk of spoiling the punchline, let me actually
+
+112
+00:21:09.360 --> 00:21:14.480
+hugo bowne-anderson: go to the slide where, huh!
+
+113
+00:21:18.100 --> 00:21:37.979
+hugo bowne-anderson: Funnily, I thought I had a slide on that. But yes, I do. I absolutely do. And this is a horrible slide from my friends at Gemini. But it's not horrible because they did a bad job. It's horrible because of the point. Mike's making that it's a weird process, and we'll go into this in detail. We'll see how it works. What you actually do is
+
+114
+00:21:38.580 --> 00:21:42.819
+hugo bowne-anderson: in the application. You have a prompt, and then the Llm output
+
+115
+00:21:42.880 --> 00:21:57.870
+hugo bowne-anderson: will say, Use this tool, or it will just give a response right? As a completion endpoint. But then what you need to do is feed the tool call into the Llm. Again, and it will decide.
+
+116
+00:21:57.870 --> 00:22:13.299
+hugo bowne-anderson: It will give the result of the tool call and then give and then actually execute it. Okay, so that's incredibly important to recognize. And we'll see how this plays out in the code. But to Mike's point it is actually to
+
+117
+00:22:13.390 --> 00:22:18.250
+hugo bowne-anderson: 2 invocations or 2 calls to their Llm. And if that's still confusing
+
+118
+00:22:19.650 --> 00:22:28.740
+hugo bowne-anderson: so we'll get to it. So Brad says he would caveat this. Take slightly, so I'd love to hear your your caveat, your warning, Brad.
+
+119
+00:22:31.380 --> 00:22:45.880
+brad morris: Oh, I'll just keep it quick. I don't want to derail the conversation. I just did. I'm doing the paper club in late, and space which I'd recommend. Everybody does. If they've got time. They cover different papers and training modalities every week.
+
+120
+00:22:46.030 --> 00:22:51.429
+brad morris: and there's some pretty strong evidence that some of the new models, like the new Kimi, K. 2, for example.
+
+121
+00:22:51.590 --> 00:23:12.939
+brad morris: is actually being trained in in our with Rl. On like tens of thousands of Mcp tool outputs and synthetic tool use. So I'm not saying that I believe that they are genuinely able to call the tools. But there's some evidence that that's what's happening now, I think it's just important to keep that in mind somewhat.
+
+122
+00:23:13.240 --> 00:23:25.000
+hugo bowne-anderson: Right? So I'm what I'm talking about is all the models that we've been using, and that what we see in production today. So if that's a pattern emerging super excited about it. Just haven't seen it yet.
+
+123
+00:23:26.900 --> 00:23:28.690
+hugo bowne-anderson: So.
+
+124
+00:23:29.310 --> 00:23:34.349
+hugo bowne-anderson: and if you wouldn't mind pasting just the link to the the paper club that would. That would be fantastic.
+
+125
+00:23:35.960 --> 00:23:43.793
+hugo bowne-anderson: and very much appreciate that, because things are moving so quickly, it's great great to know, and also remember those who
+
+126
+00:23:44.666 --> 00:23:51.829
+hugo bowne-anderson: gave everything for hugging face. You've got free credits for inference, providers where you can play around with Kimmy, too, as well so
+
+127
+00:23:52.660 --> 00:23:56.649
+hugo bowne-anderson: towards agents before jumping into, like, you know.
+
+128
+00:23:56.930 --> 00:24:05.769
+hugo bowne-anderson: multi-agent architectures. And all of this, what type of workflows did did anthropic introduce? Right? So
+
+129
+00:24:05.980 --> 00:24:14.679
+hugo bowne-anderson: the 1st one they introduced was chaining right? And this wouldn't be a surprise to anyone who works in software or machine learning or data.
+
+130
+00:24:14.890 --> 00:24:16.650
+hugo bowne-anderson: Right where we have
+
+131
+00:24:16.790 --> 00:24:30.140
+hugo bowne-anderson: an Llm. Call. We have an output, and then we pass the output to another call. After making sure the output is along the lines of what we expected or what we wanted. And finally, we'll see an example. I think we'll see an example of this.
+
+132
+00:24:30.370 --> 00:24:32.898
+hugo bowne-anderson: I'm pretty sure we will. But remember
+
+133
+00:24:33.470 --> 00:24:37.200
+hugo bowne-anderson: one of the projects we've been working on collectively and discussing in
+
+134
+00:24:37.630 --> 00:24:49.450
+hugo bowne-anderson: the workshops and doing homework for those doing the homework. Is a linkedin profile in jester that gets structured output and then generates an email based upon
+
+135
+00:24:49.600 --> 00:25:07.970
+hugo bowne-anderson: the structured output. So that is a perfect example of this workflow, right where we have one Llm. Giving structured, taking a profile, returning structured output. Then we pass it to another one to draft the email. Okay.
+
+136
+00:25:08.030 --> 00:25:19.980
+hugo bowne-anderson: Now, of course, we want to make sure it's the correct structured output. So we have some sort of gate there to make sure it's Json, or whatever whatever we're looking for, and if it fails, we exit and perhaps generate it again. Okay.
+
+137
+00:25:20.731 --> 00:25:28.569
+hugo bowne-anderson: the other types of patterns which we'll go through are a routing pattern right where? It sends it to
+
+138
+00:25:29.060 --> 00:25:53.760
+hugo bowne-anderson: a router will based on the input and its output. Figure out which call to send it to and then have an output. Another one common one is orchestrator, worker, where you'll have an orchestrator, parallelize a variety of calls, and then synthesize them and give an output. Now this may look like the router one, but the router one actually only sends it to one Llm. Call out of a choice of 3, whereas the orchestrator
+
+139
+00:25:54.020 --> 00:26:03.520
+hugo bowne-anderson: synthesizer and worker workflow, we'll call several in parallel. So an example here, once again, we've talked about structured output, right?
+
+140
+00:26:04.180 --> 00:26:05.120
+hugo bowne-anderson: And
+
+141
+00:26:06.250 --> 00:26:28.209
+hugo bowne-anderson: so we've seen that doing structured output may actually reduce accuracy with respect to each field as trying to return structured output for okay, so one thing you can do depending how accurate you want each to be. So, remember, with a Linkedin profile. We want name job, previous job skills, things along those lines. If you want really high accuracy for
+
+142
+00:26:28.210 --> 00:26:39.689
+hugo bowne-anderson: all you can actually parallelize them and have one Llm. Do each, and then construct the structured. Output yourself. So that's an example of orchestrator worker.
+
+143
+00:26:39.690 --> 00:27:03.780
+hugo bowne-anderson: This is one of my favorites, the 4th one, because it's getting like even more agentic and more creative in my mind where you have an Llm. Call generator. So it generates some output, and then you have an evaluator where it evaluates whether the output was good enough, and if it's accepted, it spits it out. If it's not, it rejects it with feedback. And
+
+144
+00:27:04.070 --> 00:27:25.670
+hugo bowne-anderson: the dance continues, my friends, so one example of this is in the email generation. You could imagine that we have an Llm generate the email, and another one, quote unquote, read it or inspect it, and then return it with feedback and iterate several times. Now I'm personally not a fan of cyclic.
+
+145
+00:27:25.820 --> 00:27:43.259
+hugo bowne-anderson: these types of loops, these cycles which can go on ad nauseam for many reasons, including including cost and latency. So you may want to do it 3 times and then have a fallback or an exit mode or something along those lines. But we'll get to that when going through code.
+
+146
+00:27:43.950 --> 00:27:49.448
+hugo bowne-anderson: So what's an agent then, and we've already kind of hit hit upon this. But
+
+147
+00:27:50.260 --> 00:28:12.999
+hugo bowne-anderson: This is from the anthropic post where workflows are systems, where Llms and tools are orchestrated through predefined code paths. Agents, on the other hand, are systems where Llms dynamically direct their own processes and tool usage, maintaining control over how they accomplish tasks. Okay, this one here is from a hugging face blog post. And actually, I will find this
+
+148
+00:28:16.130 --> 00:28:18.199
+hugo bowne-anderson: small agents
+
+149
+00:28:22.440 --> 00:28:23.870
+hugo bowne-anderson: blog post
+
+150
+00:28:28.590 --> 00:28:31.929
+hugo bowne-anderson: it's called introducing, I'm pretty sure. Yep.
+
+151
+00:28:32.230 --> 00:28:34.860
+hugo bowne-anderson: So introducing small agents, a simple library
+
+152
+00:28:36.310 --> 00:28:48.080
+hugo bowne-anderson: to build agents. And it's it's a nice framework, and I've got some very nice takes on what's happening in the space. And in particular, AI agents are programs where Lm outputs control control. The workflow
+
+153
+00:28:48.240 --> 00:28:49.749
+hugo bowne-anderson: is what they've stated there.
+
+154
+00:28:50.316 --> 00:29:04.430
+hugo bowne-anderson: And this is from from hugging face as well. When we're talking about agents, it's wait. It's just a for loop always has been okay. So a for or while loop where we're getting things to kind of cycle and and do these 2 calls.
+
+155
+00:29:04.790 --> 00:29:10.049
+hugo bowne-anderson: So we've talked about this already, and we'll see it in code. But essentially, this is
+
+156
+00:29:10.620 --> 00:29:38.530
+hugo bowne-anderson: an Llm. Where it takes in a prompt and then based on its input and the tools it has access to, it will either give a response or it will return a tool call. And then what we have to do, and we can do this programmatically. But we can pause the response and then get the result of the function call and complete it then. And I use tool call and function call interchangeably. And I realize I just did that in one sentence. So just to disambiguate. So
+
+157
+00:29:39.130 --> 00:29:40.580
+hugo bowne-anderson: we'll dive into this more.
+
+158
+00:29:40.750 --> 00:29:41.540
+hugo bowne-anderson: But
+
+159
+00:29:42.310 --> 00:29:49.530
+hugo bowne-anderson: just to give a sense of when to use an Llm. When to use as Llm. It's amazing how many typos
+
+160
+00:29:49.860 --> 00:29:50.990
+hugo bowne-anderson: can exist.
+
+161
+00:29:51.592 --> 00:29:56.969
+hugo bowne-anderson: When to use an Llm augmented Lm. Or agent. If you just want to generate text, use an Llm.
+
+162
+00:29:57.300 --> 00:30:09.229
+hugo bowne-anderson: If you want to retrieve external information or use Apis and tools. Use an augmented Llm. If you want a multi-step task, but you want it to be predefined, use an augmented Llm.
+
+163
+00:30:09.470 --> 00:30:14.150
+hugo bowne-anderson: Now, if you want to have Llm. Controlled multi-step tasks.
+
+164
+00:30:14.711 --> 00:30:16.769
+hugo bowne-anderson: or adapt the workflow dynamically.
+
+165
+00:30:17.100 --> 00:30:38.290
+hugo bowne-anderson: use an agent, but buyer, beware and and know that these systems are are wonderful, but they're not. They're not yet how you build reliable, consistent software, which is what this course is is about, right and don't get me wrong. I use agents on a daily daily basis, such as cursor, right? But I don't expect them to be
+
+166
+00:30:38.420 --> 00:30:46.940
+hugo bowne-anderson: reliable or consistent. What what happens then is I, as a human, am in the loop.
+
+167
+00:30:47.290 --> 00:30:53.580
+hugo bowne-anderson: to figure out what's working and what isn't. So one way. Other way to think about this is
+
+168
+00:30:54.080 --> 00:30:55.370
+hugo bowne-anderson: at some point.
+
+169
+00:30:57.100 --> 00:31:23.979
+hugo bowne-anderson: Something needs to decide what tools are called, what functions are called, what actions are being taken, and that needs to be verified. That is what you want right now in augmented Llms. We can do a lot of the work to do that with agents. We can't. But the user can. So why, I'm stating that is, if the expectation is set with the end user that they're interacting with an agent. And they know what's happening there such as myself and cursor.
+
+170
+00:31:24.448 --> 00:31:32.399
+hugo bowne-anderson: Then it's okay, right? Or when I build like a data and a data analyst agent for myself, which has
+
+171
+00:31:33.920 --> 00:31:35.550
+hugo bowne-anderson: a database, querying tool
+
+172
+00:31:36.540 --> 00:31:52.950
+hugo bowne-anderson: data analysis, tool, such as pandas and a data visualization tool such as matplotlib plus seaborne or altair something like that. Right now, I don't expect that to work all the time, but because I'm there in the loop with it. All my colleagues or collaborators or clients are.
+
+173
+00:31:52.950 --> 00:32:10.140
+hugo bowne-anderson: then the decisions can be checked and verified. Whereas if you're working, if you're building products for end users for a service, who aren't developers who aren't technical, it's very rare that they'll really want to have something agentic where they don't understand what's happening.
+
+174
+00:32:11.530 --> 00:32:24.440
+hugo bowne-anderson: I also. And yeah, so this is the post I linked to when I wrote this post, stop building AI agents. It it hit number one on Hacker news, and this this my intention to tell you. This is an
+
+175
+00:32:24.440 --> 00:32:47.690
+hugo bowne-anderson: merely a humble brag, although I'm sure that's some of like the deep motivation that I should work through in therapy. But the motivation in showing you this was actually to say. I was surprised that this resonated because everyone's incredibly bullish on agents at the moment. But I just wanted to make clear that this resonated a lot because people were at a point.
+
+176
+00:32:47.690 --> 00:32:52.450
+hugo bowne-anderson: you know, halfway through the year of agents, we're at a point where people have been burnt enough
+
+177
+00:32:52.450 --> 00:33:19.080
+hugo bowne-anderson: to recognize that it's not only not delivering like these multi agents are not delivering the business value that was expected, but they are actually harming people in a lot of ways, and I mean harming businesses, not only in terms of the products they're building, but the cost going into them right. And what really resonated was the fact that I kind of went through how to go through the workflows that we'll go through today, plus plus right
+
+178
+00:33:19.694 --> 00:33:26.569
+hugo bowne-anderson: so as I wrote here, the takeaway is, agents can shine, but only inside testable, observable systems.
+
+179
+00:33:27.450 --> 00:33:31.221
+hugo bowne-anderson: So I'm wondering I'd love to know
+
+180
+00:33:32.880 --> 00:33:45.549
+hugo bowne-anderson: for these cases. Maybe we can just go through them one by one. Would you use an Llm. Augmented Llm. Llm. Workflow or full blown agent for a meeting transcription bot.
+
+181
+00:33:47.900 --> 00:33:54.600
+hugo bowne-anderson: and if someone could turn their microphone on. We can. We can just like for 5, spend 5 min talking about these examples.
+
+182
+00:34:03.172 --> 00:34:10.260
+Laura Summers: I'll go, if you like, for the transcription. But I just use an Llm. Because it's not going anywhere. I just want the text. So
+
+183
+00:34:10.370 --> 00:34:16.920
+Laura Summers: I'm just gonna prompt it to summarize and synthesize and then take my text out from wherever the output shows up.
+
+184
+00:34:17.260 --> 00:34:24.010
+hugo bowne-anderson: I love it absolutely. If anyone has any other thoughts on that, please do put it in in discord.
+
+185
+00:34:24.120 --> 00:34:28.610
+hugo bowne-anderson: What about one, Laura, that emails minutes or puts them on slack afterwards.
+
+186
+00:34:29.806 --> 00:34:42.593
+Laura Summers: That probably doesn't need an agent. That might need an augmented Llm. Or a workflow depending on how fancy my like, you know Endpoint is, if it needs I know any anything like
+
+187
+00:34:43.259 --> 00:34:51.979
+Laura Summers: any validation steps. I guess I might want to work flow. But if it's just paying an endpoint and pray, then probably an augmented Lm. Will do enough.
+
+188
+00:34:51.980 --> 00:35:11.700
+hugo bowne-anderson: Yeah, exactly. So. I would think you know the transcription. But we've already had with just with a single tool call or function. Call that it always does as well. Even if it returns nothing right. If the transcription but just returns the empty string, you'd then want an email, saying, Yo.
+
+189
+00:35:12.220 --> 00:35:14.770
+hugo bowne-anderson: your transcription bot isn't doing its job.
+
+190
+00:35:15.710 --> 00:35:19.545
+hugo bowne-anderson: Fire it? No, just kidding. Of course we don't want to fire bots.
+
+191
+00:35:20.900 --> 00:35:21.735
+hugo bowne-anderson: Great
+
+192
+00:35:24.922 --> 00:35:37.110
+hugo bowne-anderson: Julian has a great, great point. Using Llm as a second pass to fix audio transcription errors definitely. If if you'd like to. There, like, there are many different things you can. You can do here for sure.
+
+193
+00:35:37.330 --> 00:35:42.380
+hugo bowne-anderson: How could someone else tell me what they'd think about for a travel assistant.
+
+194
+00:35:53.850 --> 00:36:00.680
+AlfonsoZalazar: Probably an agent there, if you want to, you know, do back and forward with changes on the on the trip.
+
+195
+00:36:02.780 --> 00:36:06.669
+hugo bowne-anderson: So. Yeah, it it depend it like, I love that answer.
+
+196
+00:36:06.670 --> 00:36:23.110
+AlfonsoZalazar: Yeah, yeah. I mean, if if that if the assistant is not going to find tickets, or you know, do an action that where you have an Llm. Just to do the plan. But then, if you want to book a a hotel or something, then you would use an agent.
+
+197
+00:36:23.500 --> 00:36:31.860
+hugo bowne-anderson: Yeah, or you could just use an augmented Llm. With a couple of tool calls as well. You don't necessarily need it to direct its own
+
+198
+00:36:32.120 --> 00:36:39.969
+hugo bowne-anderson: action with with output. Right? So let's say you had a travel assistant which can do 3 things. It can book hotels, book flights.
+
+199
+00:36:40.480 --> 00:36:48.200
+hugo bowne-anderson: let's say, book travel and book excursions. So that's that's 4 things, maybe something somewhat.
+
+200
+00:36:48.410 --> 00:37:07.790
+hugo bowne-anderson: It could be agentic, but having several tool calls which, based on the business logic as opposed to the Lm. Actually deciding itself is something I've seen working in production a lot. So. But this is getting toward that towards that fuzzy, fuzzy zone, right? And similarly, with a data analyst
+
+201
+00:37:07.920 --> 00:37:09.700
+hugo bowne-anderson: assistant. So
+
+202
+00:37:09.980 --> 00:37:29.229
+hugo bowne-anderson: this is one that, depending on your app, like what all of you want to focus on. Next week, we can think about building a data science assistant, the one I've been talking about where we have, you know, 3 different types types of tools. Now, we can get the output of an Llm. To decide which to do, and when I'm in the loop I'm good with that. But if I was serving that
+
+203
+00:37:29.230 --> 00:37:44.780
+hugo bowne-anderson: to another stakeholder. Perhaps I'd get them to dictate it in in another way as well, for example, not necessarily in this case. But you could imagine having a dropdown where someone you know there are 3 options. Which tool do you want to use?
+
+204
+00:37:44.790 --> 00:37:59.420
+hugo bowne-anderson: And then you put in your query, and the user has specified the tool there. I know that's relatively unsexy at the moment to even suggest something which isn't a text box, but guaranteed it's happening more and more, and will will happen more and more. So once again. These aren't just.
+
+205
+00:37:59.610 --> 00:38:05.289
+hugo bowne-anderson: you know. Llm. Agent questions in the abstract. They're products and ux questions as well,
+
+206
+00:38:06.870 --> 00:38:11.980
+hugo bowne-anderson: The key takeaway is if a simple, cool tool tool call works don't build an agent.
+
+207
+00:38:13.190 --> 00:38:18.749
+hugo bowne-anderson: so I'd have to fire myself if I didn't mention Mcp, at least briefly.
+
+208
+00:38:19.040 --> 00:38:36.519
+hugo bowne-anderson: And for those who want to dive deeper into Mcp. Skylar Payne is giving a workshop for this course, an optional workshop after this that we'll put online will give you the recording afterwards, and you've got the repository. But I did want to say a few things about it for people who won't won't make that today.
+
+209
+00:38:37.525 --> 00:38:42.352
+hugo bowne-anderson: So if we're going to get Llms to take action right
+
+210
+00:38:43.110 --> 00:39:03.410
+hugo bowne-anderson: before Mcp, we were getting Llm output to just like, interact with slack Apis and drive Apis and Github Apis. And it was brutal not to say using. Mcp can't can't be brutal, but essentially it's a unified Api that these providers will
+
+211
+00:39:03.660 --> 00:39:13.080
+hugo bowne-anderson: essentially set up their own internals to hook into Mcp. So we all have a unified Api, and our Llms have a unified Api, right?
+
+212
+00:39:13.440 --> 00:39:22.319
+hugo bowne-anderson: So in the words of Mcp and Pastor, if you wouldn't mind pasting the user guide to Mcp in the chat, that'd be great.
+
+213
+00:39:22.640 --> 00:39:38.359
+hugo bowne-anderson: they say. Think of Mcp like a USB-c. Port for AI applications, just as USB-c. Provides a standardized way to connect your devices to various peripherals and accessories. Mcp provides a standardized way to connect AI models to different data sources and tools.
+
+214
+00:39:38.460 --> 00:39:42.460
+hugo bowne-anderson: Right? So helps build agents, complex workflows and
+
+215
+00:39:42.520 --> 00:40:02.260
+hugo bowne-anderson: Llms, as we've ascertained frequently need to interact with data and tools. And Mcp provides a growing list of pre-built integrations, flexibility to switch and best practices for securing securing your data within your infrastructure. The reason I'm laughing about that is, Mcp. And security aren't, aren't things I would
+
+216
+00:40:02.310 --> 00:40:16.819
+hugo bowne-anderson: I would mention in the same sentence at the moment for for better and and for worse. So essentially, it's a protocol for letting Llms access tools. Now, as I think Skylar will tell us more about this promise often collapses when you try to build something real. But
+
+217
+00:40:16.890 --> 00:40:19.458
+hugo bowne-anderson: you know that's the space we're working in.
+
+218
+00:40:20.030 --> 00:40:39.076
+hugo bowne-anderson: I last cohort we had Philip Carter from Honeycomb. Come and talk about Mcp there and all his work in evaluating the systems he's he's building, and I'll link to the conversation after the chat. But what they've built at Honeycomb.
+
+219
+00:40:39.530 --> 00:41:00.629
+hugo bowne-anderson: it was one of the 1st ones I thought was really cool, and it allows Llms to directly analyze and query your own honeycomb data sets across multiple environments. You can see when I prepared like this was a couple of days ago. This is a single server process that you must run locally. It is not authenticated.
+
+220
+00:41:00.640 --> 00:41:05.802
+hugo bowne-anderson: Right? So a lot of these things are actively works, works in progress.
+
+221
+00:41:06.480 --> 00:41:08.630
+hugo bowne-anderson: the other thing worth mentioning is.
+
+222
+00:41:10.040 --> 00:41:14.570
+hugo bowne-anderson: I don't think I've ever seen adoption this quickly.
+
+223
+00:41:15.090 --> 00:41:23.780
+hugo bowne-anderson: Well, having said that, I've never been in a space that's been moving this quickly, even like machine learning a decade ago, right? But I've never seen one
+
+224
+00:41:23.960 --> 00:41:44.479
+hugo bowne-anderson: company. An AI lab such as anthropic come out with an open protocol like Mcp that they're I mean these companies aren't even frenemies right like this is like, this is war. Okay? So I like for Openai, for deep mind, for Microsoft to jump on to Mcp as soon as they did. I think
+
+225
+00:41:44.480 --> 00:42:08.150
+hugo bowne-anderson: this type of serious early adoption we should all look at very, very seriously, and I do think the open community forming around Mcp. That isn't to say it will be what we end up on. But there's strong signal there that it's something that we should be focusing on in in the short to medium term. And that's 1 of the reasons that I really wanted to talk about it today.
+
+226
+00:42:08.520 --> 00:42:29.329
+hugo bowne-anderson: The other thing is in the documentation Pastor Link to. There are tutorials which are cool and feel free to jump in. We'll be doing a different tutorial with skylar today. But this is actually a nice one. And one of the reasons I like it is it 1st gets you to download or to copy the Llms. I'm actually gonna
+
+227
+00:42:29.530 --> 00:42:30.770
+hugo bowne-anderson: go to
+
+228
+00:42:32.070 --> 00:42:48.859
+hugo bowne-anderson: go to this. Actually, I'm not in the interest of time. But what you'll see Llms full txt has the documentation text. Actually, it isn't an Lmstxt. I don't think my mistake, which I which I want to get to, but definitely check out this tutorial, because
+
+229
+00:42:49.240 --> 00:42:53.120
+hugo bowne-anderson: what I wanted to talk about was the increasing number of
+
+230
+00:42:53.340 --> 00:43:02.100
+hugo bowne-anderson: web pages that are written for Llms as well. And if you're if you manage an open source project.
+
+231
+00:43:02.220 --> 00:43:13.670
+hugo bowne-anderson: you're either writing your docs for Llms now, or you will be very soon. It's incredibly important to make sure that Llms are trained on
+
+232
+00:43:13.830 --> 00:43:29.969
+hugo bowne-anderson: your data, particularly for people like developers. If that's your target market, if your target markets boomers, maybe you don't need to yet, and that's my parents. Well, my mom's a boomer. So I say that with all the love and all the complexity of you know.
+
+233
+00:43:31.540 --> 00:43:32.370
+hugo bowne-anderson: And
+
+234
+00:43:33.860 --> 00:43:43.340
+hugo bowne-anderson: so this really leads me to think about like the future of what an agentic Internet looks like, and I don't know if you've all played around with operator. But I got operator to
+
+235
+00:43:44.180 --> 00:43:48.689
+hugo bowne-anderson: like try to find some products for me that I couldn't find, and it
+
+236
+00:43:49.110 --> 00:44:00.580
+hugo bowne-anderson: and you can watch it operate in real time like it, literally like you see it go into a browser and click around and try to find things. Okay. Now, that's fascinating for so many reasons.
+
+237
+00:44:00.640 --> 00:44:20.950
+hugo bowne-anderson: But one thing that's really important about that is that this is not how agents should be searching the Internet. Right agents should not need to be doing selenium style like clicking around and looking at like source code. And all of these different different types of things. So the idea of Llmstxt files, which are Llm readable
+
+238
+00:44:21.120 --> 00:44:36.200
+hugo bowne-anderson: actually speaks to a broader movement. We'll see soon is an Internet design, not only for Llms, but but agents. And I think we may see a huge paradigm shift in terms of what the Internet looks like, and it may be files for Llms plus
+
+239
+00:44:36.200 --> 00:45:04.059
+hugo bowne-anderson: Mcp or some other analog of these types of servers at some point, and I'm speaking to you as builders, but also people who use the Internet and members of our society to really think through what we need to be building there as well. And if you're interested, jump on board. So this is an example of, oh, yeah, so this is, yeah. An Lms full full txt. And it's it is human, readable. I mean, it's essentially markdown, right? But it's not
+
+240
+00:45:04.460 --> 00:45:33.570
+hugo bowne-anderson: intended for humans. This is intended for Llms. Similarly, Gina is an incredible product, where, among other things, it will convert any website into being Llm. Readable for you, so you can then copy and paste it into an Llm. But you can see this is their meta prompt, and this content. And so if someone wants to paste Gina in the chat that would be great. But this content is specifically designed for Llms and not intended for human reading. So yeah.
+
+241
+00:45:33.900 --> 00:45:38.639
+hugo bowne-anderson: buyer, beware. But I think this is going to be a huge part of our agentic future as well.
+
+242
+00:45:39.800 --> 00:45:40.600
+hugo bowne-anderson: So
+
+243
+00:45:41.970 --> 00:45:55.019
+hugo bowne-anderson: now I want to jump into multi-agent architectures, and then once again, when to use an agent and and when to, not just to index on that again. And then we're going to jump in and start building some of these tool calls and workflows.
+
+244
+00:45:57.150 --> 00:46:03.178
+hugo bowne-anderson: so the 1st thing I wanted to say Chip, when I wonder do I have the link for this?
+
+245
+00:46:09.340 --> 00:46:10.490
+hugo bowne-anderson: that's funny.
+
+246
+00:46:13.250 --> 00:46:17.860
+hugo bowne-anderson: Let me just get this. It's called agents. So in chips.
+
+247
+00:46:21.608 --> 00:46:26.329
+hugo bowne-anderson: Oh, yeah. Laura made a good point that you know. Lms dot txt
+
+248
+00:46:27.310 --> 00:46:39.590
+hugo bowne-anderson: are human, readable in the sense that they're essentially markdown esque. That doesn't make them easily readable, I think, and they're not designed for humans to read like, if you tried to read
+
+249
+00:46:39.850 --> 00:46:44.309
+hugo bowne-anderson: 3 Llms dot text files in a row
+
+250
+00:46:44.430 --> 00:46:50.309
+hugo bowne-anderson: as opposed to a website that was designed for human readability. It would take you a lot longer.
+
+251
+00:46:50.706 --> 00:47:02.723
+hugo bowne-anderson: Is my only point. Only point there. But yes, I do agree with with that, and I do think that we'll be seeing more and more, maybe even server things set up that agents don't even need to read text per se.
+
+252
+00:47:03.510 --> 00:47:17.609
+hugo bowne-anderson: What Chip wrote here is that. And I think once again, we really need to think this through is that AI powered agents are an emerging field with no established theoretical framework for defining, developing, and evaluating them. This section in a post is the best effort to
+
+253
+00:47:18.140 --> 00:47:18.990
+hugo bowne-anderson: it.
+
+254
+00:47:19.290 --> 00:47:27.869
+hugo bowne-anderson: Best effort attempt to build a framework from the existing literature, and it will evolve. And a lot has evolved since she wrote this. But a lot of it is foundational. Okay? And it's from it's from her book.
+
+255
+00:47:28.584 --> 00:47:33.775
+hugo bowne-anderson: And so we can chat about this later. But something we'll see coming up is that
+
+256
+00:47:35.170 --> 00:47:37.959
+hugo bowne-anderson: A lot of good agentic systems are
+
+257
+00:47:37.980 --> 00:47:48.579
+hugo bowne-anderson: multi agentic. And one pattern that we see is that we have a planner, an evaluator, and an executor. Okay, so I think it's important to kind of keep these types of patterns in in mind.
+
+258
+00:47:48.580 --> 00:47:59.640
+hugo bowne-anderson: and there are so many frameworks to build, multi agentic systems from Langraf to Burr to Openai, swarm small agents crew. AI
+
+259
+00:47:59.640 --> 00:48:22.639
+hugo bowne-anderson: Openai is one of the only people who've been somewhat honest around this at the moment, which I mean there's an irony there, but they've said it's an experimental framework. And, to be clear, all of these are experimental in a variety of ways as we're seeing and what I want to do, and I'm happy to share the code for this, and we can even go through it next week if you want to do more on
+
+260
+00:48:22.980 --> 00:48:24.919
+hugo bowne-anderson: multi-agent architectures.
+
+261
+00:48:26.290 --> 00:48:49.989
+hugo bowne-anderson: is. I built a crew, AI Demo. So if somebody wants to share a link in the discord to crew AI, that would be fantastic. But essentially this allows you to define a crew of Llms. And agents that do things and then get it to run. And the way you do this is you, I mean, I have a source file. Then I have my research crew
+
+262
+00:48:50.080 --> 00:49:09.999
+hugo bowne-anderson: in my config. I define my agents and my tasks, and then in my tools, I define what tools I allow them to use, and then I have my. Then I bring my crew together in a crew.py, and then I define what I actually want to execute in my mainpy. So I just want to jump in and give you a sense of how this works. So
+
+263
+00:49:10.350 --> 00:49:14.550
+hugo bowne-anderson: in an agents dot Yaml, for example, you can.
+
+264
+00:49:14.960 --> 00:49:34.950
+hugo bowne-anderson: I've defined a senior data researcher where I give it a role and a goal where it's the goal is to uncover cutting edge developments in a particular topic, and then give it a backstory once again. I don't know what I do now, but like it's not clear what this is sending to the Llm. So once again, like inspecting and introspecting
+
+265
+00:49:35.410 --> 00:49:40.110
+hugo bowne-anderson: and building evaluation around this and seeing doing failure. Analysis
+
+266
+00:49:40.310 --> 00:50:04.280
+hugo bowne-anderson: is already quite challenging. Then I give it a research task where I give it a description, conduct, thorough research about a particular topic. Make sure you find any interesting and relevant information given the current year is, give it the current year, and I tell it the expected output. A list with 10 bullet points of the most relevant information about the topic. And I say which agent I want to do that, and up until now I only have a researcher agent
+
+267
+00:50:05.720 --> 00:50:08.380
+hugo bowne-anderson: then in the crew.py.
+
+268
+00:50:08.560 --> 00:50:30.729
+hugo bowne-anderson: I create a class where I create the crew base, and I'm telling it to take these agents and these tasks from the Yaml. I create the research agent from that base. I create the research task from that base. And then I create the crew. And, as I said, I'm happy to share all this code after the fact. Then, in the mainpy file.
+
+269
+00:50:30.770 --> 00:50:48.970
+hugo bowne-anderson: I run the crew. So I've given it the topic to research Hugo Band Anderson here, and I did that, not out of narcissism or solipsism. But I did that because I can verify its results. I can see how well it's working, and then I give it the current year, using datetime from python.
+
+270
+00:50:49.030 --> 00:50:55.340
+hugo bowne-anderson: and then we can run it. We can also train it. Replay is a really nice function and test as well.
+
+271
+00:50:55.470 --> 00:51:00.970
+hugo bowne-anderson: So that's if I had one agent. Now I want to show you the results.
+
+272
+00:51:02.360 --> 00:51:08.909
+hugo bowne-anderson: I'm sorry of doing it with a single agent with a variety of tool calls. Okay? So I then gave it a different
+
+273
+00:51:09.340 --> 00:51:15.530
+hugo bowne-anderson: research task, which was, I wanted to conduct a thorough comparison
+
+274
+00:51:15.870 --> 00:51:18.980
+hugo bowne-anderson: between 2 items with a particular goal.
+
+275
+00:51:19.370 --> 00:51:28.089
+hugo bowne-anderson: and I tell it to use the following tools. Okay, so I say, search the web with Surpa Devtool together. Search for item, one.
+
+276
+00:51:28.530 --> 00:51:39.039
+hugo bowne-anderson: search for item 2, then search for comparisons between item one and item 2. So can someone tell me how many tool calls you'd expect it to do
+
+277
+00:51:39.520 --> 00:51:41.699
+hugo bowne-anderson: for step one in this task?
+
+278
+00:51:44.700 --> 00:51:46.120
+hugo bowne-anderson: Not a trick question.
+
+279
+00:52:35.570 --> 00:52:38.740
+hugo bowne-anderson: So, Laura! Laura, are you? Are you at liberty to speak.
+
+280
+00:52:39.932 --> 00:52:43.259
+Laura Summers: Yeah. Sorry. I was just changing location, but I am, hey?
+
+281
+00:52:43.260 --> 00:52:45.979
+hugo bowne-anderson: Good. So yeah, maybe you can talk us through your response.
+
+282
+00:52:46.610 --> 00:53:03.959
+Laura Summers: Well, I was just thinking like, if you have, you know, there's 3, obviously at least 3. 2 calls there, right? Because you're looking for like one specific, like string search, and a second specific string search, and then for a string search which compares the 2 of them but depending on, like.
+
+283
+00:53:04.320 --> 00:53:24.589
+Laura Summers: how your tool call does web search. You could imagine the tool call calling other tools depending on the type of website it brings up. So I I could imagine it being, you know, at the base, like at least 3. But I could imagine it being many more depending on the results, and, like how unitary or not, the like search the web tool call is.
+
+284
+00:53:24.590 --> 00:53:25.369
+hugo bowne-anderson: I love it so.
+
+285
+00:53:26.110 --> 00:53:27.980
+hugo bowne-anderson: What I'm hearing is at minimum 3.
+
+286
+00:53:28.880 --> 00:53:29.929
+Laura Summers: Yeah, exactly.
+
+287
+00:53:30.600 --> 00:53:53.239
+hugo bowne-anderson: And then. So I agree I'd expect 3, and particularly because I've only got and I should make clear I'm giving it only 3 tools. I'm giving it the server dev tool, the tablet search tool and reddit tabli search tool. So we'd expect 3 for the 1st one. Then the second one is do exactly the same using tablely search tool. So we'd expect 3 there as well.
+
+288
+00:53:53.650 --> 00:54:07.400
+hugo bowne-anderson: Then the 3rd one is to do the same on Reddit with the reddit Tabli search tool. So I'd expect 3 there as well. So what we'd want, what we'd expect here is is 9 tool calls. Okay?
+
+289
+00:54:07.830 --> 00:54:14.878
+hugo bowne-anderson: And then, I say, after gathering and analyzing, generate a comparison report. And so I did this then.
+
+290
+00:54:15.740 --> 00:54:33.285
+hugo bowne-anderson: I didn't say what I did this with, but I did it to compare lang graph and Crew AI for multi agentic stuff. And the report it generated wasn't actually that bad? Okay? But if we look at the Langfuse span graph and pastor, if you wouldn't mind linking to Langfuse
+
+291
+00:54:33.760 --> 00:54:35.000
+hugo bowne-anderson: which is
+
+292
+00:54:35.390 --> 00:54:44.270
+hugo bowne-anderson: open source plus plus telemetry stuff. That integrates well with with crew crew. AI. Among other things, what we actually
+
+293
+00:54:44.620 --> 00:54:52.449
+hugo bowne-anderson: see here in this band graph is, we see the kickoff happening. Then we see the crew created. We see 1st task
+
+294
+00:54:53.125 --> 00:55:21.190
+hugo bowne-anderson: or the task execution opens, and then we see these tool usages. And what we actually see is we see one tool usage. There we see 2. There we see 3, we see 4. And what actually happened is we only it only in this run it only did 4 tool calls, and I ran this about 20 times, and the most I ever saw was 7 out of 9 tool calls. The minimum I saw was 2, and
+
+295
+00:55:21.620 --> 00:55:25.240
+hugo bowne-anderson: I think the median was 4. But yeah, it like the
+
+296
+00:55:25.590 --> 00:55:52.149
+hugo bowne-anderson: like. The the majority of the density was between 3 and 6. Okay, so we always talk about hallucinations. Something we don't talk enough about is forgetting. And the fact that Llms like forget a lot as well. And so there's just totally unreliable tool usage here when building with with something like crew. AI. Now I'm not saying, don't build with with crew. AI what I'm saying is that if you do.
+
+297
+00:55:52.660 --> 00:56:00.620
+hugo bowne-anderson: you'll encounter things like this, and on top of that you won't be able to inspect and evaluate your system. That well, because once again.
+
+298
+00:56:00.730 --> 00:56:13.269
+hugo bowne-anderson: it's really tough to see what prompts being are being sent to the Llm. And how they're all interacting. Incredibly powerful tools, but very difficult to build. Consistent, reliable software with app
+
+299
+00:56:13.440 --> 00:56:14.839
+hugo bowne-anderson: at the moment. Right?
+
+300
+00:56:15.770 --> 00:56:44.849
+hugo bowne-anderson: So once again, I said, next week, if people want, I'm really happy to dive deeper into multi-agent architectures, but kind of to before we start diving into notebooks. Let's really talk about when to use an agent and and when to. Not. So, as I said before, if your task is to generate text. Use an Llm. If you want to retrieve external information, or use Apis and tools or predefined multi-step tasks, use an augmented llm.
+
+301
+00:56:45.720 --> 00:57:04.800
+hugo bowne-anderson: Besides that, use an agent if you want Llm. Controlled multi-step task, or to adapt the workflow dynamically. But a lot of the time this won't be what you want. So the key takeaway is, if simple tool call work calls work, don't build an agent. And similarly, if we're
+
+302
+00:57:04.930 --> 00:57:05.630
+hugo bowne-anderson: if
+
+303
+00:57:06.040 --> 00:57:24.439
+hugo bowne-anderson: this is a flow chart, really demonstrating exactly the same thing. If you need the system to control the workflow dynamically, use an agent. But just know this is rare, experimental, and kind of tongue in cheek, half jokingly, extremely dangerous. It's only dangerous if you're expecting reliable, consistent software right? Which is what what we're really trying to build here.
+
+304
+00:57:25.105 --> 00:57:35.819
+hugo bowne-anderson: So, all that having been said, I'm really excited to jump into Github and start building a bunch of these things with you.
+
+305
+00:57:36.140 --> 00:57:41.170
+hugo bowne-anderson: So just going to restart my codespace
+
+306
+00:57:45.010 --> 00:57:47.309
+hugo bowne-anderson: while that's restarting.
+
+307
+00:57:47.420 --> 00:58:07.070
+hugo bowne-anderson: Actually, let me just show you something else. Where is this? I did a live stream with Ravin
+
+308
+00:58:07.680 --> 00:58:14.359
+hugo bowne-anderson: Kumar. Say Hi! To Hugo and Whoa, and this is I, definitely.
+
+309
+00:58:14.520 --> 00:58:16.611
+hugo bowne-anderson: you know, it's a relatively
+
+310
+00:58:17.170 --> 00:58:32.079
+hugo bowne-anderson: long one. But we go through a lot of kind of how to build these systems locally, using Gemma models because Ravin works at Deepmind. And actually, you know, works on the team that builds these Gemma models. And
+
+311
+00:58:33.390 --> 00:58:36.670
+hugo bowne-anderson: I think this is the repository
+
+312
+00:58:37.670 --> 00:58:56.779
+hugo bowne-anderson: as well. So it's actually really really nice. You can do all this stuff locally with Olama. You can see a dali 3 generated thumbnail as well of myself and ravin, which is kind of fun. But I thought thought to share that for those who want to want to dive in deeper. So
+
+313
+00:58:59.190 --> 00:59:08.259
+hugo bowne-anderson: what I want to do now is dive into function calling, okay? So
+
+314
+00:59:08.660 --> 00:59:12.684
+hugo bowne-anderson: we'll be doing it with Openai's Api
+
+315
+00:59:15.250 --> 00:59:27.010
+hugo bowne-anderson: from execution to data instruction. And this. So we're going to explore function calling with Openai. And we're going to use a weather Api example
+
+316
+00:59:27.990 --> 00:59:41.690
+hugo bowne-anderson: that would demonstrate a crucial aspect of function calling. And it's what Mike was speaking to earlier explicit execution. Right? So when using function calling to actually perform actions, what we do is, we define the function structure for the model.
+
+317
+00:59:41.860 --> 01:00:06.409
+hugo bowne-anderson: Then we let the model decide when to call it and then explicitly execute the function yourself with the model's parameters. Okay? So we're going to define the real, define the function, get weather, then let the model choose to call it with coordinates, and actually execute the weather Api call and then return the result to the model for final response format. Okay.
+
+318
+01:00:06.710 --> 01:00:10.999
+hugo bowne-anderson: so I'm just setting my Openai Api key here
+
+319
+01:00:11.240 --> 01:00:20.630
+hugo bowne-anderson: and then using requests and the open radio weather. Api also shout out to requests, and Kenneth Wrights and everyone who's ever worked on
+
+320
+01:00:20.770 --> 01:00:28.460
+hugo bowne-anderson: one of the greatest packages in the python landscape. As far as I'm concerned, we define the get weather function where
+
+321
+01:00:29.230 --> 01:00:37.850
+hugo bowne-anderson: the Api needs a latitude and a longitude. Okay, and then we pass those.
+
+322
+01:00:38.250 --> 01:00:46.819
+hugo bowne-anderson: Yep here to the request. Then we get the data out of the response as Json, and then we return
+
+323
+01:00:47.120 --> 01:01:03.630
+hugo bowne-anderson: the current, the current temperature, and that 2 M. That may be 2 meters, or I'm not actually sure what the no, I'm actually not sure what the 2 M. Maybe it's to metric. Who knows? That would make sense. But so let's define this function. Okay.
+
+324
+01:01:04.820 --> 01:01:07.140
+hugo bowne-anderson: so now we have a function.
+
+325
+01:01:07.260 --> 01:01:19.940
+hugo bowne-anderson: right? But how do we turn it into a tool that the Openai Api knows about. We need to define it as a tool. And this Api isn't particularly
+
+326
+01:01:20.170 --> 01:01:41.920
+hugo bowne-anderson: pleasant. But given AI assisted coding, that's cool, you know you can get. You know, you often don't need to write this yourself. So what we're doing is we're telling the tool that it's going to be a function. Now, we want to define the function. It's get weather. We're giving it a description. Okay? And we want to give a description here that an Lm. Will
+
+327
+01:01:42.240 --> 01:01:52.459
+hugo bowne-anderson: will know or be able to to pick up on. So we tell it, get current temperature for provided coordinates in Celsius.
+
+328
+01:01:53.860 --> 01:02:01.910
+hugo bowne-anderson: Then we give it the types of parameters. So you know latitude, longitude, and tell them it'll be a number. And then we say what's required
+
+329
+01:02:02.270 --> 01:02:03.880
+hugo bowne-anderson: no additional properties.
+
+330
+01:02:04.330 --> 01:02:31.890
+hugo bowne-anderson: And then, once we've defined that tool, what I'm going to do is I'm going to send a message to the Openai Api saying, What's the weather like in Sydney today, and I'm interested because I'm from Sydney. I live in Sydney. My family's there. My friends are there, so I'm interested in what the weather is there is is like, there now, and I send that message as a user message to the Gpd 4. 0, completion endpoint. Okay.
+
+331
+01:02:32.820 --> 01:02:34.620
+hugo bowne-anderson: so let me execute that
+
+332
+01:02:37.640 --> 01:02:40.049
+hugo bowne-anderson: So maybe I can also ask in the chat.
+
+333
+01:02:41.540 --> 01:02:45.050
+hugo bowne-anderson: what do you think of this, Api?
+
+334
+01:02:46.190 --> 01:02:49.069
+hugo bowne-anderson: And by that I mean of the code that we have to write.
+
+335
+01:02:50.590 --> 01:02:57.580
+hugo bowne-anderson: I may have already given away what I think about it, but look, I've I've now executed this.
+
+336
+01:02:58.690 --> 01:03:09.310
+hugo bowne-anderson: Oh, looks like it's no that. And so then then I'm going to see
+
+337
+01:03:09.770 --> 01:03:12.889
+hugo bowne-anderson: what the message actually let me, just
+
+338
+01:03:14.910 --> 01:03:17.099
+hugo bowne-anderson: I wonder what the message is first.st
+
+339
+01:03:19.460 --> 01:03:22.140
+hugo bowne-anderson: So yeah, look at this. If I just look
+
+340
+01:03:22.700 --> 01:03:28.389
+hugo bowne-anderson: at the message that's returned. There's no content in it. And usually there's content right?
+
+341
+01:03:29.640 --> 01:03:32.510
+hugo bowne-anderson: But this is recognized that
+
+342
+01:03:32.640 --> 01:03:46.029
+hugo bowne-anderson: my question, what's the weather like in Sydney today corresponds to a tool. It has access to right? So the response here it actually has something in the tool call, chat, completion, message, tool call.
+
+343
+01:03:46.360 --> 01:03:54.637
+hugo bowne-anderson: and it says function arguments. It gives me the latitude, the longitude, it tells me. Get weather.
+
+344
+01:03:55.760 --> 01:04:18.249
+hugo bowne-anderson: there's a there's a lot already happening here, so I do want to pause for a second and see if in discord, or someone would like to turn their microphone on. If anyone can tell me, like some things that they've noticed in in here which are either counterintuitive or surprising or any reflections. I mean, there's a lot happening here. So I'd be interested in anyone's reflections on what's happening
+
+345
+01:04:29.420 --> 01:04:33.249
+hugo bowne-anderson: and against my my inner intuition, I'm
+
+346
+01:04:35.000 --> 01:04:40.019
+hugo bowne-anderson: I think I'm comfortable, having an awkward, an extended, awkward silence until someone else speaks.
+
+347
+01:04:43.760 --> 01:04:44.970
+hugo bowne-anderson: It's brutal, though.
+
+348
+01:04:52.370 --> 01:04:54.779
+hugo bowne-anderson: To sit in silence is the real surrender.
+
+349
+01:04:57.920 --> 01:05:01.490
+hugo bowne-anderson: Come on, someone. Look! There are bloody 30 people here. Someone has to.
+
+350
+01:05:01.490 --> 01:05:05.150
+Mitch: Confess I got a little bit sorry. This is Mitch again.
+
+351
+01:05:05.150 --> 01:05:06.290
+hugo bowne-anderson: Hey, Chris, how are you, mate?
+
+352
+01:05:06.290 --> 01:05:07.359
+Mitch: It's not a meeting.
+
+353
+01:05:07.360 --> 01:05:09.280
+hugo bowne-anderson: At the UK. Civil Service.
+
+354
+01:05:09.540 --> 01:05:10.720
+hugo bowne-anderson: Yeah, that's right. Yeah.
+
+355
+01:05:10.720 --> 01:05:11.090
+hugo bowne-anderson: Awesome.
+
+356
+01:05:11.373 --> 01:05:22.160
+Mitch: Yeah, I'll confess I did get a little bit lost. But I think one of the, if I've understood it right is one of the interesting things here that is not actually answering your question in its response.
+
+357
+01:05:22.210 --> 01:05:27.559
+hugo bowne-anderson: Exactly. That's 1 of one of 3 interesting things happening absolutely.
+
+358
+01:05:27.990 --> 01:05:30.619
+Mitch: So it's just telling you that it's done a talk call. But it's not actually.
+
+359
+01:05:30.620 --> 01:05:41.907
+hugo bowne-anderson: Yeah. And and Mitch, I I do. Would you mind us talking through briefly? What's confusing? Because if something's slightly confusing for you, I can guarantee you. It's slightly confusing for for many people.
+
+360
+01:05:42.680 --> 01:05:43.240
+hugo bowne-anderson: So.
+
+361
+01:05:43.575 --> 01:06:01.350
+Mitch: To be completely honest, I'd not seen that you could. I'd not seen tools passed directly like that to the open AI Api before. So I was intrigued. I was. I was wondering whether my interpretation of what the output is giving you was correct. That is actually not answering the question.
+
+362
+01:06:01.550 --> 01:06:09.989
+hugo bowne-anderson: Yeah, interesting. So so have you used? And how have you seen tools used before? Or is this your 1st foray into like programmatically doing tool usage?
+
+363
+01:06:10.740 --> 01:06:29.399
+Mitch: I've done a very. It's funny you asked about the how would you make the Llm. Do maths earlier? And I did a very brief L. And D. Thing myself, trying to write a little calculator and then get the Llm. To use it in a loop. But aside from that I've not actually passed. Yeah tools to the
+
+364
+01:06:29.570 --> 01:06:32.440
+Mitch: the the providers themselves, I suppose.
+
+365
+01:06:32.860 --> 01:06:49.109
+hugo bowne-anderson: Super interesting. Yeah, thanks so much for for that, because it is, it is actually a bit counterintuitive. What? What's happening? And Laura has a question that says, did it fail to return a response because of strict mode? Did something not match the Api? And it actually
+
+366
+01:06:51.090 --> 01:07:02.680
+hugo bowne-anderson: it did what it's supposed to do. It is not supposed to return a response yet. So if we go back to seeing how these things actually work, Whoa! Right?
+
+367
+01:07:04.960 --> 01:07:08.989
+hugo bowne-anderson: So I give a prompt.
+
+368
+01:07:09.250 --> 01:07:14.330
+hugo bowne-anderson: then it decides what to respond. It will. If it. If it doesn't need a tool call.
+
+369
+01:07:15.220 --> 01:07:18.640
+hugo bowne-anderson: it will answer. If it does need a tool call.
+
+370
+01:07:19.500 --> 01:07:25.810
+hugo bowne-anderson: What it will do is it will give the function name and the argument. It will not give a response. Okay.
+
+371
+01:07:26.680 --> 01:07:31.370
+hugo bowne-anderson: it will pop. Then we pause the response and execute the function ourselves.
+
+372
+01:07:32.460 --> 01:07:36.560
+hugo bowne-anderson: and then we send the result of the function to.
+
+373
+01:07:37.280 --> 01:07:45.930
+hugo bowne-anderson: Sorry. I'm just saying, Brad. I knew I knew something that would happen. Then we will pass it to the Llm. Again to, and it will then
+
+374
+01:07:46.060 --> 01:08:08.129
+hugo bowne-anderson: put that into the response, and we get our completion. This is exactly to Mike's Mike's point earlier. This is one of the reasons that I'm excited about. You know, Brad's suggestion that some models trained on Mcp and function calling may be able to perform these types of things. So so yeah, let's let's go through it in a bit more detail once again.
+
+375
+01:08:09.270 --> 01:08:12.320
+hugo bowne-anderson: So we've given it a function which Will
+
+376
+01:08:12.870 --> 01:08:15.539
+hugo bowne-anderson: called get weather, and we've told it.
+
+377
+01:08:16.850 --> 01:08:22.430
+hugo bowne-anderson: The current. The description is, get the current weather, and I'm sorry I may not have mentioned this explicitly.
+
+378
+01:08:22.580 --> 01:08:28.320
+hugo bowne-anderson: So that's in a list of tools, and it's a single tool in the list. And then.
+
+379
+01:08:28.649 --> 01:08:37.359
+hugo bowne-anderson: when we ask the question, what's the weather like in Sydney today? We're passing it, this list of tools and we give it only one tool. Okay? Now.
+
+380
+01:08:39.479 --> 01:08:40.709
+hugo bowne-anderson: what's interesting?
+
+381
+01:08:41.840 --> 01:08:47.490
+hugo bowne-anderson: I've asked it. What's the weather like in? I'm sorry that I'm repeating this, but I do want an index on 3 very
+
+382
+01:08:47.899 --> 01:08:49.980
+hugo bowne-anderson: interesting and perhaps surprising things.
+
+383
+01:08:50.270 --> 01:09:07.710
+hugo bowne-anderson: The 1st is, I've asked that. What's the weather like in Sydney today? And because of that, and because it knows it has a function or a tool, the description of which is, get current temperature for provided coordinates in Celsius, because it has access to that tool.
+
+384
+01:09:10.130 --> 01:09:18.070
+hugo bowne-anderson: It then realizes that the answer to this question. It will not draw on its weights. It will use the tool. Okay?
+
+385
+01:09:18.950 --> 01:09:33.100
+hugo bowne-anderson: Or it will say, let's use this tool because it doesn't actually use the tool. So what it then does is it doesn't return any messages. It recalls information for the tool call. It returns
+
+386
+01:09:34.950 --> 01:09:42.190
+hugo bowne-anderson: the name, get weather and the arguments, latitude and longitude. So remember going back to this slide from Gemini.
+
+387
+01:09:44.130 --> 01:09:47.869
+hugo bowne-anderson: If it doesn't give a if it doesn't complete it with text.
+
+388
+01:09:48.250 --> 01:09:55.349
+hugo bowne-anderson: it will output a function name and an argument. Right? That's exactly what it's doing here. It's outputting. Get weather
+
+389
+01:09:55.610 --> 01:10:03.089
+hugo bowne-anderson: and well, all the required arguments. Okay, so the 1st interesting thing is that
+
+390
+01:10:03.770 --> 01:10:30.420
+hugo bowne-anderson: it recognized that it would use a tool call to do this right? So once again, this is slightly agentic. It isn't just a tool call it is because I haven't said, use this tool for that. It's recognized. Quote unquote, that the tool call could be useful here. Okay, so that's interesting thing. Number one interesting thing number 2 is that it just doesn't answer the question. All it does is give us a tool call. Okay.
+
+391
+01:10:31.170 --> 01:10:34.440
+hugo bowne-anderson: can anyone see? Interesting thing number 3?
+
+392
+01:10:39.040 --> 01:10:42.790
+Mitch: It's returned the latitude and longitude, even though you just said Sydney.
+
+393
+01:10:43.120 --> 01:10:45.820
+hugo bowne-anderson: Incredible, incredible.
+
+394
+01:10:46.484 --> 01:10:51.870
+hugo bowne-anderson: You're absolutely right, Mitch. The fact that I, said Sydney, and from its weights.
+
+395
+01:10:53.250 --> 01:11:02.310
+hugo bowne-anderson: firstly, it quote unquote, recognized that we require latitude and longitude. From the tool call, from the tool definition
+
+396
+01:11:02.440 --> 01:11:03.380
+hugo bowne-anderson: and
+
+397
+01:11:03.510 --> 01:11:11.909
+hugo bowne-anderson: from its weights. It's converted Sydney into the required latitude and longitude there. Okay, so that's interesting thing number 3, which
+
+398
+01:11:12.210 --> 01:11:38.730
+hugo bowne-anderson: which I find quite impressive to be. I mean, there are lots of things that are impressive about these technologies. But the fact that it's doing that under the hood, of course, the fact that it's doing that under the hood means it's something that we need to inspect, and may even need to be evaluated at some point. So, Mitch, you're absolutely right that they are pretty much right funnily. I know the latitudes pretty right, because I know the latitude of Sydney. I never remember the longitude, but longitude
+
+399
+01:11:39.590 --> 01:11:45.770
+hugo bowne-anderson: is less important to me than latitude, for whatever reason I mean. Latitude tells you what the weather will be like
+
+400
+01:11:46.660 --> 01:11:51.410
+hugo bowne-anderson: on average, give or take right? So. But so we've got we've got a tool call
+
+401
+01:11:51.690 --> 01:11:54.099
+hugo bowne-anderson: right? So that's super cool.
+
+402
+01:11:54.400 --> 01:12:07.020
+hugo bowne-anderson: It's cool to have tools. And so but then we need to do something with it, don't we? So what do we actually do? Well, we need to pass this latitude and longitude.
+
+403
+01:12:08.960 --> 01:12:15.550
+hugo bowne-anderson: to Sorry radar's response, that it may have failed because the weather in Sydney is the reason I I love
+
+404
+01:12:15.990 --> 01:12:38.710
+hugo bowne-anderson: So what we need to do then, is extract the arguments and pass them to the get weather function. Okay? So the way we do that is, once again, I mean, like nightmare. Api, not the worst, but not like requests, not the beauty of requests, or spacey, or keras, or scikit-learn. So we
+
+405
+01:12:39.420 --> 01:12:40.520
+hugo bowne-anderson: extract
+
+406
+01:12:40.900 --> 01:12:51.360
+hugo bowne-anderson: what we need. And then we, you know, get the arguments out and load them as Json, and then what we do is we pass them to get weather
+
+407
+01:12:52.320 --> 01:13:00.950
+hugo bowne-anderson: as a result, and let me just print the result in this notebook here.
+
+408
+01:13:03.740 --> 01:13:09.708
+hugo bowne-anderson: That's really interesting. I suppose that doesn't feel right. Let's just go.
+
+409
+01:13:16.020 --> 01:13:16.900
+hugo bowne-anderson: yeah.
+
+410
+01:13:17.580 --> 01:13:32.910
+hugo bowne-anderson: fascinating. So look, it definitely isn't point 4 degrees, Celsius. But let's now what we're going to do. So we'll get to that. That's why evaluation and and testing and validation is super important even with this type of thing. What we're going to do
+
+411
+01:13:33.170 --> 01:13:44.900
+hugo bowne-anderson: is we're going to take the function call meth method. We're going to append the tool to it.
+
+412
+01:13:45.200 --> 01:13:51.092
+hugo bowne-anderson: the tool result to messages. And now we're going to do
+
+413
+01:13:51.720 --> 01:13:56.940
+hugo bowne-anderson: The the second pass of sending all this information
+
+414
+01:13:57.100 --> 01:14:02.170
+hugo bowne-anderson: to the Llm. And seeing it completed. Okay, so
+
+415
+01:14:04.780 --> 01:14:08.440
+hugo bowne-anderson: let's do that. And before we see the result, let's just have a look at what
+
+416
+01:14:11.190 --> 01:14:16.230
+hugo bowne-anderson: what we're passing to it. Okay? So what we're passing to
+
+417
+01:14:16.960 --> 01:14:22.159
+hugo bowne-anderson: as this second Lm invocation, we're passing the content. What's the weather like in Sydney today?
+
+418
+01:14:22.520 --> 01:14:29.260
+hugo bowne-anderson: And then we're telling it. The the result of the tool call was 0 point 4. Okay? And
+
+419
+01:14:29.440 --> 01:14:37.700
+hugo bowne-anderson: we get the current temperature in Sydney is 0 point 4°C, and that that is is wrong.
+
+420
+01:14:39.380 --> 01:14:42.439
+hugo bowne-anderson: So what I want to do is just
+
+421
+01:14:45.680 --> 01:14:50.690
+hugo bowne-anderson: have a look and see what it says for New York, which is where I am
+
+422
+01:14:53.310 --> 01:15:01.519
+hugo bowne-anderson: right and sorry for the cognitive dissonance of doing an American temperature in the correct units.
+
+423
+01:15:02.180 --> 01:15:09.089
+hugo bowne-anderson: But half joking, Fahrenheit's ridiculous, though. And
+
+424
+01:15:09.680 --> 01:15:12.980
+hugo bowne-anderson: let's just have a look and see what the temperature is.
+
+425
+01:15:13.140 --> 01:15:15.769
+hugo bowne-anderson: That's a lot closer. Okay?
+
+426
+01:15:18.730 --> 01:15:25.990
+hugo bowne-anderson: So we see the current temperature in New York is 30.3°C.
+
+427
+01:15:27.560 --> 01:15:54.740
+hugo bowne-anderson: great. So that's looking good. It's interesting that it didn't work for Sydney. And once again, I mean, that's actually a wonderful illustration, as I've said explicitly of why we need to be able to inspect what's happening in our systems and look at failure analysis. We'd want to dig it? Was it the latitude and longitude that was slightly off? Or is it the weather, Api, that just doesn't have good data on like up to date data on on Sydney.
+
+428
+01:15:55.540 --> 01:16:01.919
+hugo bowne-anderson: for example. So I'm wondering there were a few questions around.
+
+429
+01:16:03.130 --> 01:16:10.232
+hugo bowne-anderson: You know the fact that this odd process of of function calling. So I'm I'm just wondering
+
+430
+01:16:10.800 --> 01:16:21.300
+hugo bowne-anderson: if anyone wants to turn their microphone on and and reflect on. If you've seen this before, if it if it resonates, or if it is quite surprising, and what you think about having to
+
+431
+01:16:25.187 --> 01:16:26.410
+hugo bowne-anderson: Roger has a
+
+432
+01:16:29.220 --> 01:16:36.510
+hugo bowne-anderson: great point that maybe there's another Sydney in in the world. I'm just gonna look up longitude latitude.
+
+433
+01:16:37.450 --> 01:16:39.550
+hugo bowne-anderson: Sydney, Australia.
+
+434
+01:16:40.830 --> 01:16:49.520
+hugo bowne-anderson: Yeah, look it. Minus 33.8, and then 1 5 1
+
+435
+01:16:51.460 --> 01:16:52.990
+hugo bowne-anderson: I'm just going to do this again.
+
+436
+01:16:53.270 --> 01:16:59.880
+hugo bowne-anderson: But yeah, I'd actually, if you've done a lot of function calling before, or if not, I'd actually love your reflections
+
+437
+01:17:00.090 --> 01:17:05.210
+hugo bowne-anderson: on kind of how this process works.
+
+438
+01:17:05.310 --> 01:17:13.980
+hugo bowne-anderson: There's also a there's a Melbourne in Florida. I know that. No, this is. This is the correct latitude and longitude for Sydney, so there's something up with the
+
+439
+01:17:16.190 --> 01:17:17.969
+hugo bowne-anderson: weather. Api. Actually.
+
+440
+01:17:28.370 --> 01:17:42.300
+hugo bowne-anderson: yeah, I'd I'd love to know. Are there people who've done a lot of function calling. And this is just what what you do, or are there people who haven't really seen it so much before, and have been building agents in in other ways? And and not not explicitly.
+
+441
+01:17:42.860 --> 01:17:46.119
+hugo bowne-anderson: I don't know, Brad, if if you're around and want to reflect on this again.
+
+442
+01:17:47.610 --> 01:17:54.779
+brad morris: Actually, my reflection is more of an embarrassing
+
+443
+01:17:54.890 --> 01:17:59.879
+brad morris: like. I've taken all the courses like I've done the hugging face courses, but I don't actually know
+
+444
+01:18:00.150 --> 01:18:05.129
+brad morris: what is happening. So my question would be, is the model trained
+
+445
+01:18:05.260 --> 01:18:11.189
+brad morris: to decide semantically in each case whether it needs to
+
+446
+01:18:11.330 --> 01:18:16.169
+brad morris: call a tool or provide a direct response. Is that what's happening every time.
+
+447
+01:18:19.860 --> 01:18:36.559
+hugo bowne-anderson: It's a great question. So the models optimized for that. I don't know if it's trained, or if it happens in post training to be clear. I don't. It may be in the system prompt, for example, but it definitely is optimized to recognize that if
+
+448
+01:18:37.330 --> 01:18:43.269
+hugo bowne-anderson: if your query is semantically similar to a description.
+
+449
+01:18:43.820 --> 01:18:46.500
+hugo bowne-anderson: Then there's a higher likelihood of using that tool.
+
+450
+01:18:49.030 --> 01:18:50.250
+hugo bowne-anderson: I hope that's helpful.
+
+451
+01:18:51.368 --> 01:19:05.080
+brad morris: Yeah, I mean, I've just been playing with the I've been using a lot of the Mcp stuff. So I'm really looking forward to this workshop with skylar. And I'm like, I've tried to crank it up to like 30 to 50 tools.
+
+452
+01:19:05.500 --> 01:19:10.380
+brad morris: just to test with crude examples. And yeah, it seems to get
+
+453
+01:19:11.230 --> 01:19:19.660
+brad morris: more difficult for the model to choose which tool so like more refined, it's really important to refine and to go through this process of understanding
+
+454
+01:19:19.960 --> 01:19:25.630
+brad morris: tool calls at the very basic level, so that you can make sure that you're really refining the context or the prompt.
+
+455
+01:19:26.530 --> 01:19:33.800
+hugo bowne-anderson: Absolutely and and this is part of the point when even with one tool call, it's so finicky. I mean, this gives insight into why?
+
+456
+01:19:37.430 --> 01:19:43.150
+hugo bowne-anderson: into? Why, state of the art is only 90%. So several tool calls in a row and it ends up being a
+
+457
+01:19:43.280 --> 01:19:59.670
+hugo bowne-anderson: a coin flip. William has a really interesting point that it's not explicitly making decision between outputting text versus a function call. Well, I mean, it isn't making decisions in full stop right? But what it is returning in the end is not
+
+458
+01:19:59.950 --> 01:20:08.870
+hugo bowne-anderson: is no tokens per se right like it does produce tokens internally, of course, that then result in this, but it is returning
+
+459
+01:20:09.010 --> 01:20:18.880
+hugo bowne-anderson: the the tool call itself and well saying, specifying the tool call and and the function. So, William, I don't know if you're at liberty to turn your microphone on. But perhaps you could say a few things about that.
+
+460
+01:20:21.430 --> 01:20:23.109
+William Horton: Yeah, I just mean that, like.
+
+461
+01:20:23.900 --> 01:20:28.419
+William Horton: it's somewhat useful to understand that the Lm is always even Lms that can do function calling
+
+462
+01:20:28.530 --> 01:20:37.930
+William Horton: are always outputting tokens, and then, like the part that we see is like open AI interpreting it for us. And like saying, This is a function call, but like.
+
+463
+01:20:38.540 --> 01:20:41.480
+William Horton: and there's some value in seeing that like to the model.
+
+464
+01:20:42.030 --> 01:20:45.709
+William Horton: like a function calling model is not special. It hasn't been trained. I mean.
+
+465
+01:20:46.080 --> 01:20:53.210
+William Horton: it hasn't been trained to output something special. That's like a function call. It's still just all tokens all the way down. It's just like
+
+466
+01:20:53.590 --> 01:21:00.029
+William Horton: knows that. Now there's a function called token, if that makes sense like, maybe that's not a useful distinction, but in my brain it's like
+
+467
+01:21:00.290 --> 01:21:02.109
+William Horton: helpful to see that like.
+
+468
+01:21:05.011 --> 01:21:13.069
+William Horton: I guess in one way to illustrate it is like you could also, just as easily in the prompt, tell it a different syntax for using function, calling and parse it yourself.
+
+469
+01:21:13.610 --> 01:21:20.940
+William Horton: and that would work probably not as well as the like model Api, but like it, would work fine.
+
+470
+01:21:21.490 --> 01:21:28.709
+William Horton: because, like the Lms. Always just generating token output. And then it's like, just how do you interpret that?
+
+471
+01:21:30.280 --> 01:21:32.650
+William Horton: It's a convenience layer, I guess, is what I'm saying.
+
+472
+01:21:33.230 --> 01:21:45.875
+hugo bowne-anderson: Absolutely. And but I I do what I meant when I said it might not be trained explicitly on this. My understanding is in post training like our like Jeff, for example, there'll be people like giving plus one and minus ones to
+
+473
+01:21:47.100 --> 01:21:54.699
+hugo bowne-anderson: to when it's doing the thing that we would expect as well with models that are better at at getting the right function calls. I suppose.
+
+474
+01:21:55.500 --> 01:21:58.009
+William Horton: Yeah, no, I think the models are explicitly trained on that. Now.
+
+475
+01:21:58.990 --> 01:22:13.049
+hugo bowne-anderson: Yup, and Sid has a great question. Yes, and this is this is common. Give the Llm direction through prompting on when to make tool calls versus not, and you can get higher accuracy there as well.
+
+476
+01:22:13.437 --> 01:22:27.119
+hugo bowne-anderson: Well, I'm actually glad, because in previous cohorts this has been something a lot of people have done already, but it is still a sticking point. So I'm I'm really glad that we've been able to dive in a bit deeper into the the innards of
+
+477
+01:22:27.120 --> 01:22:50.029
+hugo bowne-anderson: function calling, so you can see what's up there. The other thing worth mentioning. And I hinted this at the start. I did so it returned function call. Then I did this explicitly. Where I got the function call pass it to the Api. I mean, I did it manually, then passed it to the next invocation of the Llm. But you can do this programmatically, and you will a lot of the time.
+
+478
+01:22:50.030 --> 01:23:00.009
+hugo bowne-anderson: Okay, so you can define this in in business. Logic yourselves. So look! We have half an hour left, and I do.
+
+479
+01:23:02.170 --> 01:23:04.689
+hugo bowne-anderson: What do I want to do? Actually.
+
+480
+01:23:04.850 --> 01:23:09.619
+hugo bowne-anderson: I just a word from our sponsor. For those who can't make.
+
+481
+01:23:10.170 --> 01:23:15.340
+hugo bowne-anderson: Oh, where is it for those who can't make the workshop with skylar
+
+482
+01:23:17.500 --> 01:23:22.769
+hugo bowne-anderson: totally cool? But I I did just want to show you one of the things we're going to do in it.
+
+483
+01:23:24.640 --> 01:23:26.260
+hugo bowne-anderson: let me
+
+484
+01:23:30.670 --> 01:23:31.890
+hugo bowne-anderson: find this.
+
+485
+01:23:39.780 --> 01:23:45.019
+hugo bowne-anderson: So what you actually I'm sorry this is the wrong.
+
+486
+01:23:45.330 --> 01:23:48.529
+hugo bowne-anderson: the wrong, URL. This is the correct URL.
+
+487
+01:23:49.580 --> 01:23:57.740
+hugo bowne-anderson: So this is the repository that I've linked to in the special guests Channel. And I'm going to link to it in this workshop
+
+488
+01:23:59.320 --> 01:24:03.640
+hugo bowne-anderson: as well. And what I did was I
+
+489
+01:24:06.750 --> 01:24:11.589
+hugo bowne-anderson: did this in a codespace, and while that's booting up, so I'm just going to do this
+
+490
+01:24:11.870 --> 01:24:18.489
+hugo bowne-anderson: for 60 to 120 seconds. So consider it like an advertisement interlude, but one that adds a lot of value hopefully as well.
+
+491
+01:24:20.200 --> 01:24:27.600
+hugo bowne-anderson: So what I did was, I set up my environment and I configured my Api key in Demo
+
+492
+01:24:28.050 --> 01:24:29.616
+hugo bowne-anderson: dot env
+
+493
+01:24:31.120 --> 01:24:32.140
+hugo bowne-anderson: And
+
+494
+01:24:33.760 --> 01:24:39.592
+hugo bowne-anderson: one thing, what Skylar has got us to do is set up a personal access token, so that
+
+495
+01:24:40.750 --> 01:24:41.799
+hugo bowne-anderson: so that
+
+496
+01:24:43.390 --> 01:24:49.810
+hugo bowne-anderson: the workflow you do can actually create a gist which will give the output of some research you ask it to do
+
+497
+01:24:49.880 --> 01:25:15.020
+hugo bowne-anderson: and actually look for. I can do this really quickly. I think you know the demo gods may not shine. This is what we're going to go through. I'm setting up an Mcp server that skylar has developed, and we're going to talk through all of this. What this does is. It shows an archive paper search integrated with Github Gist creation through Mcp. So in one terminal, I have the server.
+
+498
+01:25:15.020 --> 01:25:22.569
+hugo bowne-anderson: What I'm going to do is then set up the client, and we're going to learn about server clients all of that type of stuff in it.
+
+499
+01:25:24.020 --> 01:25:30.170
+hugo bowne-anderson: gonna paste that there William, would you mind just giving me something? You'd like me to look up on archive
+
+500
+01:25:32.300 --> 01:25:33.859
+hugo bowne-anderson: something not too niche.
+
+501
+01:25:35.350 --> 01:25:36.379
+William Horton: Drop out.
+
+502
+01:25:37.260 --> 01:25:37.863
+hugo bowne-anderson: Great
+
+503
+01:25:39.250 --> 01:25:43.950
+hugo bowne-anderson: I'd like to know as much as possible about dropout in neural networks.
+
+504
+01:25:50.060 --> 01:25:55.900
+hugo bowne-anderson: So it's calling search papers, which is its 1st function.
+
+505
+01:26:00.060 --> 01:26:02.709
+hugo bowne-anderson: Of course it's going to take a bit of time.
+
+506
+01:26:07.200 --> 01:26:09.679
+hugo bowne-anderson: and so remember what I have here is, I've got
+
+507
+01:26:10.210 --> 01:26:15.609
+hugo bowne-anderson: the server running in one terminal. And this is me with a with a client.
+
+508
+01:26:18.120 --> 01:26:20.849
+hugo bowne-anderson: So once again, we're going to go through all this in detail.
+
+509
+01:26:21.484 --> 01:26:23.970
+hugo bowne-anderson: with with Skylar coming up next.
+
+510
+01:26:29.990 --> 01:26:33.129
+hugo bowne-anderson: And what we're gonna do, Nick, while I'm waiting for that to run. I know we're
+
+511
+01:26:36.960 --> 01:26:39.049
+hugo bowne-anderson: jumping around a bit, but we're going to
+
+512
+01:26:39.160 --> 01:26:46.909
+hugo bowne-anderson: jump into the session. 6 notebook on the agentic continuum, and all the things we've been talking about
+
+513
+01:26:49.200 --> 01:26:52.640
+hugo bowne-anderson: great. So we have calling search papers. Then
+
+514
+01:26:56.370 --> 01:27:11.160
+hugo bowne-anderson: It created the gist, and it says, I have gathered and summarized recent research on dropout in neural networks, highlighting its use in regularization. Great Bayesian uncertainty, estimation, robustness analysis, and its role in understanding generalization behaviors like grocking. What? Okay?
+
+515
+01:27:12.470 --> 01:27:15.309
+hugo bowne-anderson: So a lot of that made sense to me. So now
+
+516
+01:27:15.560 --> 01:27:27.609
+hugo bowne-anderson: look, Hugo, bound research summary on dropout in neural network. We've just created this gist. Not so it has. The dropout talks about the summary, has the summary, has the papers, and
+
+517
+01:27:28.230 --> 01:27:42.680
+hugo bowne-anderson: has references to them as well, and then says, for further reading the text of these papers, so I just wanted to show you some of the great things you can do with Mcp, adding a few tokens. And this is the type of stuff we'll be going deep
+
+518
+01:27:42.680 --> 01:28:06.450
+hugo bowne-anderson: with Skylar in in half an hour. Okay, and I love that, I said to him, Are you able to set up a code space? And he came back to me the next day with this entire repository with a code space. So I personally, I mean Skylar's fire. So I'm really excited about this. So that was a word from our sponsor that beats a super bowl advertisement in my well, I was going to say humble opinion, but that that felt slightly unhumble.
+
+519
+01:28:07.670 --> 01:28:12.520
+hugo bowne-anderson: A lot of fun, though. So now what we're?
+
+520
+01:28:13.430 --> 01:28:14.730
+hugo bowne-anderson: Oh, yeah.
+
+521
+01:28:16.050 --> 01:28:30.730
+hugo bowne-anderson: Kevin, that is so great. How long did it take to you, after 1st seeing a paper published on Archive to realize that it was pronounced archive. You know that's really funny, and I think I never had that because I used to work in research.
+
+522
+01:28:31.168 --> 01:28:58.389
+hugo bowne-anderson: And I think I heard it said by my graduate school advisor before I saw how it was spelt, just like Latex. A lot of people say Latex or Latex, or Latex which is, which is interesting. I also had a friend who used to say Mayo instead of Mao for Chairman Mayo, and and he refused to say, Mao, even when he found out he was like Mayo, is a way better name, and you know
+
+523
+01:28:58.902 --> 01:29:02.230
+hugo bowne-anderson: I'm glad Mal wasn't around to to hear him. So
+
+524
+01:29:02.530 --> 01:29:24.230
+hugo bowne-anderson: without further ado, let's jump into building some of these augmented workflows together, and this is a notebook that you know I use time and time again, as you know, including templates, and it's built upon the anthropic. The code associated with the anthropic blog post as well. So
+
+525
+01:29:24.440 --> 01:29:29.920
+hugo bowne-anderson: what I want to do is take some of the patterns, the augmented Llm. Patterns that that we've discussed and that
+
+526
+01:29:30.130 --> 01:29:55.830
+hugo bowne-anderson: anthropic, popularized, and show how they can apply to. You know the Linkedin profile extraction and email generator that that we've been working through in this course. Okay? So once again, we'll start with one of the most before jumping to agents. Think about whether chaining a couple of prompts together will work for you because you could imagine trying to create an agent which is like extract profile from Linkedin.
+
+527
+01:29:56.655 --> 01:29:57.350
+hugo bowne-anderson: and
+
+528
+01:29:57.500 --> 01:30:14.649
+hugo bowne-anderson: create an email. And then iterate on that email. You could do that using crew AI or any number of other frameworks once again, then evaluating, iterating and doing failure. Analysis gets really tough, really quickly. So if you can figure out how to break it down into
+
+529
+01:30:15.144 --> 01:30:26.199
+hugo bowne-anderson: one of these one of these workflows. It can help you very seriously build more robust, reliable applications. So let's have a look at this one Llm. Call
+
+530
+01:30:26.590 --> 01:30:30.849
+hugo bowne-anderson: output pass to another. Okay, so when would you use this pattern?
+
+531
+01:30:32.189 --> 01:30:36.360
+hugo bowne-anderson: Firstly, when a task naturally breaks down into sequential steps funnily.
+
+532
+01:30:36.510 --> 01:30:49.879
+hugo bowne-anderson: I mean, not so funny that happens at a huge amount of the time, right? When each step's output feeds into the next step, when you need clear intermediate results, and when order of operations matter. Now, all of these hold in this case, and.
+
+533
+01:30:49.880 --> 01:31:09.990
+hugo bowne-anderson: to be clear, you really do need clear intermediate results that you want to see the structured output in order to interrogate whether it's correct or not. And once again, when you modularize your workflows like this, which has been a through line of this course kind of essentially based around the data flow paradigm
+
+534
+01:31:10.570 --> 01:31:11.949
+hugo bowne-anderson: you're able to figure out
+
+535
+01:31:12.160 --> 01:31:40.389
+hugo bowne-anderson: like which levers to pull in order to improve and iterate on your app is the problem in the email generation, or is it in the structured output generation? Okay, so what are the key components? We have the input pro processor. So we preparing data for the chain, then chaining the steps, the series of calls with clear inputs and outputs, then formatting and error handling, of course. So
+
+536
+01:31:40.970 --> 01:31:48.689
+hugo bowne-anderson: what we're going to do is demonstrate this by 1st extracting data from a Linkedin profile. Then
+
+537
+01:31:49.206 --> 01:31:52.950
+hugo bowne-anderson: using the structured data to generate a personalized email.
+
+538
+01:31:53.438 --> 01:31:55.180
+hugo bowne-anderson: and as we've written here.
+
+539
+01:31:55.570 --> 01:32:00.989
+hugo bowne-anderson: each step builds on the output of the previous step, and I'm asking, give me a thumb up
+
+540
+01:32:01.250 --> 01:32:07.730
+hugo bowne-anderson: if you've seen the TV show Mr. Robot in
+
+541
+01:32:08.232 --> 01:32:20.570
+hugo bowne-anderson: discord and give me a thumb down if you haven't and we'll see why I'm asking you that in a second. So we have our chain function, which will chain our 2
+
+542
+01:32:21.540 --> 01:32:26.060
+hugo bowne-anderson: calls together, and funnily, I may not even use this here because
+
+543
+01:32:26.510 --> 01:32:32.590
+hugo bowne-anderson: I actually do it separately, and just pass one the output to the next. But when you have longer flows you will want to do that.
+
+544
+01:32:32.670 --> 01:32:59.109
+hugo bowne-anderson: Then I have this extract structured output. So the prompt is extract the following structured data from the Linkedin profile, full name, current job skills. Previous job, provide the output in this. And once again you can use structured output. But I'm doing this explicitly and passing it some profile text. Then I have another function which is generate outreach email where I'm saying, generate professional outreach email using the structured data.
+
+545
+01:32:59.610 --> 01:33:16.240
+hugo bowne-anderson: So yeah, using the following structured data, write a professional email. And I pass it the data from the previous. The email should address the recipient by name reference, their current position relevant highlight relevant skills politely request the meeting to discuss potential collaboration opportunities.
+
+546
+01:33:17.080 --> 01:33:25.110
+hugo bowne-anderson: so think about also how I even generate this prompt right? And the way you do that would
+
+547
+01:33:25.580 --> 01:33:31.509
+hugo bowne-anderson: firstly look at the type of emails that were successful previously. Secondly, chat with the person
+
+548
+01:33:31.850 --> 01:33:43.050
+hugo bowne-anderson: or iterate on this, prompt with the person who used to write the emails and then look at the results with them as well. Okay, so what I'm passing in here is
+
+549
+01:33:43.700 --> 01:34:11.180
+hugo bowne-anderson: the Linkedin profile of someone called Elliot Alderson, who's the main character in Mr. Robot who is a cybersecurity engineer by day and a total wild hacker by night, but specializes in penetration, testing, network security, ethical hacking. He has a deep understanding of unix systems, Python and C, passionate about open source contributing to cybersecurity. Forums haven't mentioned his like
+
+550
+01:34:11.260 --> 01:34:16.839
+hugo bowne-anderson: arguably unethical packing, although it's got ethical ethical basis
+
+551
+01:34:17.650 --> 01:34:38.710
+hugo bowne-anderson: and well, the other thing. Sorry I saw, Carol wrote. I've had reach outs. Oh, also, like I do once again apologize. I think this is a nice toy example. But like, I hope I'm not all teaching you how to like generate more outreach emails because the world definitely doesn't need more Hr outreach emails, and also like politely requests, a meeting like an Llm. Might then
+
+552
+01:34:38.710 --> 01:34:54.000
+hugo bowne-anderson: say, Oh, I would like to politely request a meeting to discuss potential collaboration opportunities. And who who wants to? Wants to read something something like that? But let's look at what it does. So I haven't used the chain function. I've just got the
+
+553
+01:34:54.450 --> 01:35:05.120
+hugo bowne-anderson: structured data is output, and I'm passing it to the generate outreach email. And that's cool name.
+
+554
+01:35:12.420 --> 01:35:17.610
+hugo bowne-anderson: Oh, yeah, I mustn't have executed. Oh, I thought I had executed that cell. But
+
+555
+01:35:22.660 --> 01:35:26.499
+hugo bowne-anderson: okay, so we have the structure, the structured data there.
+
+556
+01:35:26.610 --> 01:35:28.100
+hugo bowne-anderson: And now we have
+
+557
+01:35:30.260 --> 01:35:40.690
+hugo bowne-anderson: the outreach email. Oh, I love this. This doesn't always happen. Because these systems are absurd. But can anyone just tell me what is wrong here?
+
+558
+01:35:54.710 --> 01:35:56.179
+hugo bowne-anderson: It's so bad.
+
+559
+01:35:58.650 --> 01:36:01.760
+Laura Summers: It's written from the point of view of the person you're trying to outreach to.
+
+560
+01:36:01.760 --> 01:36:09.229
+hugo bowne-anderson: Exactly so. It's written by Elliot Alderson, whereas we want to outreach to Elliot Alderson. So let's just have a look at our
+
+561
+01:36:09.390 --> 01:36:10.460
+hugo bowne-anderson: our prompt.
+
+562
+01:36:13.310 --> 01:36:15.240
+hugo bowne-anderson: Huh! Beautiful.
+
+563
+01:36:15.380 --> 01:36:29.467
+hugo bowne-anderson: Using the following structured data, write a professional outreach email. So we haven't specified who who it should be to and from right? So that's really our fault. The Llm. We haven't given it
+
+564
+01:36:30.170 --> 01:36:42.490
+hugo bowne-anderson: to the I'm gonna do something to the person described in the
+
+565
+01:36:43.100 --> 01:36:55.429
+hugo bowne-anderson: structured data. So once again. This is something that this is a really lovely example of, something you don't need evaluation for yet, and you don't want to write a test for yet you literally just go and iterate on the prompt very quickly and see
+
+566
+01:36:55.937 --> 01:36:57.069
+hugo bowne-anderson: see what's up.
+
+567
+01:37:01.950 --> 01:37:03.040
+hugo bowne-anderson: Fantastic.
+
+568
+01:37:03.250 --> 01:37:09.080
+hugo bowne-anderson: That arrow was fixed. Okay, so, dear Mr. Alderson. Okay. Great. So
+
+569
+01:37:09.820 --> 01:37:13.239
+hugo bowne-anderson: simple. Example of prompt chaining and the power of prompt chaining.
+
+570
+01:37:13.830 --> 01:37:18.520
+hugo bowne-anderson: once again, if I've got a crew AI agent to do that, I may not have even been able to see
+
+571
+01:37:19.460 --> 01:37:27.734
+hugo bowne-anderson: my ability to quickly edit on the prompt, because I don't even know what prompt is being sent to the system, right? So the fact that we've split it into
+
+572
+01:37:28.160 --> 01:37:39.740
+hugo bowne-anderson: into the structured data extraction and the email generation, that means that we can really just iterate quickly and and know exactly exactly what's happening. Okay.
+
+573
+01:37:42.520 --> 01:37:47.100
+hugo bowne-anderson: great. So I mentioned parallelization
+
+574
+01:37:47.240 --> 01:37:52.446
+hugo bowne-anderson: right? And once again, this image is from anthropic. So
+
+575
+01:37:53.370 --> 01:37:58.129
+hugo bowne-anderson: we use this when different aspects of a task can be processed independently
+
+576
+01:37:58.350 --> 01:38:13.430
+hugo bowne-anderson: when you need to analyze multiple components simultaneously, and when speed and performance is a priority. Okay, so we have our task distributor, which splits it into a variety of tasks. We have our worker pool.
+
+577
+01:38:13.730 --> 01:38:21.549
+hugo bowne-anderson: You may want thread management. You don't necessarily need that at the 1st approximation, then you want to aggregate the results. So this example and I can't.
+
+578
+01:38:22.490 --> 01:38:26.760
+hugo bowne-anderson: I can't speak to this enough that when you're doing structured output generation. What?
+
+579
+01:38:27.020 --> 01:38:33.650
+hugo bowne-anderson: When you're putting any constraints on on the output? Remember, these are probabilistic models.
+
+580
+01:38:34.646 --> 01:38:38.620
+hugo bowne-anderson: That have some form of output space. Sorry?
+
+581
+01:38:39.511 --> 01:38:41.919
+hugo bowne-anderson: That have some form of
+
+582
+01:38:42.050 --> 01:38:59.840
+hugo bowne-anderson: output space. And what we're doing when we're putting constraints on the output is we're conditioning the output space. Okay? The the possible output space, and what that can have really funky effects on
+
+583
+01:39:04.150 --> 01:39:28.870
+hugo bowne-anderson: on what types of things are generated there. And so the jury isn't in on this, but at least anecdotally, there's a lot of evidence that it can reduce accuracy across the variety of different things you're trying to extract. So I mean, when I've done this several times, and I know a lot of people and work with a lot of people who have similar issues, you will get
+
+584
+01:39:28.890 --> 01:39:41.410
+hugo bowne-anderson: less accurate responses in structured output than you will if you're just asking it for a name or just asking for skills and so on. So that's kind of a rationale behind. Once again it can cost more.
+
+585
+01:39:41.992 --> 01:39:54.309
+hugo bowne-anderson: But of course there's a cost accuracy trade off. But if you, if you really need high accuracy here, parallelizing these types of things can get you get you a long way. So
+
+586
+01:39:54.840 --> 01:40:08.709
+hugo bowne-anderson: what we're doing here is, oh, yeah. And I am. I am doing some thread and thread pulling here. You don't necessarily need to. You could just define this yourself and and parallelize. But what I'm getting it to do is do all of these separately. So
+
+587
+01:40:11.550 --> 01:40:19.320
+hugo bowne-anderson: position and company name skills and previous jobs. Okay? And then I'm getting it to
+
+588
+01:40:20.770 --> 01:40:27.000
+hugo bowne-anderson: do the same outreach email. And I'm using the same prompt there. So we'll see. If it flip flops. What it actually does here.
+
+589
+01:40:33.110 --> 01:40:35.139
+hugo bowne-anderson: Isn't this interesting? Okay? So
+
+590
+01:40:38.770 --> 01:40:47.070
+hugo bowne-anderson: oh, this is infuriating any any reflections on on the results here.
+
+591
+01:40:49.570 --> 01:40:55.850
+Cheska P: The thinking tags are kind of included in the response. Where it's saying, let me extract the current job.
+
+592
+01:40:56.230 --> 01:41:02.470
+hugo bowne-anderson: Exactly so under current position, even though I've asked it solely for the current position.
+
+593
+01:41:02.750 --> 01:41:10.660
+hugo bowne-anderson: It's saying, let me extract the current job, title and company from the Linkedin profile. Which we definitely don't want. The
+
+594
+01:41:10.780 --> 01:41:15.870
+hugo bowne-anderson: the next step. The email generation is clever enough to have extracted.
+
+595
+01:41:16.580 --> 01:41:43.165
+hugo bowne-anderson: Remove that and extracted what it, what it wanted, which is cool. But this is one of the reasons I wanted us to like. Try to hand code getting structured output because it doesn't only happen with structured output. It happens all the time that you get these verbose responses. Even when you say, Please do not do this, even if you're thinking you're not doing this double check it triple, check it. These types of things, right? You may all remember there was. And I may have mentioned this earlier in the course, but there was
+
+596
+01:41:44.900 --> 01:42:03.820
+hugo bowne-anderson: one of El Sevier, the academic publisher, one of their, you know very well regarded journals, had an abstract for one of their papers, which opened with something like, here is here's the final version of the abstract, for you know, blah blah blah! And it was clearly, you know, an Llm generator response. So they.
+
+597
+01:42:04.050 --> 01:42:23.219
+hugo bowne-anderson: you know, on on the side of being far more, far more verbose. The other thing that's interesting here is that the generated response the prompt I gave was exactly the same as the previous one before I edited it, but it got it right that it's to Elliot Alderson, and and not from which I, which I find find interesting.
+
+598
+01:42:26.270 --> 01:42:27.240
+hugo bowne-anderson: So
+
+599
+01:42:27.510 --> 01:42:43.599
+hugo bowne-anderson: key takeaways. Here I use parallel processing when subtasks are independent. And it's useful for analyzing multiple aspects of the same output input simultaneously. It can also reduce total processing time. It can be more expensive. Some common gotchas, which we haven't.
+
+600
+01:42:43.900 --> 01:43:00.669
+hugo bowne-anderson: you know, encoded in code. Here is just be mindful of rate limits, and you should ensure thread, pool size matches, your actual needs. And you, you want to handle errors in all the parallel tasks, and we haven't done much much error handling here, but it's very important to keep in mind.
+
+601
+01:43:02.000 --> 01:43:02.930
+hugo bowne-anderson: So
+
+602
+01:43:03.450 --> 01:43:24.928
+hugo bowne-anderson: I'm not going to go through the routing example here. You can definitely do that after the fact. And I mean all the code. And the output is here actually. And I'm not going to go through the orchestrator worker Workflow. We've talked about both of those, and you can definitely go go through those yourself because I do want to just spend the last 5 or so minutes.
+
+603
+01:43:25.780 --> 01:43:48.919
+hugo bowne-anderson: talking about evaluator optimizer. And if you do need to drop off soon. Pastor has just given the form, the survey for today's workshop and pastor, if you could also once again, and you may be doing this include the demo days form, just for people who want to just put down a few ideas for what they'd like to show next week, and also the form
+
+604
+01:43:49.110 --> 01:43:56.320
+hugo bowne-anderson: for what you all would like to focus on next week. I'd really really appreciate it.
+
+605
+01:43:57.980 --> 01:43:59.140
+hugo bowne-anderson: So
+
+606
+01:43:59.590 --> 01:44:09.220
+hugo bowne-anderson: and once again, your feedback is is so welcome and important, everyone so keep the wonderful feedback coming through. So for the evaluator, optimizer workflow
+
+607
+01:44:10.468 --> 01:44:12.420
+hugo bowne-anderson: when do we want to use it?
+
+608
+01:44:13.040 --> 01:44:21.120
+hugo bowne-anderson: It's ideal when we want quick iterative improvement to refine outputs to meet specific quality criteria.
+
+609
+01:44:21.580 --> 01:44:24.710
+hugo bowne-anderson: and where clear evaluation criteria are available.
+
+610
+01:44:25.656 --> 01:44:53.109
+hugo bowne-anderson: and when the task benefits from a feedback loop. So one example is refining email email drafts. There's also polishing translations. The other thing that came up earlier actually was when we were talking about a transcription, but improving the quality of transcription. So I love that example from I think it was Julian. But I forgive me, Julian, if I'm wrong, and forgive me whoever it was, if I'm if I'm wrong.
+
+611
+01:44:54.265 --> 01:45:03.990
+hugo bowne-anderson: So what are the key components here? There's the generator which produces the initial output, such as a draft email and provides a starting point for the evaluators. Analysis.
+
+612
+01:45:04.160 --> 01:45:16.059
+hugo bowne-anderson: then there's the evaluator which reviews the output and compares it against predefined criteria. Then there's the optimizer, which is often the generator as well, which will modify the output based on the feedback. Right? So
+
+613
+01:45:16.410 --> 01:45:22.689
+hugo bowne-anderson: let's do this with our email generation. Example.
+
+614
+01:45:23.210 --> 01:45:28.530
+hugo bowne-anderson: Right? So let's just go to the bottom and have a look.
+
+615
+01:45:31.480 --> 01:45:33.350
+hugo bowne-anderson: Just want to get this right where?
+
+616
+01:45:39.140 --> 01:45:44.949
+hugo bowne-anderson: Exactly so, where I'm using a high level orchestrator here, where I generate the initial email.
+
+617
+01:45:45.380 --> 01:45:52.640
+hugo bowne-anderson: Right? So I have this generate email function. And I've split it. Actually, yes, into generate, evaluate and optimize. Okay.
+
+618
+01:45:52.980 --> 01:45:59.711
+hugo bowne-anderson: so what we 1st do is we generate an email based on the Linkedin
+
+619
+01:46:00.630 --> 01:46:04.269
+hugo bowne-anderson: profile. And I'm using the hiring route here, which is
+
+620
+01:46:07.240 --> 01:46:08.609
+hugo bowne-anderson: You are
+
+621
+01:46:10.550 --> 01:46:19.489
+hugo bowne-anderson: a talent acquisition specialist. Write a professional email to the individuals described below, to the individual described below, inviting to discuss career opportunities.
+
+622
+01:46:19.960 --> 01:46:24.399
+hugo bowne-anderson: Few more things. Then that's what we're doing there.
+
+623
+01:46:24.570 --> 01:46:37.809
+hugo bowne-anderson: Then the evaluate email is, please review the following email and provide feedback. The goal is to ensure it's professional clear, and maintains a warm tone, if it needs improvement, provide suggestions. Now, something I haven't added here that
+
+624
+01:46:38.290 --> 01:46:57.709
+hugo bowne-anderson: I would encourage you all to think about when iterating on this type of thing is telling telling the Llm. To not bike shed. Okay? Because they're very good at providing. You know, minor fixes that don't add any value in the spirit of appearing helpful. Once again.
+
+625
+01:46:58.430 --> 01:47:00.670
+hugo bowne-anderson: And then we pass
+
+626
+01:47:01.120 --> 01:47:14.839
+hugo bowne-anderson: the feedback to the optimize email function, which is based on the following feedback, improve the email, ensure. It remains professional and clear while implementing the suggested changes. And so we've given it Elliot Alderson's email.
+
+627
+01:47:15.537 --> 01:47:17.150
+hugo bowne-anderson: sorry, Linkedin profile.
+
+628
+01:47:17.300 --> 01:47:22.400
+hugo bowne-anderson: And then we set up this entire flow and
+
+629
+01:47:23.740 --> 01:47:31.169
+hugo bowne-anderson: let me just make sure we're printing. Yes, we're printing the original email, printing the feedback and then printing the optimized email. So let me.
+
+630
+01:47:35.360 --> 01:47:43.219
+hugo bowne-anderson: we're on this initial email. Dear Elliot, I hope this email finds you well, I'm reaching out because your impressive, impressive background and
+
+631
+01:47:43.680 --> 01:47:50.919
+hugo bowne-anderson: etc. So that looks okay to me. Then let's look at the feedback.
+
+632
+01:48:00.500 --> 01:48:01.290
+hugo bowne-anderson: Okay.
+
+633
+01:48:01.450 --> 01:48:12.259
+hugo bowne-anderson: this is a well crafted recruitment email that effectively combines professionalism with a personal touch. Here's my analysis and suggestion for minor improvements, so gives the strengths
+
+634
+01:48:12.390 --> 01:48:14.310
+hugo bowne-anderson: then suggested improvements.
+
+635
+01:48:14.660 --> 01:48:17.590
+hugo bowne-anderson: Look.
+
+636
+01:48:17.860 --> 01:48:28.940
+hugo bowne-anderson: I really like this suggestion. Actually, once again making it personalized, like actually saying someone's name in in an email. Is something
+
+637
+01:48:31.540 --> 01:48:43.410
+hugo bowne-anderson: which which I really like. Laura has a great question is, do you ever have the reviewer accept the initial output without changes? Yeah. And that's that's kind of what I was hinting at with telling it not to bike shed. So say, say something like, Do not bike shed. If the email is good.
+
+638
+01:48:43.820 --> 01:48:52.572
+hugo bowne-anderson: say it's good, and and we'll move on. Also saying stuff like don't waste my time. I actually find more impactful.
+
+639
+01:48:53.220 --> 01:49:03.150
+hugo bowne-anderson: when it when it has that type of urgency around it. Actually, then a couple more things at a brief company introduction I represent. So on, then make the
+
+640
+01:49:03.360 --> 01:49:05.626
+hugo bowne-anderson: call to action more specific.
+
+641
+01:49:06.610 --> 01:49:15.360
+hugo bowne-anderson: wonderful. And look once again like recruitment emails aside like. I love it. When someone
+
+642
+01:49:15.860 --> 01:49:22.560
+hugo bowne-anderson: says to me, instead of Please let me know what time works best for you. I love it when they say, would you be available at the
+
+643
+01:49:22.680 --> 01:49:36.659
+hugo bowne-anderson: anytime on Tuesday? Because I can quickly pick a time? Even better send me a calendar. That's how I feel any, anyway. Right? To be honest, it actually stops. Like, if I'm not available during that time, it's email back and forth. Right?
+
+644
+01:49:37.110 --> 01:49:43.240
+hugo bowne-anderson: Then the revised closing could be okay. Great. Now let's look at the optimized email. Elliot.
+
+645
+01:49:43.400 --> 01:49:45.580
+hugo bowne-anderson: your cybersecurity expertise. Great.
+
+646
+01:49:46.660 --> 01:49:56.480
+hugo bowne-anderson: Oh, yep, I represent all of this has been, huh!
+
+647
+01:49:59.080 --> 01:50:05.860
+hugo bowne-anderson: This is super interesting. So the evaluator didn't only provide feedback. It drafted
+
+648
+01:50:06.060 --> 01:50:10.079
+hugo bowne-anderson: the entire email right? The entire new email
+
+649
+01:50:10.600 --> 01:50:24.510
+hugo bowne-anderson: which is worth thinking about. Once again, if we're doing this at scale. Maybe maybe the the token cost. There is something we we don't want to have it generated twice. Having said that the final optimized email incorporates all the points. As far as I can tell
+
+650
+01:50:24.650 --> 01:50:27.920
+hugo bowne-anderson: Elliot's name in the subject I represent company name.
+
+651
+01:50:28.100 --> 01:50:30.680
+hugo bowne-anderson: Would you be available for a 20 min? Call this week?
+
+652
+01:50:31.880 --> 01:50:59.659
+hugo bowne-anderson: and so on. Okay, so this was a toy example of doing one round. Now, of course, you may want a while loop, or you may want several rounds. You definitely don't want to have it go. You know. Add ad nauseam round and round in circles. But this was this was a 1st kind of dive into what this evaluator optimizer pattern actually actually looks like, okay, key. Takeaways are used when output quality and consistency are critical
+
+653
+01:50:59.710 --> 01:51:02.640
+hugo bowne-anderson: and create a feedback loop for continuous improvement.
+
+654
+01:51:02.890 --> 01:51:09.830
+hugo bowne-anderson: And it is, it can be very valuable for customer or stakeholder facing, facing content and
+
+655
+01:51:10.230 --> 01:51:18.606
+hugo bowne-anderson: common gotchas are avoid infinite optimization loops, set clear evaluation, criteria, balance improvement against response time.
+
+656
+01:51:19.130 --> 01:51:46.410
+hugo bowne-anderson: and just be careful to not over optimize and lose the original intent. Keep that keep that in mind. So everyone I appreciate. It's been a long day so far, and we have another workshop starting in 4 min. So what I'm going to suggest is we take the next 4 min to chill. I would love you all if you can, you know, if you're still here, take this time to complete the the feedback survey, if you haven't already.
+
+657
+01:51:47.132 --> 01:51:49.269
+hugo bowne-anderson: But I wonder.
+
+658
+01:51:50.490 --> 01:52:15.430
+hugo bowne-anderson: No, that was the end of the slides as well. And I, if you if you want to. I mean, I want you all to get as prepared for Demo Day as possible. But if you want to start playing around with these for your own linkedin cases, please do, and we'll set up a homework channel, where we'll include a bit more information about that. But I've had a wonderful time not only introducing you to how we're all thinking about building agents in the space, but working through
+
+659
+01:52:15.430 --> 01:52:23.037
+hugo bowne-anderson: all the all the details, all the patterns, and even like the relatively deep conversations around tool calls and function, calls.
+
+660
+01:52:23.400 --> 01:52:32.679
+hugo bowne-anderson: I found fantastic hearing hearing from all of you. So thanks for such a great engaging session, and I'll see you in 3 min with with Skylar in the next call.
+

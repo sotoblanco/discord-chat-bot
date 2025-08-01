@@ -1,0 +1,1444 @@
+WEBVTT
+
+199
+00:31:31.900 --> 00:31:39.110
+hugo bowne-anderson: can people see workshop. 5, Google slides.
+
+200
+00:31:39.300 --> 00:31:53.222
+hugo bowne-anderson: Great, fantastic. So we're gonna we're going to jump into the the proverbial meat meat of it, plant-based or otherwise, in a second. But today we are talking about context embeddings and and vector stores.
+
+201
+00:31:53.750 --> 00:32:16.180
+hugo bowne-anderson: just slight bit of housekeeping. This week. We're really talking about the core components of all the types of software we want to build. So of course, rag information retrieval. Of course, we started this course by building a basic rag information retrieval system. Now, we're going to see that the inner guts of it, right? We're going to talk about what embeddings are and why they're foundational introduction to vector stores
+
+202
+00:32:16.180 --> 00:32:38.540
+hugo bowne-anderson: building rag systems. Then later this week, we're going to get into function calling when and how to use it, and agentic workflows, and even more excitedly the path to agents. So augmented Llms adding memory. Here we're talking about adding context, adding tools, and then Llm workflows. So, using different types of tool calls and chaining Llms on the path
+
+203
+00:32:38.550 --> 00:32:39.850
+hugo bowne-anderson: to agents
+
+204
+00:32:40.040 --> 00:33:03.840
+hugo bowne-anderson: just big shout out, there are many people I could shout out to. I've picked 2. Sean has been doing just really inspiring work with the homework and projects he's he's working on. So check out. He recorded a loom video of him walking through a bunch of stuff he's he's working on with respect to what he's been learning in the course for his own project, and then adding, you know.
+
+205
+00:33:03.840 --> 00:33:24.030
+hugo bowne-anderson: optimizing prompts with dspy, using opentelemetry and tracing with arise Phoenix using using gradio and a variety of other things as well. So much so that John Berryman, who gave a guest guest talk last week, you know, who built the precursor to copilot, jumped in, was like really really great to see all the tools
+
+206
+00:33:24.030 --> 00:33:41.840
+hugo bowne-anderson: you're using so big. Shout out to Sean and Alona, who's been off the back of Stefan's workshop last week. Been using pytest and pedantic and bur and opentelemetry. So check out the homework 4 channel for all the fun stuff happening there. If you have the time
+
+207
+00:33:42.260 --> 00:33:56.589
+hugo bowne-anderson: so quickly. Today we've had Ivan's talk. We've had Jason's Q&A. At the end of this workshop which is going to go 15 min over to make time for for Ines ines is ines Montani from from who
+
+208
+00:33:56.830 --> 00:34:10.370
+hugo bowne-anderson: co-creator and core contributor to Spacey, and has the company explosion. AI with Matthew Matthew honable, we'll be talking about applied natural language processing and document. Sorry. Yeah. And document processing
+
+209
+00:34:10.370 --> 00:34:33.600
+hugo bowne-anderson: in the age of Gen. AI. And as we'll see a lot of the challenges we have are in the actual document processing, and not the generative aspect of things. And then I'm really excited to welcome Shreya Shankar from Uc. Berkeley, who's really at the forefront of working on these types of things to talk about accurate Llm powered, unstructured data analysis at scale. Okay.
+
+210
+00:34:33.956 --> 00:34:52.490
+hugo bowne-anderson: so the agenda. Now, we just had the Q&A with Jason gonna have a quick recap of workshops, one to 4. Then we're going to talk a bit about a bit about context. And then we'll jump into embeddings and vector spaces. And then we'll have Ines's guest talk. So
+
+211
+00:34:52.770 --> 00:35:21.990
+hugo bowne-anderson: what have we built so far in workshop. One, we built a basic app. We got into proof of concept purgatory with a gradio front end llama index for context enrichment which would decide what prompt to send the Llm. As we saw figuring out what prompt was actually sent to the Llm. Was the big challenge, so much so that Hamill wrote a blog post which I won't even say the name of right now. But if someone wants to link to it again, feel free
+
+212
+00:35:22.050 --> 00:35:31.890
+hugo bowne-anderson: using gemini openai anthropic for the calls, and then doing our observability and monitoring with sqlite and dataset and or excel.
+
+213
+00:35:32.590 --> 00:35:40.270
+hugo bowne-anderson: Then we ripped out the frameworks necessarily, in order to get more being able to inspect what was happening in our systems.
+
+214
+00:35:40.480 --> 00:36:01.059
+hugo bowne-anderson: Then what we did is well, we iterated on prompts and played around with knobs, such as top P and temperature and system prompting. Then we saw how to really begin the iterative process of evaluation which is tied to product development and never occurs in a vacuum. So we iterate and use evaluation to do so. We use human labeling.
+
+215
+00:36:01.060 --> 00:36:12.029
+hugo bowne-anderson: We use metrics. We use error, analysis and failure analysis, and then we scale with Llms. As a judge as well, among many other things, such as regular expressions and structured output right?
+
+216
+00:36:12.030 --> 00:36:26.069
+hugo bowne-anderson: And then once again, I mean, I'm so grateful to Stefan for being able to. I've learned so much from him about. You know the Ops. Part of all of these things. So in Workshop 4, we saw the 2 iterative loops
+
+217
+00:36:26.140 --> 00:36:50.559
+hugo bowne-anderson: both in development and and production as well. So today, we're actually, we're very much focusing on context. And how wonderful that now is the age of context, engineering as as well, even though it really does seem to me to be prompt engineering in in disguise, or an aspect of prompt engineering, because the context, I mean everything goes into the prompt right. But it is incredibly important.
+
+218
+00:36:51.480 --> 00:36:54.170
+hugo bowne-anderson: So as a precursor
+
+219
+00:36:54.410 --> 00:37:04.639
+hugo bowne-anderson: to our next workshop. If you and if someone could actually put it, Caleb, actually, if you wouldn't mind just putting in the chat the anthropic Blog Post building
+
+220
+00:37:05.040 --> 00:37:32.110
+hugo bowne-anderson: effective agents, is it? It's something, something along those lines far out. I read this post all the time and reference it all the time. I think that's what it's called. But the reason we index on that post is it? It really helped us think last year something we're all thinking, but formalized that even before we talk about agents, we need to recognize that Llms a text in text out right? And then we start to add memory. And we talked about this in
+
+221
+00:37:32.370 --> 00:37:57.459
+hugo bowne-anderson: workshop 2, when we're doing prompt engineering. And we actually saw how we can use prompts to, you know, encapsulate memory. We also think about retrieval. So being grounded in documentation. And then we think about tool calls. And this is the formalism that anthropic Barry and Eric, at anthropic introduced in this blog post, and we'll go through more of this. Then the approach to agents
+
+222
+00:37:58.550 --> 00:38:01.469
+hugo bowne-anderson: using Llm. Workflows in our
+
+223
+00:38:01.580 --> 00:38:10.115
+hugo bowne-anderson: next workshop this week. But it's very important to really think about the retrieval aspect, and in particular,
+
+224
+00:38:11.580 --> 00:38:14.502
+hugo bowne-anderson: As we've said time and time again,
+
+225
+00:38:15.270 --> 00:38:17.380
+hugo bowne-anderson: Llms, don't only hallucinate
+
+226
+00:38:17.590 --> 00:38:46.200
+hugo bowne-anderson: a lot. They actually hallucinate. And this is paraphrasing Andre Carpathee. They actually hallucinate all the time. It just so happens that sometimes the hallucinations coincide with ground truth, and what we really mean by that is, that by nature of being. Next token, prediction engines, there is no sense of what ground ground truth actually actually is, and when we do retrieval, though there is a sense of ground truth, right? Because we have actual documents that are
+
+227
+00:38:46.200 --> 00:38:49.089
+hugo bowne-anderson: and chunks that are referenced. Okay.
+
+228
+00:38:49.576 --> 00:39:07.229
+hugo bowne-anderson: what else do I want to say about that. Carpathy actually makes a point in when he talked about everything being hallucinations that Llms 100% hallucination and search is 0% hallucination, because it's always grounded in documents. Those documents may be hallucinations themselves. Let's let's not go there.
+
+229
+00:39:07.390 --> 00:39:14.349
+hugo bowne-anderson: But the the point remains that when we do retrieval, we're combining the generative aspect and the search aspect. Right?
+
+230
+00:39:14.680 --> 00:39:15.650
+hugo bowne-anderson: So
+
+231
+00:39:15.890 --> 00:39:31.830
+hugo bowne-anderson: why do we even need to add context? So firstly, and I've just said a few things about this filling knowledge gaps. Right? So Llms are trained on fixed data sets and they can't know everything. So context lets us supplement the model with external information, grounding and accuracy. So
+
+232
+00:39:32.090 --> 00:39:35.310
+hugo bowne-anderson: context ideally constrains the model's output.
+
+233
+00:39:36.133 --> 00:39:47.576
+hugo bowne-anderson: Anchoring them to relevant information. Okay, this will reduce hallucination and increases the reliability of the generated text, and once again being able to have references to
+
+234
+00:39:49.200 --> 00:39:51.560
+hugo bowne-anderson: The source documentation is incredibly important.
+
+235
+00:39:51.710 --> 00:39:54.970
+hugo bowne-anderson: I don't know if you all have played around with perplexity.
+
+236
+00:39:55.150 --> 00:39:58.999
+hugo bowne-anderson: But this was Oh, pardon me, sorry.
+
+237
+00:39:59.210 --> 00:40:05.410
+hugo bowne-anderson: This was one of the 1st products which combined search
+
+238
+00:40:06.433 --> 00:40:10.230
+hugo bowne-anderson: and Llms in a in in an interesting way.
+
+239
+00:40:11.520 --> 00:40:13.499
+hugo bowne-anderson: So I'm just going to turn my microphone off to.
+
+240
+00:40:20.980 --> 00:40:22.819
+hugo bowne-anderson: So what perplexity would do?
+
+241
+00:40:23.350 --> 00:40:24.780
+hugo bowne-anderson: You'd ask it a question.
+
+242
+00:40:25.040 --> 00:40:43.879
+hugo bowne-anderson: and it will give a generative answer, but it would give you references. Okay. Now, sometimes the references weren't great. It would like, give an answer, and then it'd say, this is verified by and like it'd be a comment in a reddit thread from 8 years ago. Right? So you need to be very careful and and look at the references yourself.
+
+243
+00:40:44.130 --> 00:41:11.529
+hugo bowne-anderson: But it's this type of grounding and accuracy that we're looking for in products and be user focus once again. So do you want to provide the references, then we have task specific relevance. So many tasks require precise focus knowledge. It also allows us to be more dynamic and up to date in information right? So, as you know, I presume there are cut off dates for models like when they were trained. So let's say they were trained before
+
+244
+00:41:11.910 --> 00:41:15.350
+hugo bowne-anderson: an election took place. They may not know who you know. The
+
+245
+00:41:15.780 --> 00:41:41.030
+hugo bowne-anderson: the leader of a country is the hopefully, democratically elected leader, and so, being able to retrieve up-to-date information have a ground in documents is important. This also once again enables explainability, so you can introspect into the documents that were referenced, and see why they were referenced, and where they come from
+
+246
+00:41:41.930 --> 00:41:44.629
+hugo bowne-anderson: the one other thing worth mentioning.
+
+247
+00:41:45.171 --> 00:41:50.228
+hugo bowne-anderson: And I'll link to these in the chat unless someone wants to
+
+248
+00:41:51.900 --> 00:42:04.069
+hugo bowne-anderson: link to them now. I just saw Mike mentioned in the chat. He's still a big fan of perplexity. I haven't used it in some time. I do go back to it every now and then, but I'm really bullish on it in a number of ways, and they actually
+
+249
+00:42:04.200 --> 00:42:09.960
+hugo bowne-anderson: they have an agent powered browser. They've called Comet that they put out released recently, for
+
+250
+00:42:11.040 --> 00:42:36.690
+hugo bowne-anderson: I think you need perplexity, Max, which is one of those subscriptions I'm just not going to pay for, but you can get on the waiting list to get some form of its general release. But I actually, I'm excited about perplexity still, so O'reilly has published a series of blog posts which then move into their business model with respect to how they're using rag. And when we talked about this previously, William Horton, who.
+
+251
+00:42:36.987 --> 00:42:48.309
+hugo bowne-anderson: I think, is on the call he mentioned. That Rag isn't the only way to approach this, and I totally agree with this. But what information retrieval and grounding in documents can do is actually allow you to
+
+252
+00:42:48.890 --> 00:42:54.879
+hugo bowne-anderson: track Providence and and then pay royalties to people whose
+
+253
+00:42:55.893 --> 00:43:09.920
+hugo bowne-anderson: so who you cite and who you source. So this is something O'reilly does. Now, I'm sorry. Do they say it? Yeah, yeah, I think this is the article which which talks about it. They have a rag based system on their
+
+254
+00:43:10.170 --> 00:43:24.743
+hugo bowne-anderson: platform, and it will do rag across all of their books, and if you get a response from one of their books, and you go there. Then the author gets some form of royalty there. So I think this is an absolutely
+
+255
+00:43:25.230 --> 00:43:46.940
+hugo bowne-anderson: wonderful, wonderful system and something which you know hopefully, more people will put into practice. It's actually, as Tim makes pretty clear here. It's antithetical to you know, AI's original sin. Kind of antithetical to Tech's original sin as well. Just imagine if Google paid royalties to people who it it used. So
+
+256
+00:43:48.210 --> 00:43:51.499
+hugo bowne-anderson: the 2 fundamental questions, then, of
+
+257
+00:43:51.710 --> 00:43:58.000
+hugo bowne-anderson: Llm. Based information, retrieval are, how do we give information that we extract to the Llm.
+
+258
+00:43:58.170 --> 00:44:07.669
+hugo bowne-anderson: And also, how do we get the information out of our corpus of documents. Perhaps I should have put this these in in the other order as well. So
+
+259
+00:44:08.240 --> 00:44:14.190
+hugo bowne-anderson: how do we get information out of the Corpus, and how do we give it to the Llm. Okay? So
+
+260
+00:44:14.910 --> 00:44:21.170
+hugo bowne-anderson: firstly, how do we give it? Give the information we extract to the Lom
+
+261
+00:44:23.310 --> 00:44:24.110
+hugo bowne-anderson: So
+
+262
+00:44:24.470 --> 00:44:41.839
+hugo bowne-anderson: there are several things we can do. We can prepend to the prompt. We can add the retrieve context directly to the input, so we can say, here is relevant information. The question is, dot dot, we can also organize, retrieve context into well-defined sections. So have structured templates. Context query for clarity and consistency.
+
+263
+00:44:41.850 --> 00:45:11.279
+hugo bowne-anderson: We can also use system messages. So for chat based models, you can pass context via system level instructions. And if you look into what llama index does lama index plus plus, you'll see these are the types of things they do right? So what are the challenges here? Managing the context window efficiently? So how much stuff you can put in there. So this, you know, and we'll see this so chunking and then prioritizing what what comes 1st and then ensuring the context is relevant and concise, so it doesn't confuse or overwhelm the Llm.
+
+264
+00:45:11.539 --> 00:45:18.649
+hugo bowne-anderson: And I do want to say a bit more about this. I mean, we? We've hinted at this several times, including just with with Jason, then. But you know there are.
+
+265
+00:45:19.760 --> 00:45:43.919
+hugo bowne-anderson: There are marketing and shiny object forces at play which tell us about like infinite context, and you can just give it everything. And Rag is dead, and all of those types of things. And that just isn't true. Of course, there are far larger context these days, but if you start looking at performance and cost and latency, you'll find pretty pretty soon that you can get significantly better performance when you do
+
+266
+00:45:43.920 --> 00:45:51.660
+hugo bowne-anderson: pass it relevant information and as much relevant and high signal information as possible.
+
+267
+00:45:51.660 --> 00:46:15.660
+hugo bowne-anderson: The other thing that doing this allows us to do is then to iterate and evaluate. If we're just throwing everything into the context and we have a failure mode, it's actually not clear what the what the issue is at all right. So the ability to have data pipelines, where we know what happens at each step allows us then to do our failure analysis and iterate and evaluate.
+
+268
+00:46:15.660 --> 00:46:20.088
+hugo bowne-anderson: And I do want to say I mean, I know I get a bit big picture sometimes, but think about
+
+269
+00:46:25.720 --> 00:46:26.290
+hugo bowne-anderson: right?
+
+270
+00:46:27.650 --> 00:46:32.399
+hugo bowne-anderson: So Tico Brahe's data set that I think Kepler based is
+
+271
+00:46:34.860 --> 00:46:53.977
+hugo bowne-anderson: you know, laws of, you know, celestial mechanics upon it was like 2,000 data points highly curated. Right? And so the point of. And this is what you know. Newton based gravitation upon. My only point of saying this is that when we have incredibly high signal information,
+
+272
+00:46:54.970 --> 00:47:07.680
+hugo bowne-anderson: and and small data, we can actually get get a lot a lot done there. So the the point remains that giving it high signal as small information and relevant as possible is incredibly important.
+
+273
+00:47:08.190 --> 00:47:15.680
+hugo bowne-anderson: So then, and we've we've touched on this several times now. But how do we get information out of our corpus of documents?
+
+274
+00:47:16.130 --> 00:47:43.770
+hugo bowne-anderson: There are lots of old school techniques which we've talked about. There's exact matching. There's grip. There's regular expressions for precise patterns. There's keyword-based retrieval, and we'll be going through a few of these in today's workshop. There's bag of words. There's Tfidf there's heuristic search, so fuzzy, matching for approximate terms. There are statistical methods. Bm, 25 is one, Jason mentioned briefly, which a lot of the time is incredibly performant.
+
+275
+00:47:43.770 --> 00:48:00.270
+hugo bowne-anderson: Then there's embedding based retrieval, so semantic similarity via vector spaces. And then there are hybrid hybrid approaches. And we'll get into all of these on a set of a subset of these in the notebooks soon. So what challenges do we see here
+
+276
+00:48:00.360 --> 00:48:19.050
+hugo bowne-anderson: chunking documents for effective retrieval? So breaking Pdfs or long texts into meaningful parts and then balancing precision, relevant results and recall not missing important information. So actually, I'm gonna say, I'm gonna ask in the chat, would you?
+
+277
+00:48:23.890 --> 00:48:33.740
+hugo bowne-anderson: Okay in, I'm gonna say in Ir. So information retrieval which includes rag in Ir systems, would you
+
+278
+00:48:34.580 --> 00:48:47.410
+hugo bowne-anderson: prefer better precision, who recall? And I'm just going to add 2 emojis.
+
+279
+00:48:48.060 --> 00:48:57.060
+hugo bowne-anderson: One is P for precision, and I really hope there's an R here as well.
+
+280
+00:48:57.550 --> 00:48:59.140
+hugo bowne-anderson: I'm looking for it.
+
+281
+00:49:01.290 --> 00:49:03.550
+hugo bowne-anderson: Oh, come on, discord!
+
+282
+00:49:07.940 --> 00:49:13.300
+hugo bowne-anderson: Is there an R massive file? I'm going to use this symbol for
+
+283
+00:49:14.460 --> 00:49:16.960
+hugo bowne-anderson: oh, someone found an R. Great. Thank you. Carol.
+
+284
+00:49:26.140 --> 00:49:27.220
+hugo bowne-anderson: great. So
+
+285
+00:49:27.650 --> 00:49:37.750
+hugo bowne-anderson: Alona says, depends on the domain and risk perspective. Let's say in in the abstract, if you had, if you had to choose one, and I know that, yeah, I'd like you to.
+
+286
+00:49:46.270 --> 00:49:49.319
+hugo bowne-anderson: So let's just take a minute to see see the responses.
+
+287
+00:50:06.510 --> 00:50:16.930
+hugo bowne-anderson: So while we're waiting, Alona, maybe you could tell me what if you can turn your microphone on. In what cases, if it depends in what cases you'd prioritize, recall, and in what cases you'd prioritize precision.
+
+288
+00:50:17.550 --> 00:50:31.860
+Ilona Brinkmeier: For example, in the medical space, if it's disease that could lead to death or something. I would not like to miss any kind of important information.
+
+289
+00:50:32.760 --> 00:50:40.870
+Ilona Brinkmeier: If it's a system for medical doctors, for example, and the detailed information is important.
+
+290
+00:50:41.570 --> 00:50:43.789
+Ilona Brinkmeier: right? You shouldn't know it. Everything.
+
+291
+00:50:43.790 --> 00:50:46.039
+hugo bowne-anderson: So in that case you'd prioritize, recall.
+
+292
+00:50:47.193 --> 00:50:53.380
+Ilona Brinkmeier: Not missing any kind of important information, relevant.
+
+293
+00:50:53.380 --> 00:50:56.810
+hugo bowne-anderson: Sorry. My, my question is, in that case you'd prioritize. Recall over precision.
+
+294
+00:50:56.810 --> 00:50:57.850
+Ilona Brinkmeier: Yeah, correct.
+
+295
+00:50:58.570 --> 00:51:01.819
+Ilona Brinkmeier: And if it's not so relevant, I would say precision.
+
+296
+00:51:02.240 --> 00:51:03.690
+Ilona Brinkmeier: I think everything.
+
+297
+00:51:03.690 --> 00:51:05.910
+hugo bowne-anderson: In what use case would you prioritize precision?
+
+298
+00:51:14.440 --> 00:51:16.579
+Ilona Brinkmeier: if the risk isn't so high.
+
+299
+00:51:17.460 --> 00:51:19.739
+hugo bowne-anderson: What? What use case? Tell me a use case.
+
+300
+00:51:20.866 --> 00:51:26.509
+Ilona Brinkmeier: For example, having a medical system that breaks down.
+
+301
+00:51:28.030 --> 00:51:31.000
+Ilona Brinkmeier: But the risk is not having a
+
+302
+00:51:33.330 --> 00:51:37.399
+Ilona Brinkmeier: For example, death of patient. It's only a little hurt or something.
+
+303
+00:51:37.870 --> 00:51:39.210
+Ilona Brinkmeier: Oh, it's only financial.
+
+304
+00:51:39.210 --> 00:51:43.450
+hugo bowne-anderson: Why would you prioritize precision there? I'd probably still prioritize recall, because.
+
+305
+00:51:43.630 --> 00:51:44.619
+Ilona Brinkmeier: It's the other way around.
+
+306
+00:51:44.620 --> 00:51:45.939
+hugo bowne-anderson: Important information.
+
+307
+00:51:46.310 --> 00:51:59.119
+Ilona Brinkmeier: I thought missing. If I would be a medical doctor and have to decide if it's a specific disease or not, I need every kind of detailed information.
+
+308
+00:52:00.790 --> 00:52:02.830
+hugo bowne-anderson: Right. So that's once again recall.
+
+309
+00:52:03.800 --> 00:52:04.400
+Ilona Brinkmeier: Yeah.
+
+310
+00:52:04.890 --> 00:52:08.239
+hugo bowne-anderson: Right. So I'm I'm still yet to hear when we would prioritize precision.
+
+311
+00:52:11.130 --> 00:52:14.700
+hugo bowne-anderson: So Laura, or Nick's, whoever nix is, you may.
+
+312
+00:52:14.700 --> 00:52:44.299
+nyx: So that's sorry. That's me. That's I. I just have my computer name just to offer one for a loan of precision like, if you have a hugely, like a really dense data domain like. So you're looking at resumes or something. And you don't. You just want to like optimize for you say you're predicting like, who's most likely to succeed in this role. And you want to optimize for like having a smaller data set of Cvs to look through. So it's a little bit Machiavellian. But I I could imagine, wanting to optimize for precision there of a recall.
+
+313
+00:52:44.560 --> 00:52:49.420
+hugo bowne-anderson: Great. I like that example, and and I agree I do. The reason I was pushing there is because
+
+314
+00:52:51.710 --> 00:52:54.770
+hugo bowne-anderson: by far in information, retrieval.
+
+315
+00:52:56.980 --> 00:53:16.789
+hugo bowne-anderson: most of the time we want to optimize for recall before precision we may and Julian's right. F. 1 score can be very useful, but generally with information retrieval. We'd prefer to have a few too many results with some irrelevant information than to miss out on very important information.
+
+316
+00:53:17.130 --> 00:53:27.929
+hugo bowne-anderson: just like with recommender systems. Right? That's that's what we want. And funnily, one of my least favorite recommender systems
+
+317
+00:53:28.040 --> 00:53:30.530
+hugo bowne-anderson: kind of operates on this principle, which is
+
+318
+00:53:30.790 --> 00:53:37.359
+hugo bowne-anderson: Amazon. And it is annoying. So this is an example where we'd want more precision. So a while ago, you know, I've been traveling recently.
+
+319
+00:53:37.680 --> 00:53:53.989
+hugo bowne-anderson: This isn't just an anecdote. Me waxing lyrical. This is so. I bought a power bank right in order to charge while I'm on the road, and I bought a black power bank. The next day Amazon offered me a red power bank.
+
+320
+00:53:54.220 --> 00:54:08.049
+hugo bowne-anderson: and this is ridiculous like I'm not going to buy that right like that. That's something that I don't need at that point in time. Having said that they offered me they were serving 10 different things to me. So in terms of their business.
+
+321
+00:54:08.420 --> 00:54:29.420
+hugo bowne-anderson: they they're going to serve me 10 different things, and all they really need is for one of them to land with me. Right? So they're definitely there's high recall there not so precise, which is annoying as a consumer. So this is. This is an example where we'd like. I would have liked a bit more precision at the expense of some sort of sort of recall. But
+
+322
+00:54:29.580 --> 00:54:35.020
+hugo bowne-anderson: the point remains is that we do really want to most of the time prioritize, recall
+
+323
+00:54:35.270 --> 00:54:40.950
+hugo bowne-anderson: some precision. FF. 1 score. But if we're once again remember optimizing for one metric at least initially,
+
+324
+00:54:41.590 --> 00:54:58.930
+hugo bowne-anderson: is important. So think about recall. There. This speaks to another point. Today, we're not going to get into all the nuts and bolts of evaluating rag systems. And I'm going to actually give a survey for what you all want to cover next week we have a variety of choices. We can get into evaluating rag. But as we discussed with Jason, you really want to think about
+
+325
+00:54:59.270 --> 00:55:13.919
+hugo bowne-anderson: breaking the evaluation, decoupling the retrieval evaluation from the generative evaluation. Okay? So we want to make sure that we do robust evaluation on the retrieval to make sure we're getting the chunks that we want there. Okay, so
+
+326
+00:55:14.360 --> 00:55:19.709
+hugo bowne-anderson: at a high level, I just want to tell you a bit about the different types of techniques. So
+
+327
+00:55:20.320 --> 00:55:43.180
+hugo bowne-anderson: there's bag of words which we'll see in a notebook in a second. There's Tfidf, which you may know this, but this is an acronym for term frequency, inverse document frequency. So bag of words just takes like it counts all the words in it right now what tf, and it treats them as independent. Tf, idf will
+
+328
+00:55:44.109 --> 00:55:46.570
+hugo bowne-anderson: scale each word, it'll look at
+
+329
+00:55:46.580 --> 00:56:00.470
+hugo bowne-anderson: the frequency of each word or term, and then scale it by how often it appears in the document so very common words. It won't wait that highly like the and A. And and because we don't want to count those so much right
+
+330
+00:56:00.470 --> 00:56:26.509
+hugo bowne-anderson: word 2 vec, doesn't have a lot of context. It uses local context, as we'll see. And then we get into the big revolution in transformer based models starting with well, such as Bert. Then, of course, Openai, which captures deep contextual meaning of words based on sentence context. Okay, there are all types of things you want to think about, such as semantic similarity, which is not captured in bag of words. It's barely captured in Tfid.
+
+331
+00:56:26.510 --> 00:56:42.810
+hugo bowne-anderson: It's something that is is captured more and more, as we'll see in word 2 vec, we'll see. We'll actually see using Gen. SIM. The example that the gendered example of, of course. But it's based around a lot of our, you know, civilizations training data that
+
+332
+00:56:43.370 --> 00:56:48.559
+hugo bowne-anderson: king minus man plus woman as vectors. The closest vector. To that
+
+333
+00:56:48.730 --> 00:56:55.016
+hugo bowne-anderson: is Queen. Okay? So we get strong semantic similarity there. Okay,
+
+334
+00:56:55.960 --> 00:57:07.939
+hugo bowne-anderson: dimensionality is very high with bag of words high with tfidf, it's fixed with word 2 vec. And and fixed there and then. We really want to think about sparsity and and scalability. So transformer based.
+
+335
+00:57:08.230 --> 00:57:24.069
+hugo bowne-anderson: it's expensive, which is the state of the art to compute embeddings, but scalable with pre-trained models which we use for the majority of things now. And actually, when we used lama index it, you know, under the hood chose an Openai embeddings, pre-trained model.
+
+336
+00:57:24.120 --> 00:57:39.419
+hugo bowne-anderson: and then use cases. Now, we don't really use back of words in Tfidf so much a bit of word to vet with semantic search and similarity tasks. But for the most part we use transformer based stuff, and we'll get into the code with that soon. So
+
+337
+00:57:39.710 --> 00:57:58.859
+hugo bowne-anderson: our job is finding relevant information in the document Corpus based on the prompt. Okay? So we want to quote unquote, understand? The prompt. So we want to extract intent or key information needs from the user's query. And to do that, we want to search the corpus to find the most relevant chunks or documents that align with the prompts intent.
+
+338
+00:57:59.160 --> 00:58:26.129
+hugo bowne-anderson: How do we do that? So we retrieve the relevant context. We we have our corpus. We chunk it in some way, and then we search the corpus to find the most relevant chunks that align. We have it in some space. Then, when we have a prompt we. And we'll see how this plays out. We have that prompt in the same vector, space. And we see what's closest to it in terms of the retrieved chunks. Okay. And those are the chunks that we use.
+
+339
+00:58:26.670 --> 00:58:29.530
+hugo bowne-anderson: and so to step back a bit.
+
+340
+00:58:30.050 --> 00:58:31.910
+hugo bowne-anderson: And why can't we just embed
+
+341
+00:58:32.410 --> 00:58:40.869
+hugo bowne-anderson: embed it in some way, and yolo it like. Why? Why is this so important? To make sure our embedding is working really well? And the truth is
+
+342
+00:58:41.050 --> 00:59:00.609
+hugo bowne-anderson: because garbage in garbage out. This is a key part of the data pipeline. And it's what it's what you feed into your model. Okay, in terms of information extraction. Right? So it's it's it's super important. And as we as we'll see a lot of the time, the generative part doesn't really.
+
+343
+00:59:01.320 --> 00:59:05.350
+hugo bowne-anderson: you know, isn't where you'll get significant lift. So once again, like
+
+344
+00:59:05.770 --> 00:59:12.136
+hugo bowne-anderson: people are excited about the hot new models, the hot, new generative models. But in all honesty, if you're doing your
+
+345
+00:59:13.190 --> 00:59:33.609
+hugo bowne-anderson: text extraction. You know that part of your your pipeline or embeddings. These are where you'll get the majority of the lift. So William actually has a great point, says his answer is different. If we're talking information, retrieval for user facing search versus as part of a rag pipeline, could you turn your microphone on and say a bit more about that, William.
+
+346
+00:59:46.820 --> 00:59:52.150
+hugo bowne-anderson: If you're talking, your microphone's not on, the answer may be, no, that you're not at liberty to as well.
+
+347
+01:00:01.090 --> 01:00:06.679
+hugo bowne-anderson: Okay, I'll assume William can't talk right now. It'd be great to know in the chat, William.
+
+348
+01:00:08.030 --> 01:00:12.118
+hugo bowne-anderson: Why, your answer is different there. And Laura's just mentioned.
+
+349
+01:00:12.610 --> 01:00:30.839
+hugo bowne-anderson: she'd love to tell us about the time she did. A lazy local embedding that didn't capture text snippets in Markdown that didn't have a heading. Yeah, exactly. So actually look. And once again, failure analysis and looking at the different stages in the pipeline will really fundamentally help with that. How do you find that out without looking at your data?
+
+350
+01:00:31.120 --> 01:00:40.730
+hugo bowne-anderson: The answer is, it's unlikely that you will. So what happens when we do language to math?
+
+351
+01:00:40.860 --> 01:00:44.280
+hugo bowne-anderson: And so with the reason I call it language to math. I don't know if
+
+352
+01:00:44.770 --> 01:01:03.449
+hugo bowne-anderson: you know people people call it this, but the reason I call because we have. You have word to Vec, you have sentence to Vec, you have, you know. So it's really forms of language to some form of mathematics. And what happens in these systems is they capture some sort of semantic relationship. And what we see here in this vector space is if we embed king.
+
+353
+01:01:03.590 --> 01:01:15.110
+hugo bowne-anderson: we see that King minus queen is similar to the vector man minus woman. And what that means is that if you do, king
+
+354
+01:01:15.630 --> 01:01:19.749
+hugo bowne-anderson: minus man plus woman, you get something similar to Queen.
+
+355
+01:01:20.260 --> 01:01:24.847
+hugo bowne-anderson: I just want to say, you know, this is because this happens because
+
+356
+01:01:25.360 --> 01:01:35.030
+hugo bowne-anderson: our training corpus, right? Similarly, biggest minus big is similar to smallest minus small. And we'll actually see that play out in code very soon.
+
+357
+01:01:36.250 --> 01:01:58.130
+hugo bowne-anderson: So an example we'll go through is the Ag news data set right. And what we actually see this is, I love this example, because what we see when we embed this we do. Essentially, we embed it. And it's unsupervised learning. And we see these clusters emerge so. And we'll see this in code. What we see emerge is
+
+358
+01:01:58.500 --> 01:02:14.990
+hugo bowne-anderson: the second cluster is Wall Street short sellers. Wall Street's dwindling band of ultra cynics are seeing green again far out. Sorry I didn't mean to make it too depressing. This is old news, though. Oil and economy cloud stocks outlook
+
+359
+01:02:16.810 --> 01:02:34.869
+hugo bowne-anderson: oil prices. Soar stocks end up so we can see a cluster of finance financial stuff emerge. We haven't added these labels at all right? So we see this cluster emerge. Similarly, the 3rd cluster we see researchers seek to untangle email, thread, Microsoft, core 2
+
+360
+01:02:35.300 --> 01:02:53.599
+hugo bowne-anderson: dell, delightful dell, the age of Doom in 1993, 6 geeks had a digital nightmare that changed the culture. It's about to get far creepier. I bet it is. So we see a technology cluster emerge there as well, and just shout out to Brad, just
+
+361
+01:02:53.970 --> 01:03:21.580
+hugo bowne-anderson: linked to 3 blue, one brown on word to math. I presume most of you have encountered 3 blue, one brown, but if not, some of the most wonderful explanations of technical, beautiful, intuitive explanations of technical and mathematical concepts. So I've shown you a couple of the clusters here, right? And this is this is old news. This is stuff that was, you know, we were doing before the plague right even 5 years before the plague.
+
+362
+01:03:21.720 --> 01:03:32.990
+hugo bowne-anderson: But what we actually see is when we embed these and using tsny, which is a way to map embeddings to two-dimensional space.
+
+363
+01:03:33.620 --> 01:03:36.170
+hugo bowne-anderson: we, we see these clusters emerge
+
+364
+01:03:36.770 --> 01:04:01.349
+hugo bowne-anderson: immediately right? Which is, which is pretty incredible. And when we do these clusters. Then we can look at the labels. And, as I, as I mentioned, cluster 2 is finance cluster. 3. Is technology right? So we see the clusters emerge immediately and do once again Ivan Leo's talk about clustering our large language model data does a lot of this type of type of cool stuff as well.
+
+365
+01:04:01.690 --> 01:04:02.530
+hugo bowne-anderson: So
+
+366
+01:04:02.650 --> 01:04:22.710
+hugo bowne-anderson: I do want to say it's it's not sexy now, thank thank goodness! But there was a time, you know, earlier this year where it was like cosine similarity is all you need and like. Oh, no, cosine similarity isn't isn't enough right? So I feel like I'd have to fire myself if I didn't say a bit about how to measure distance in embedding space, but in the end it doesn't.
+
+367
+01:04:22.840 --> 01:04:39.180
+hugo bowne-anderson: It isn't actually so impactful. But there are several ways. Cosine similarity is the most common you can use dot product, Euclidean distance, Manhattan distance. And once again, I think the one reason
+
+368
+01:04:40.180 --> 01:04:53.989
+hugo bowne-anderson: it's important to just think through these is, there are frameworks that do it under the hood for you. Okay? Like, when you use a framework, it will choose one. So it's good good to know what what they're actually doing, what they're actually doing there.
+
+369
+01:04:55.310 --> 01:05:00.770
+hugo bowne-anderson: So the final thing I want to say here is.
+
+370
+01:05:01.530 --> 01:05:26.190
+hugo bowne-anderson: there are a lot of questions around. Where do you store embeddings? I mean, it wasn't too long ago that there were venture capitalists on Market Street in San Francisco, writing checks to people who would say the word vector, store. Okay, now or vector, database. And I want to. I want to mention that because sure vector databases are great. But once again, I wouldn't get too distracted by by shiny tools. When when starting to build these systems.
+
+371
+01:05:26.662 --> 01:05:37.290
+hugo bowne-anderson: You can adopt a vector database early on. I usually do adopt a vector database. I use chrome often for the most part, but choose whatever whatever works for you. Chrome is.
+
+372
+01:05:38.190 --> 01:05:46.169
+hugo bowne-anderson: Chrome is one I've made a bet on because I think it will. It has a longer life life horizon. I'm I'm quite certain.
+
+373
+01:05:47.080 --> 01:06:05.230
+hugo bowne-anderson: because of the open source community behind it. That'll be around for a long time, but feel free to start off when you're developing with numpy arrays, right? Or, if you want, you know, like tables of some sort, use pandas or polars, and then, when you start
+
+374
+01:06:05.720 --> 01:06:10.007
+hugo bowne-anderson: real, when comparing, like looking at which
+
+375
+01:06:11.050 --> 01:06:33.850
+hugo bowne-anderson: which vectors are close to one another. When that gets too slow, you can move to vector, indices when you want more scale, when it doesn't fit in memory, move to vector databases. And then when you want to go to the Enterprise, go to vector systems and what I mean when you want to go to the Enterprise enterprise software. And I think I've said this before.
+
+376
+01:06:35.860 --> 01:06:46.582
+hugo bowne-anderson: Several things are important. There they they helped like they help teams do do work together a lot of the time. So, and they they solve collaborative things. They solve
+
+377
+01:06:47.230 --> 01:06:53.189
+hugo bowne-anderson: security, authentication, these types of things also depending where you work. You may want
+
+378
+01:06:53.890 --> 01:07:18.369
+hugo bowne-anderson: a phone number you can call to support, or, you know, as we say, a bit more cynically in in business, a throat to choke, and what I mean by that is outsourcing the responsibility of something actually working. If you have, enterprise needs definitely do check out enterprise vector systems. But for a lot of the time, you know, vector databases should be enough when when you need
+
+379
+01:07:18.630 --> 01:07:21.140
+hugo bowne-anderson: significant speed and scale.
+
+380
+01:07:21.610 --> 01:07:30.407
+hugo bowne-anderson: So this is a table just going through through these. So look, you can use arrays and matrices for data sets less than
+
+381
+01:07:31.450 --> 01:07:36.431
+hugo bowne-anderson: a thousand vectors. A hundred 1,000 vectors. I'm sorry.
+
+382
+01:07:37.040 --> 01:07:44.199
+hugo bowne-anderson: vector indices is, if you you know, have a million plus if you're outgrowing memory with, you know.
+
+383
+01:07:44.220 --> 01:07:55.519
+hugo bowne-anderson: a million to 10 million plus vectors. And then vector, systems for production ready dynamic scaling. Kevin has just linked to Simon Willison's
+
+384
+01:07:55.540 --> 01:08:20.449
+hugo bowne-anderson: post about embeddings from 2023, which is which is incredible. And he actually, I don't know whether he talks about in this post, but he does have posts where he actually used and shows you how to do it. Used embeddings to help navigate his blog, so he uses semantic search and embeddings. So you can see what's similar to different blog posts if you want to navigate around his his blog there, and it might be might be in that post
+
+385
+01:08:20.529 --> 01:08:21.470
+hugo bowne-anderson: as well.
+
+386
+01:08:21.740 --> 01:08:25.729
+hugo bowne-anderson: So before we jump in into notebooks.
+
+387
+01:08:26.550 --> 01:08:31.919
+hugo bowne-anderson: let's just look at the anatomy and core components of a rag system. We have a user prompt.
+
+388
+01:08:33.490 --> 01:08:38.815
+hugo bowne-anderson: We put that in embedding space using embedding model. Then we
+
+389
+01:08:39.819 --> 01:08:48.840
+hugo bowne-anderson: you know, for example, compare it to things in our vector database, which is all our chunks. Then we retrieve the top end, chunks for the chunk retrieval.
+
+390
+01:08:48.890 --> 01:08:58.810
+hugo bowne-anderson: and then we combine the prompt and the chunks, for example, by saying, this is the context, these are the chunks.
+
+391
+01:08:58.810 --> 01:09:22.900
+hugo bowne-anderson: and this is the question, and send them to an Llm. Api. And then we return the generated response. One other note here which we're not going to get into today. But when we if we do want to do a lot more about rag and evaluation. Next week we'll talk about re rankers where we may want to. We retrieve the chunks, but we may want to re rank them. So we get the most relevant 1 first.st And once again this speaks to a lot of points
+
+392
+01:09:22.899 --> 01:09:31.830
+hugo bowne-anderson: we made earlier. As it turns out, the order of the chunks you put in actually can significantly affect
+
+393
+01:09:31.830 --> 01:09:48.689
+hugo bowne-anderson: the results. So if you've all played around with re-ranking, I presume you've used cohere re-rankers, for example, which is really state of the art and the most performant in my experience. So, yeah, what are we talking about here? We use our embedding models. We can use models from hugging face. Openai vector databases such as chroma.
+
+394
+01:09:48.689 --> 01:10:08.570
+hugo bowne-anderson: the Llm Apis we know and love, such as Gemini and Openai. What we're going to do in this notebook is way, more fun. We're going to use hugging face an embedding model from hugging face. We're going to use Chroma. And then we're going to use an Llm. Api, we're actually going to use Gpt 2 from
+
+395
+01:10:10.900 --> 01:10:23.799
+hugo bowne-anderson: that we're going to pull from from hugging face just to show that, you know, retrieval can actually be done with far simpler models as well. So we're not going to get into the homework yet. But what we're going to do is
+
+396
+01:10:24.993 --> 01:10:33.059
+hugo bowne-anderson: get into the codespace, and of course I need to restart it because them's the brakes.
+
+397
+01:10:38.370 --> 01:10:41.371
+hugo bowne-anderson: Oh, Kevin has such a great question.
+
+398
+01:10:42.630 --> 01:10:45.930
+hugo bowne-anderson: Kevin's question, which I'm sure most of you can see is.
+
+399
+01:10:46.120 --> 01:10:58.580
+hugo bowne-anderson: what extent can you control or tune? How much the Llm. Relies on the provided chunks to answer your question versus using what it already knows to answer the question.
+
+400
+01:11:02.230 --> 01:11:03.080
+hugo bowne-anderson: So
+
+401
+01:11:03.330 --> 01:11:24.560
+hugo bowne-anderson: the most, the most common way to do this, as as we actually saw with with llama index is in the prompt what we're sending to the Api, and a lot of the time you need to prompt engineer these things with comments such as only draw on the provided context.
+
+402
+01:11:24.560 --> 01:11:45.150
+hugo bowne-anderson: If there is nothing in the actual context, answer that this, that the answer to the question is not provided in the context. You can also do kind of few shot learning or provide examples with context to help it. Learn those types of things.
+
+403
+01:11:45.150 --> 01:12:02.490
+hugo bowne-anderson: And some people have experimented with fine tuning for this type of thing as well. But I'm actually interested. What other people have seen, so feel free to respond to Kevin's, create a thread and respond to Kevin in the chat. But a lot of the time it's done through clever prompting.
+
+404
+01:12:05.910 --> 01:12:09.750
+hugo bowne-anderson: So let's now jump in to
+
+405
+01:12:15.670 --> 01:12:20.270
+hugo bowne-anderson: the 1st notebook. Now I need to apologize.
+
+406
+01:12:22.160 --> 01:12:23.050
+hugo bowne-anderson: This
+
+407
+01:12:23.850 --> 01:12:39.719
+hugo bowne-anderson: notebook may run for you. Some of it may not. And the reason is, it did it worked for me, and then it didn't. It actually has to do with some issues with Gen. SIM and Numpy. I actually had on Scipy. I had to monkey patch
+
+408
+01:12:40.580 --> 01:12:55.169
+hugo bowne-anderson: a scipy function because of some clashes, and it worked in codespace. But then it didn't, and then it did again, and I had to restart the kernel. So if you do want to run this, what I want you to do is
+
+409
+01:12:55.820 --> 01:13:01.960
+hugo bowne-anderson: so I've already done this. But I'll do it again. Source V and bin
+
+410
+01:13:02.590 --> 01:13:04.980
+hugo bowne-anderson: activate. Then I want you to
+
+411
+01:13:05.510 --> 01:13:12.319
+hugo bowne-anderson: well, make this a bit larger. It should work locally as well. Cd into workshops.
+
+412
+01:13:12.950 --> 01:13:25.739
+hugo bowne-anderson: Workshop 5. And then there's a requirements file in there and UV actually didn't work, for whatever reason. And I want you to. Then Pip install the requirements dot txt, and I I've done that
+
+413
+01:13:26.130 --> 01:13:32.013
+hugo bowne-anderson: myself. You can see it's already satisfied. And then I ran the notebook before before this workshop today.
+
+414
+01:13:32.550 --> 01:13:41.327
+hugo bowne-anderson: but it actually didn't didn't work consistently. I'm sorry, and that's due to a clash with gensim and and codespace. So if you really want to run the gensim stuff
+
+415
+01:13:42.690 --> 01:13:56.920
+hugo bowne-anderson: and you're not able to. We can figure out on discord, or I'm happy to to jump on another call as well. But Gensim isn't something you'll use in production now. So it's really to to demonstrate some of the concepts we've we've just discussed.
+
+416
+01:13:57.270 --> 01:14:05.361
+hugo bowne-anderson: Okay, so we've talked through all all of this. This is what we talked about in the slides, but I wanted to put in the notebook for
+
+417
+01:14:07.030 --> 01:14:10.529
+hugo bowne-anderson: for completeness. So I just want to show you a bit about
+
+418
+01:14:10.847 --> 01:14:37.950
+hugo bowne-anderson: the precursors to embeddings that we talked about, to give a bit of historical perspective and show you in code. So we're going to talk about bag of words and Tfidf, and then word to Vec, okay, so I made sure that psychic learn was here. And what I did was I created a sample data set of sentences, such as dog barks at the car. The cat sleeps on the mat. Dogs and cats are friends. I love my dog, and cats are the best pets. Okay?
+
+419
+01:14:38.100 --> 01:14:44.129
+hugo bowne-anderson: By the way, I'm well, I'm a dog person, but cat cats are cool. I'm allergic to cats. Actually.
+
+420
+01:14:44.966 --> 01:14:53.230
+hugo bowne-anderson: So what we see is, we have a data frame with one sentence for each row. Now
+
+421
+01:14:53.380 --> 01:14:58.049
+hugo bowne-anderson: to do bag of words right? So this is what we were doing a decade ago.
+
+422
+01:14:58.250 --> 01:15:22.809
+hugo bowne-anderson: What we do is we create a count vectorizer which will count the occurrence of each row and put it in a vector and then we fit it and transform the documents a la machine learning this is, you know, the scikit-learn Api. I don't want to go into too many details about this. But I want to show you the output. Okay, so what it does is it takes each sentence.
+
+423
+01:15:23.240 --> 01:15:31.239
+hugo bowne-anderson: and it now makes each word a column, and then for each row, remember, is a sentence,
+
+424
+01:15:33.300 --> 01:15:35.730
+hugo bowne-anderson: and it counts essentially.
+
+425
+01:15:36.180 --> 01:16:00.470
+hugo bowne-anderson: It gives a 0 if the word didn't occur, and it gives a number which is the amount of times that word occurred in that sentence. So you'll recall the 1st sentence. The 0 sentence was, dog barks at the car, so at. Yes, barks at car. Yes, dog. Yes, the yes. Okay. Now, lots of issues here. Right? Finally, this this kind of isn't
+
+426
+01:16:01.100 --> 01:16:30.630
+hugo bowne-anderson: that badly performant when we combine bag of words with naive bays, or something which essentially does prediction based on the bag of words. Here it's interesting because it counts, you know, common words as much as others. So it doesn't change the weight of the. For for example, on top of that, it doesn't capture order of words right? So the example I like to give is, if we were to take the sentences.
+
+427
+01:16:31.490 --> 01:16:40.620
+hugo bowne-anderson: build bridges, not walls, and build walls, not bridges, very different meanings. Yet bag of words would
+
+428
+01:16:40.990 --> 01:17:00.699
+hugo bowne-anderson: treat them exactly the same right? So it doesn't capture word, order, or closeness, or that type of stuff. Having said that bag of words and naive bays is actually incredibly powerful, even, for you know, text classification, right? So it's what we were doing like naive Bayes is something we're doing, you know, a decade ago.
+
+429
+01:17:00.820 --> 01:17:03.600
+hugo bowne-anderson: So, as I said before.
+
+430
+01:17:04.180 --> 01:17:14.680
+hugo bowne-anderson: this doesn't capture the fact that the is a common word across all these all these documents. Right? So what we do then is we think about Tfidf.
+
+431
+01:17:15.280 --> 01:17:17.419
+hugo bowne-anderson: and what that does is it
+
+432
+01:17:17.570 --> 01:17:31.822
+hugo bowne-anderson: has 0. If the word doesn't occur, and if the word does occur. It has the number of times it occurs in the document, divided by the number of times it occurs in the Corpus. So many common words are weighted.
+
+433
+01:17:32.350 --> 01:17:46.729
+hugo bowne-anderson: less highly. Okay. And as it turns out, this is, this is somewhat more powerful than than bag of words. Right? So as we've summarized here bag of words counts word frequency in the document.
+
+434
+01:17:47.210 --> 01:18:06.319
+hugo bowne-anderson: Tfidf, weights words by importance. Okay? So the next one is word to Vec, which it takes words, and it puts them in some sort of embedding space in in vector space. Okay, so what are the differences
+
+435
+01:18:06.320 --> 01:18:34.429
+hugo bowne-anderson: between word 2 vec, or traditional models? Traditional methods like bag of words. Tfidf, traditional methods, count. Word occurrences don't consider relationships, treats words like dog and puppy as completely separate terms missing their semantic similarity, whereas word 2 Vec will map words to continuous vector spaces, capturing context and semantics. And this is really the most important precursor to transformer based models that we use today. King and queen are close in vector space
+
+436
+01:18:34.490 --> 01:18:39.710
+hugo bowne-anderson: because they share a similar context, whereas king and dog are farther apart. And
+
+437
+01:18:40.210 --> 01:18:59.089
+hugo bowne-anderson: this now allows us to model subtle word relationships such as man minus woman is similar to King minus queen. And let's look at that. So this is where I had a serious issue with dependency management and package clashes here, but it did work when I ran it ran it here.
+
+438
+01:18:59.380 --> 01:19:07.330
+hugo bowne-anderson: What I did was I took this corpus, which is a bit silly. Because it it won't necessarily.
+
+439
+01:19:07.840 --> 01:19:11.250
+hugo bowne-anderson: you know, reflect what we'd see if we trained it on.
+
+440
+01:19:11.750 --> 01:19:16.069
+hugo bowne-anderson: you know, on on our you know, on Internet data or
+
+441
+01:19:16.750 --> 01:19:40.900
+hugo bowne-anderson: our kind of larger corpuses that we train these things on. But what I did was, I took word to Vec from Gen. SIM trained it on this corpus specified a few things such as the size of the vector. Window size that we don't need to get into all these details, and we see that the embedding for King is is this right? So that's just via example, how you can do kind of
+
+442
+01:19:41.590 --> 01:20:05.799
+hugo bowne-anderson: a brief model, and then embedding. You usually won't train these things yourself. Okay, what you'll do is find the similarity. The way you find similarity is model dot wv, similarity. Pass it the terms you're looking for. And we did this. And then we printed the similarity here. Similarity between King and Queen. They're very similar similarity between king and dog.
+
+443
+01:20:06.150 --> 01:20:13.989
+hugo bowne-anderson: Not so similar. Okay, so this is based on our kind of silly little training example. There, what I want to
+
+444
+01:20:14.130 --> 01:20:16.746
+hugo bowne-anderson: do. Now let me yes,
+
+445
+01:20:17.440 --> 01:20:20.840
+Kashyap Amin: Why, why do you have to train the model per se.
+
+446
+01:20:21.150 --> 01:20:21.550
+hugo bowne-anderson: What's next?
+
+447
+01:20:21.550 --> 01:20:26.079
+Kashyap Amin: Why, why do you have to train the model on the small example.
+
+448
+01:20:26.396 --> 01:20:41.899
+hugo bowne-anderson: This is just by example. You you will never do this. So as we're about to get to, we're loading a pre-trained example, pre-trained model here. Okay? The only reason you'd you'd want to train it is if you had, you know, enterprise data. And you want to.
+
+449
+01:20:41.900 --> 01:21:02.499
+hugo bowne-anderson: You want to see what the embeddings are in your data as opposed to in a previously trained model on a different corpus. But generally you'll use a pre-trained model. So this is just kind of a toy example to show you how this process works. And so what we see is top 3 words similar to king, Prince dog, Princess
+
+450
+01:21:04.920 --> 01:21:16.689
+hugo bowne-anderson: And so what I've done next is actually imported. I've loaded a pre-trained glove model. You can look up, look up, glove embeddings. Actually let's just do that
+
+451
+01:21:17.120 --> 01:21:35.780
+hugo bowne-anderson: very quickly. Global vectors for word representation. And it's, you know, a previously very powerful technique. I mean, nowhere near as powerful of things things we use today. But we've done a 50 dimensional one. You can try 100 or 200 if you want larger models and and more performant models.
+
+452
+01:21:36.030 --> 01:21:47.490
+hugo bowne-anderson: Now, what I've done here is to demonstrate kind of the old school power of this I've I'm looking for the most similar vector to King
+
+453
+01:21:47.750 --> 01:21:57.339
+hugo bowne-anderson: plus woman minus man. And the way we specify that in the Gen. SIM Api is, we say, the positive. So that's king plus woman minus man. And we actually see, the
+
+454
+01:21:57.680 --> 01:22:03.249
+hugo bowne-anderson: the result is queen, and the similarity is
+
+455
+01:22:03.350 --> 01:22:13.090
+hugo bowne-anderson: pretty close to one. This is incredibly high. So this is kind of kind of the punchline of the power of of these types of word word to Vec word, 2 vec, models.
+
+456
+01:22:13.510 --> 01:22:24.469
+hugo bowne-anderson: Okay? So I encourage you all. You know, if and when you're interested and have the time to play around with these things, I'm just in the interest of time. I will not
+
+457
+01:22:24.590 --> 01:22:25.889
+hugo bowne-anderson: go through
+
+458
+01:22:28.870 --> 01:22:43.479
+hugo bowne-anderson: this section on using bag of words and Tfidf for classification. It's it's introductory. But it shows you how you how you can do it. And it actually shows that. Yeah, if you combine Tfidf, actually, I do want to say.
+
+459
+01:22:43.640 --> 01:22:48.239
+hugo bowne-anderson: the reason I did this is because it is actually incredibly powerful. We load in the Ag news
+
+460
+01:22:48.300 --> 01:23:17.949
+hugo bowne-anderson: data set. And we see Tfidf classification, we get, you know, a precision of 85% right? And we get these types of accuracies on, you know, doing a logistic regression after Tfidf, which I mean, a macro average of a macro average accuracy of 77% like isn't great. But it isn't bad for a basic model where we haven't done a lot based on term frequency, inverse document frequency. Okay?
+
+461
+01:23:18.110 --> 01:23:21.843
+hugo bowne-anderson: And then, what we can also do.
+
+462
+01:23:22.450 --> 01:23:29.049
+hugo bowne-anderson: and this is what we used to using word 2 vec. For information retrieval. So what you can do is
+
+463
+01:23:30.830 --> 01:23:32.210
+hugo bowne-anderson: take a
+
+464
+01:23:32.750 --> 01:23:52.319
+hugo bowne-anderson: a query such as breaking news and embed that in the embedding space and have a look at what the most similar is is here. And this, this actually isn't a great response. And you know your mileage mileage may vary, but this is the way that you would do it with with word 2 vec.
+
+465
+01:23:52.530 --> 01:24:11.769
+hugo bowne-anderson: So all that having been said. This was really an introduction to the historical precedence for everything we use today. But I think it provides a really good mental model for what we use today. You won't necessarily use use these techniques, but it helps to understand where we came from and to see how it plays out in in code as well. So
+
+466
+01:24:12.300 --> 01:24:39.150
+hugo bowne-anderson: what I want to do for the next 20 min or so before Innes's guest lecture guest talk is talk about transformer embeddings which we've already used in the course, and we'll use more and more. And essentially, as we've already seen, embeddings are the backbone of semantic retrieval in information, retrieval and rag systems. They map text into high dimensional latent space.
+
+467
+01:24:39.390 --> 01:24:40.350
+hugo bowne-anderson: and
+
+468
+01:24:40.500 --> 01:25:05.479
+hugo bowne-anderson: this makes it easier to compare and retrieve semantically relevant information. And they just outperform all the traditional methods because they're able to provide much richer, richer context. So I'm using sentence transformers here from hugging face. And what I'm actually doing, and I'm actually going to
+
+469
+01:25:06.630 --> 01:25:07.390
+hugo bowne-anderson: put
+
+470
+01:25:10.590 --> 01:25:20.419
+hugo bowne-anderson: this in the chat who has used this model. And
+
+471
+01:25:21.670 --> 01:25:26.069
+hugo bowne-anderson: finally, I just want to say, like, once again, like
+
+472
+01:25:26.260 --> 01:25:34.570
+hugo bowne-anderson: all the hot stuff is use open AI models and all these cool embeddings and that that type of stuff. But before we even look at this model
+
+473
+01:25:35.611 --> 01:25:52.310
+hugo bowne-anderson: which, in fact, you know, you can't necessarily have like I can't remember quite how long you can, how many tokens it can take, but it does have an upper limit. So if you want very, very long context, you wouldn't use it, for example.
+
+474
+01:25:53.700 --> 01:25:59.309
+hugo bowne-anderson: But I do want to just point out how many downloads
+
+475
+01:25:59.740 --> 01:26:05.030
+hugo bowne-anderson: this model had last month. Okay, over 88 million.
+
+476
+01:26:05.230 --> 01:26:06.170
+hugo bowne-anderson: So
+
+477
+01:26:06.670 --> 01:26:24.030
+hugo bowne-anderson: while we're all focusing on the latest, hottest open AI Embeddings models, a lot of people doing the work are using smaller models, cheaper models and putting them in robust pipelines. So I just want to make that that isn't to say that you shouldn't just start with
+
+478
+01:26:24.400 --> 01:26:29.770
+hugo bowne-anderson: a classic open AI embedding model. But even in terms of, you know, guaranteeing
+
+479
+01:26:34.050 --> 01:26:44.155
+hugo bowne-anderson: cheaper models, lower latency. These types of things I very much encourage you to play around with with models such as this, and we'll see that it's
+
+480
+01:26:44.670 --> 01:27:11.970
+hugo bowne-anderson: quite performant here, although, good Lord, I mean, okay, so this is fine, because it's actually given me all the outputs I need. But there are ipython jupyter stuff here. Having said that, I think codespaces has definitely worked far better than any other solution to teach a course like this, including doing things locally and and attempting to be debug with everyone. So what I do is I've loaded this model which I've just showed you.
+
+481
+01:27:12.130 --> 01:27:17.869
+hugo bowne-anderson: And I've got 2 sentences, and I encode the sentences. And then I print the embedding. Okay?
+
+482
+01:27:18.010 --> 01:27:21.339
+hugo bowne-anderson: And so I print the sentence. And then
+
+483
+01:27:22.840 --> 01:27:26.610
+hugo bowne-anderson: this is the embedding. Right? So I mean, that's that's just a vector
+
+484
+01:27:27.240 --> 01:27:37.450
+hugo bowne-anderson: that's all it is. Then what I do is I'm going to compute the cosine similarity. So just see how similar these vectors are to each other.
+
+485
+01:27:37.680 --> 01:27:46.039
+hugo bowne-anderson: And then I print that as a matrix. Okay, so 2 things we've got 2 sentences.
+
+486
+01:27:46.370 --> 01:28:13.179
+hugo bowne-anderson: This entry will be, how similar the 1st sentence is to itself. This will be how similar the second sentence is to itself. This will be how similar the 1st is to the second, and this is how similar the second is to the first.st So because of the symmetry. We'd expect this to be almost the same as that. We'd expect that to be close to one. We'd expect that to be close to one. In fact, this will be one without rounding error.
+
+487
+01:28:13.320 --> 01:28:22.890
+hugo bowne-anderson: and this will be one without rounding error. Okay, so this is just like numerical imprecision, essentially right? But what we see is that
+
+488
+01:28:23.450 --> 01:28:24.230
+hugo bowne-anderson: you know
+
+489
+01:28:24.960 --> 01:28:45.560
+hugo bowne-anderson: the sentences are kind of similar to each other. Right? So this is an example. Sentence is the 1st one, and each sentence is converted to an embedding. They're kind of similar. Why is that? Because they're both talking about sentences. They're both sentences talking about sentences. Okay, so that's just a little toy example of seeing how this embedding model works.
+
+490
+01:28:45.770 --> 01:29:09.780
+hugo bowne-anderson: Then what I do is I'm Pip installing the package data sets, which is the hugging face package which gives me access to the Ag news data set, for example, which we've talked about. And what I do here is I'm loading the Ag news data set which I showed you in the slides which we clustered. I showed you the clusters of, and once again I've got some Jupyter widget nonsense happening here.
+
+491
+01:29:10.030 --> 01:29:12.374
+hugo bowne-anderson: Well, that's chill and
+
+492
+01:29:14.160 --> 01:29:28.360
+hugo bowne-anderson: What I then do is just like we did with the 2 example sentences before I now take this model and encode all the sentences in the Ag news data set. So and then I just look at the 1st 5 elements of
+
+493
+01:29:28.620 --> 01:29:55.050
+hugo bowne-anderson: the vector corresponding to each. So we see the 1st one is the Wall Street bear's claw back. That's the embedding. Then Carlisle looks towards commercial aerospace, then the embedding oil and economy. Iraq courts. Oil. Okay? So that's it. And this is just once again looking at our data a bit before doing much with it and making sure that we don't know if these embeddings actually, if this embedding has worked yet right? But we can. We can at least
+
+494
+01:29:55.280 --> 01:30:05.350
+hugo bowne-anderson: well quote unquote vibe check or inspect our data to see that. Okay, we're getting the sentence. We're getting the article. And then we're getting out and embedding. Okay? So that that looks all right for the time being.
+
+495
+01:30:06.700 --> 01:30:09.677
+hugo bowne-anderson: The next thing I've done is I've taken
+
+496
+01:30:14.050 --> 01:30:15.620
+hugo bowne-anderson: I've taken the first.st
+
+497
+01:30:17.420 --> 01:30:29.710
+hugo bowne-anderson: The 1st sentence, which is the Wall Street bears claw back, and I've just tried to find the most similar sentences to it in the Corpus right? And what we see is that the most similar is
+
+498
+01:30:30.080 --> 01:30:55.279
+hugo bowne-anderson: the sentence itself. This is a great spot. Check right? So once again, this is something to you know Laura's point earlier. You know, she had a situation where the embedding was actually not not great, and you can start inspecting things. This is not. This is necessary, but not sufficient. If you're if you have an embedding space, or where it looks like the most similar sentence to a sentence is not itself.
+
+499
+01:30:55.310 --> 01:31:07.034
+hugo bowne-anderson: There's an issue with your how your embeddings working right? So it's necessary that this is the case, but not sufficient. And then we see the next most similar one is oil and economy. That's good. Yeah, we've got, you know.
+
+500
+01:31:08.960 --> 01:31:21.509
+hugo bowne-anderson: you know, this is all stock market stuff and then stocks end up. Okay, so spot check that this is working at least at the start of how we'd like and then what I what I did was I? I took, you know, the 1st
+
+501
+01:31:21.560 --> 01:31:49.724
+hugo bowne-anderson: 9 sentences and looked at the similarities. I'm sorry, yes, looked at the similarities to each, and then what I did was I took most similar to the 1st one least similar, and we won't go through that because I do want to get to the punchline essentially, which is what I then did. And I did some basic you know, rendering using ipython HTML, to make it a bit nicer. But
+
+502
+01:31:50.720 --> 01:31:58.380
+hugo bowne-anderson: I then use this embedding model to do some clustering. Okay? And
+
+503
+01:31:58.760 --> 01:32:14.070
+hugo bowne-anderson: I did it with a number of clusters, and it turned out that 7 was the one that kind of looked the best. But this is a hyperparameter. You want to tune right? So you can. You can definitely do that. And then eyeball the clusters to see what's up, but what we see. Then the clusters that emerge, you know.
+
+504
+01:32:14.080 --> 01:32:37.249
+hugo bowne-anderson: As I said, I'm just choosing a couple here, and finally, this is different to what I showed you in the slides, because the slides were from a previous iteration of it. These were from an iteration I did this morning before class, and we actually see cluster 2 was finance or something before right? And now we've got so the clustering will be somewhat somewhat similar. But now we see cluster 2 is actually sport and Olympics
+
+505
+01:32:38.180 --> 01:32:41.580
+hugo bowne-anderson: great. So we see all these clusters emerging. Now, cluster.
+
+506
+01:32:44.250 --> 01:32:46.620
+hugo bowne-anderson: Cluster 6, actually, maybe looks like
+
+507
+01:32:46.830 --> 01:33:14.910
+hugo bowne-anderson: in international news or international relations or something something like that. So now we've got all these clusters. I just want to visualize it. Okay, I like seaborne for visualization, which is a beautiful package that an abstraction layer above matplotlib that allows us to generate nice nice plots, and what I did was, we've got a very high dimensional space, right? And so what I did was I.
+
+508
+01:33:16.430 --> 01:33:25.579
+hugo bowne-anderson: I reduced the dimension. To using principal component analysis for faster t-sne, and remember, t-sne is
+
+509
+01:33:28.631 --> 01:33:32.910
+hugo bowne-anderson: the projection into two-dimensional space which
+
+510
+01:33:33.890 --> 01:33:44.700
+hugo bowne-anderson: which allows us to visualize the clusters. And I'm actually yeah, I'll I'll say one more thing about Tsney in in a second. We've chosen 2 dimensions there and
+
+511
+01:33:45.395 --> 01:33:51.659
+hugo bowne-anderson: so we do this clustering, and then projection here.
+
+512
+01:33:51.770 --> 01:34:12.450
+hugo bowne-anderson: and then I do my plotting, and you'll see similar to the plot I showed you in the slides. We see all these clusters emerge really nicely, and then we can go kind of. We had a look at what the clusters look like. We can then see what what the clusters actually actually are. And one of the wonderful things about techniques such as Tsne and another one called umap
+
+513
+01:34:12.752 --> 01:34:24.849
+hugo bowne-anderson: is that once you do some sort of embedding, you can immediately project down into these spaces and see things emerge, and it tells you not only about your data set, but about your embeddings as well, and in fact.
+
+514
+01:34:27.110 --> 01:34:33.760
+hugo bowne-anderson: can someone I'm just gonna say, here, oh, we did this, and has anyone used
+
+515
+01:34:36.370 --> 01:34:40.569
+hugo bowne-anderson: Marimo? So give it a thumb up if yes, and a thumb down.
+
+516
+01:34:43.580 --> 01:34:49.769
+hugo bowne-anderson: if not, Marimo. Faces, Hugo, I wonder if this will?
+
+517
+01:34:54.030 --> 01:34:59.160
+hugo bowne-anderson: Okay. So I don't want to play this at all.
+
+518
+01:34:59.600 --> 01:35:03.740
+hugo bowne-anderson: Okay, so this is actually part of a live stream.
+
+519
+01:35:05.920 --> 01:35:24.389
+hugo bowne-anderson: I did with Akshay, who built Marimo, which are beautiful notebooks. That help you essentially productionize notebooks, among other things. And what I actually did here is I looked at labeled faces in the wild data set, where we it has
+
+520
+01:35:25.680 --> 01:35:52.060
+hugo bowne-anderson: faces of world leaders. And I did. It was face to Vec essentially. And what we saw is, look at these clusters that emerged here, and you can check out the video. I can share the notebook later, but we see, like Ariel Sharon, Colin Powell, Donald Rumsfeld, George W. Bush, etc. And just to be very clear. I'm not actually pro facial recognition. I think it's probably one of the most invasive technologies we can use. I don't see many good uses of it.
+
+521
+01:35:52.060 --> 01:36:04.320
+hugo bowne-anderson: I was fine doing it on world leaders, such as Colin Powell, Donald Rumsfeld, and George W. Bush, for what that's worth. I have no problem with doing facial recognition on world leaders.
+
+522
+01:36:04.636 --> 01:36:13.193
+hugo bowne-anderson: So I definitely, if you're interested in playing around more with tea, snake and sorry. The point there also is that we had a conversation about how
+
+523
+01:36:13.510 --> 01:36:29.590
+hugo bowne-anderson: these types of embeddings and projections into this type of space can actually tell you a huge amount about your data set, but also about the embeddings. Great. So now, how do we now we've got these embeddings? How do we use it for information? Retrieval?
+
+524
+01:36:29.890 --> 01:36:32.239
+hugo bowne-anderson: Great question, Hugo. So
+
+525
+01:36:32.280 --> 01:37:00.529
+hugo bowne-anderson: what I've done is, as we've said before, we take our query, and we compare it to all all the sentences or all the chunks, and we haven't chunked here. But we have our sentences. And so my query is, how did the recent financial policies affect the stock market? And we just embed that. And we get the top top. 3 results. Okay, so we get stocks end up. But near year lows.
+
+526
+01:37:01.850 --> 01:37:02.900
+hugo bowne-anderson: We get.
+
+527
+01:37:03.382 --> 01:37:20.359
+hugo bowne-anderson: This is interesting oil and economy. Cloud stocks outlook great. But then we get the same thing once again. Looking at your data really show like we do not want the same sentence returned twice. Right? So we'd want to inspect what's happening there and then. What I did was, this is some of the most fun I had here.
+
+528
+01:37:21.160 --> 01:37:24.910
+hugo bowne-anderson: This. This isn't rag yet. We've just looked at the most common.
+
+529
+01:37:25.860 --> 01:37:44.430
+hugo bowne-anderson: the most similar sentences, right? But what we can then do is we can take a model. And I've taken Gpt. 2 here from transformers. So from from hugging face. And I've given Gpt. 2 the question.
+
+530
+01:37:45.250 --> 01:37:50.540
+hugo bowne-anderson: I've given it the out the the
+
+531
+01:37:51.060 --> 01:38:11.460
+hugo bowne-anderson: yeah, the similar responses. And then I've asked it to give the answer to the question given those chunks. And so the question was, how did the recent financial policies affect the stock market? And the answer was, the recent economic downturn has been a major factor in the market's recent decline. Now.
+
+532
+01:38:11.870 --> 01:38:41.149
+hugo bowne-anderson: once again. I don't suggest you use Gpt. 2, right. But as proof of principle, I just wanted to show you that you know there are small and Gpt-two is something you can train yourself. Sebastian Rajkar has some incredible resources, which, if someone wants to put in the chat, otherwise, if I remember, I'll find it later on, how to train. Gpt. 2, yourself, actually, which it's a wonderful exercise to learn about the training process of large language models, or, as we like to call them small large language models. Right?
+
+533
+01:38:41.490 --> 01:38:49.550
+hugo bowne-anderson: So exactly. And so that was the answer. And now we see the generative response there from Gpt. 2.
+
+534
+01:38:50.880 --> 01:38:55.079
+hugo bowne-anderson: Now we've talked about vector databases, but we haven't
+
+535
+01:38:55.300 --> 01:38:59.449
+hugo bowne-anderson: used one yet. And once again.
+
+536
+01:38:59.780 --> 01:39:28.789
+hugo bowne-anderson: here, all above here, we've used arrays right? We've used numpy arrays for all of this so far for our embeddings, which I said, you definitely can do. But let's look at how we would use a vector, database, for example. And we definitely can do more of these types of things in Builders Club. And if you want more next week as well, but it's exactly the same. To be honest, they abstract over some things. But we're importing the data set. We're installing.
+
+537
+01:39:28.860 --> 01:39:36.640
+hugo bowne-anderson: Chromadb. Oh, that's hilarious, Laura, that you found the yeah fine-tuning Gbt. 2, that I did with Sebastian super cool.
+
+538
+01:39:37.294 --> 01:39:40.126
+hugo bowne-anderson: That was a really fun live stream, actually.
+
+539
+01:39:40.610 --> 01:39:52.089
+hugo bowne-anderson: but primarily, because he's just so much fun. So. Yep, we initialize the chroma client. We create a collection. I've called it news Embeddings 3. Again. I
+
+540
+01:39:53.490 --> 01:40:19.579
+hugo bowne-anderson: I was feeling like I was from New Zealand that day clearly, but what actually happened was, I created it 1st as news Embeddings 3, and I messed it up, and then it had already created it. And I was like, Okay, I'm just going to call it something else for what that's worth. I'm using the same model embedding model we did earlier storing the embeddings in chroma. So we're storing a thousand sentences there and then. What we do is we ask the query, what are the latest economic trends?
+
+541
+01:40:19.900 --> 01:40:28.562
+hugo bowne-anderson: We query, chroma using our vector, database. And then we print the top 3 results. Right?
+
+542
+01:40:29.080 --> 01:40:53.310
+hugo bowne-anderson: Brad, thank you for sharing Andre Carpathis. Let's reproduce Gpt-two. That's an incredible video as are all of these, we get the top 3 retrieved sentences. You might say to me, Hugo, we're not having a generative response there, it doesn't matter. You can literally do what I just showed you using Gpt 2 or any other generative model. You want to feed these in, give it the context, give it the chunks, ask it the question.
+
+543
+01:40:53.780 --> 01:40:57.090
+hugo bowne-anderson: and using a template or saying, this is the context.
+
+544
+01:40:57.100 --> 01:41:26.100
+hugo bowne-anderson: the user query is so and so it's all the same. But what I wanted to do here is just give you a strong sense of how to start using a vector database and very much happy to drill deeper into this with you all later this week or next week, and or in Builders Club. But there's no magic to it, and it's it's no different to what we've been doing with our numpy arrays throughout throughout this workshop as well. So we're about to be joined by
+
+545
+01:41:26.140 --> 01:41:38.310
+hugo bowne-anderson: Ines Montani. I just do want to say that if you want to continue with the types of things we're doing and and and do homework.
+
+546
+01:41:38.780 --> 01:42:02.270
+hugo bowne-anderson: what I'd like you to start doing is enhance your app, and some of you have already done this. But a lot of people have been just putting everything in the context as we did in the 1st couple of weeks. But you can start adding rag and information retrieval to handle indexing and querying for your Linkedin profile Ingester. I've actually, Stefan, very kindly.
+
+547
+01:42:02.400 --> 01:42:10.000
+hugo bowne-anderson: you know, created a folder of a bunch of if you wanted to try to do it at scale with a bunch of different profiles, profiles there.
+
+548
+01:42:11.490 --> 01:42:12.639
+hugo bowne-anderson: And
+
+549
+01:42:12.810 --> 01:42:37.289
+hugo bowne-anderson: you can explore advanced retrieval methods, such as semantic search or chunking strategies to improve the performance. I've got a 3rd notebook for this workshop, which has a lot more ideas. If you want to do more work. And if you want to try these things in in Builders Club, I see, Mike Powers just have a has a great comment here. So, Mike, maybe you could say that. Live if you can turn your microphone on.
+
+550
+01:42:41.170 --> 01:42:43.729
+Mike Powers: Sure. So you had just
+
+551
+01:42:44.410 --> 01:42:58.259
+Mike Powers: described using a vector database and some advantages of that rather than a bunch of vectors in memory, which is good enough for some use cases. But I had one use case where the vector database can store not only the vector which is the embedded
+
+552
+01:42:58.260 --> 01:43:26.049
+Mike Powers: document, but also metadata around that document. So I had a flag, you know, various flags for various records. And so in this single chromadb query there's a way to structure that pre filter by. So give me the 10 most similar documents. But where this metadata flag is equal to one, for example, so it's a hybrid structured pre filter. In addition to the chrome, to the vector similarity.
+
+553
+01:43:26.640 --> 01:43:32.779
+hugo bowne-anderson: I really appreciate that. That's a great point. And actually, Mike, I'm wondering.
+
+554
+01:43:33.350 --> 01:43:36.512
+hugo bowne-anderson: the answer may be the jury's out at the moment. But
+
+555
+01:43:37.110 --> 01:43:41.290
+hugo bowne-anderson: Are you intending on on doing things along these lines in Builders Club tomorrow?
+
+556
+01:43:42.455 --> 01:44:04.470
+Mike Powers: That wasn't a specific plan, but I did but thank you for the plug, because I did kind of solicit in the channel. If people have things they want to bring post there. And and I can kind of prep that in advance, and and we'll look at it. But yeah, either just bring it on the fly. Or but if people want to look at yeah, let's play with the vector, database, we can certainly do that.
+
+557
+01:44:04.920 --> 01:44:09.154
+hugo bowne-anderson: Super cool. So I've also put
+
+558
+01:44:10.050 --> 01:44:37.220
+hugo bowne-anderson: a link to our feedback survey for this workshop in discord. We had maybe 10 people fill out the survey last time, which I really appreciate. Just the the more feedback we get, not only the better we can make future iterations of the course, and our work, but we can improve the workshop in 2 days and next week as well. So we'd love that. So I'm wondering if
+
+
+

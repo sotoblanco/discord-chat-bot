@@ -47,13 +47,12 @@ volume_mounts = {
     "/root/chroma_db": chroma_volume
 }
 
-def bot_is_mentioned(content: str, client_user) -> bool:
-    """Checks if the bot is mentioned or addressed in the message content."""
-    # Use word boundaries (\b) to avoid matching parts of other words
-    return (
-        client_user.mention in content
-        or re.search(r"\bbot\b", content, re.IGNORECASE) is not None
-    )
+# List of allowed channel names (lowercase)
+ALLOWED_CHANNEL_NAMES = ["bwai-bot"]  # e.g., ["general", "ai-questions"]
+
+def bot_is_mentioned(message, client_user) -> bool:
+    """Checks if the bot is explicitly mentioned in the message."""
+    return client_user in message.mentions
 
 @app.function(
     image=image, 
@@ -207,7 +206,8 @@ async def discord_bot_runner():
             if message.author == bot.user:
                 return
 
-            if bot_is_mentioned(message.content, bot.user):
+            # Only respond if bot is mentioned and in allowed channel
+            if bot_is_mentioned(message, bot.user) and message.channel.name.lower() in [name.lower() for name in ALLOWED_CHANNEL_NAMES]:
                 print(f"Question received: {message.content}")
                 thread = await message.create_thread(
                     name=f"Question from {message.author.display_name}",
@@ -215,24 +215,15 @@ async def discord_bot_runner():
                 )
                 await thread.send(f"Hey {message.author.mention}, I'm thinking...")
                 try:
-                    result = fetch_api.remote(message.content)  # Remove await - Modal .remote() is synchronous
+                    result = fetch_api.remote(message.content)
                     answer = result["answer"]
                     log_id = result["log_id"]
                     context_info = result.get("context_info", {})
-                    
-                    # Get workshop information
                     workshops_used = context_info.get("workshops_used", [])
                     num_chunks = context_info.get("num_chunks", 0)
-                                      
-                    # Create the response message with workshop information
                     response_message = f"**Answer:** {answer}"
-                    
-                    #if workshops_used and workshops_used != ['Unknown'] and len(workshops_used) > 0:
                     workshop_list = ", ".join(workshops_used)
                     response_message += f"\n\n📚 **Sources:** This answer was based on information from {num_chunks} sections across workshops: **{workshop_list}**"
-                    #else:
-                    #    response_message += f"\n\n📚 **Sources:** This answer was based on {num_chunks} sections from the workshop transcripts."
-                    
                     await thread.send(response_message)
                     feedback_msg = await thread.send(
                         "\nWas this answer helpful? Please reply with:\n"
@@ -241,15 +232,11 @@ async def discord_bot_runner():
                     )
                     await feedback_msg.add_reaction("👍")
                     await feedback_msg.add_reaction("👎")
-                    
-                    # Store the mapping between message ID and log ID
                     message_log_mapping[feedback_msg.id] = log_id
                     print(f"📝 Stored feedback mapping: message_id={feedback_msg.id} -> log_id={log_id}")
-                    
                 except Exception as e:
                     await thread.send(f"Sorry, I encountered an error: {str(e)}")
                     print(f"Error processing question: {e}")
-
             await bot.process_commands(message)
 
         @bot.event
@@ -427,7 +414,8 @@ async def start_persistent_bot():
             if message.author == bot.user:
                 return
 
-            if bot_is_mentioned(message.content, bot.user):
+            # Only respond if bot is mentioned and in allowed channel
+            if bot_is_mentioned(message, bot.user) and message.channel.name.lower() in [name.lower() for name in ALLOWED_CHANNEL_NAMES]:
                 print(f"Question received: {message.content}")
                 thread = await message.create_thread(
                     name=f"Question from {message.author.display_name}",
